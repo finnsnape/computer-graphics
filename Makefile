@@ -12,7 +12,7 @@ SDW_SOURCE_FILES := $(wildcard $(SDW_DIR)*.cpp)
 SDW_OBJECT_FILES := $(patsubst $(SDW_DIR)%.cpp, $(BUILD_DIR)/%.o, $(SDW_SOURCE_FILES))
 
 # Build settings
-COMPILER := clang++
+COMPILER := g++
 COMPILER_OPTIONS := -c -pipe -Wall -std=c++11 # If you have an older compiler, you might have to use -std=c++0x
 DEBUG_OPTIONS := -ggdb -g3
 FUSSY_OPTIONS := -Werror -pedantic
