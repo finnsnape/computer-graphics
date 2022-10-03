@@ -3,17 +3,28 @@
 #include <Utils.h>
 #include <fstream>
 #include <vector>
+#include <glm/glm.hpp>
 
-#define WIDTH 320
-#define HEIGHT 240
+#define WIDTH 1920 // 320
+#define HEIGHT 1200 // 240
+
+std::vector<float> interpolateSingleFloats(float from, float to, int numberOfValues) {
+  float difference = to - from;
+  float delta = difference / (numberOfValues - 1);
+  std::vector<float> interpolatedFloats;
+  for (int i=0; i<numberOfValues; i++) interpolatedFloats.push_back(from + (i * delta));
+  return interpolatedFloats;
+}
+
 
 void draw(DrawingWindow &window) {
 	window.clearPixels();
+  std::vector<float> colourRow = interpolateSingleFloats(255, 0, window.width);
 	for (size_t y = 0; y < window.height; y++) {
 		for (size_t x = 0; x < window.width; x++) {
-			float red = rand() % 256;
-			float green = 0.0;
-			float blue = 0.0;
+			float red = colourRow[x];
+			float green = colourRow[x];
+			float blue = colourRow[x];
 			uint32_t colour = (255 << 24) + (int(red) << 16) + (int(green) << 8) + int(blue);
 			window.setPixelColour(x, y, colour);
 		}
