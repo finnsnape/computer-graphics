@@ -33,12 +33,18 @@ std::vector<glm::vec3> interpolateThreeElementValues(glm::vec3 from, glm::vec3 t
 
 void draw(DrawingWindow &window) {
 	window.clearPixels();
-  std::vector<float> colourRow = interpolateSingleFloats(255, 0, window.width);
+  glm::vec3 topLeft(255, 0, 0);
+  glm::vec3 topRight(0, 0, 255);
+  glm::vec3 bottomRight(0, 255, 0);
+  glm::vec3 bottomLeft(255, 255, 0);
+  std::vector<glm::vec3> firstColumn = interpolateThreeElementValues(topLeft, bottomLeft, window.height);
+  std::vector<glm::vec3> lastColumn = interpolateThreeElementValues(topRight, bottomRight, window.height);
 	for (size_t y = 0; y < window.height; y++) {
-		for (size_t x = 0; x < window.width; x++) {
-			float red = colourRow[x];
-			float green = colourRow[x];
-			float blue = colourRow[x];
+    std::vector<glm::vec3> colourRow = interpolateThreeElementValues(firstColumn[y], lastColumn[y], window.width);
+		for (size_t x = 1; x < window.width - 1; x++) {
+			float red = colourRow[x][0];
+			float green = colourRow[x][1];
+			float blue = colourRow[x][2];
 			uint32_t colour = (255 << 24) + (int(red) << 16) + (int(green) << 8) + int(blue);
 			window.setPixelColour(x, y, colour);
 		}
