@@ -16,6 +16,20 @@ std::vector<float> interpolateSingleFloats(float from, float to, int numberOfVal
   return interpolatedFloats;
 }
 
+std::vector<glm::vec3> interpolateThreeElementValues(glm::vec3 from, glm::vec3 to, int numberOfValues) {
+  std::vector<std::vector<float>> temp;
+  for (int i=0; i<3; i++) {
+    std::vector<float> vec = interpolateSingleFloats(from[i], to[i], numberOfValues);
+    temp.push_back(vec);
+  }
+
+  std::vector<glm::vec3> interpolatedThreeElementValues;
+  for (int i=0; i<numberOfValues; i++) {
+    glm::vec3 vec(temp[0][i], temp[1][i], temp[2][i]);
+    interpolatedThreeElementValues.push_back(vec);
+  }
+  return interpolatedThreeElementValues;
+}
 
 void draw(DrawingWindow &window) {
 	window.clearPixels();
