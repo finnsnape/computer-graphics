@@ -1,6 +1,8 @@
 #include <CanvasTriangle.h>
 #include <DrawingWindow.h>
 #include <CanvasPoint.h>
+#include <TextureMap.h>
+#include <ModelTriangle.h>
 #include <Colour.h>
 #include <Utils.h>
 #include <fstream>
@@ -47,65 +49,46 @@ void drawLine(DrawingWindow &window, CanvasPoint from, CanvasPoint to, Colour co
   }
 }
 
-void drawStrokedTriangle(DrawingWindow &window, CanvasTriangle triangle, Colour colour) {
-  drawLine(window, triangle.v0(), triangle.v1(), colour);
-  drawLine(window, triangle.v1(), triangle.v2(), colour);
-  drawLine(window, triangle.v2(), triangle.v0(), colour);
+glm::vec3 parseVector(std::string line) {
+  std::vector<std::string> trianglePointRaw = split(line, ' ');
+  glm::vec3 trianglePoint = {std::stof(trianglePointRaw[1]), std::stof(trianglePointRaw[2]), std::stof(trianglePointRaw[3])};
+  return trianglePoint;
 }
 
-
-float getClockwiseAngle(CanvasPoint point) {
-  float angle = 0.0;
-  angle = -1 * atan2(point.x, -1 * point.y);
-  return angle;
+int cleanFacet(std::string triangleRawItem) {
+  return std::stof(triangleRawItem.substr(0, triangleRawItem.size()-1));
 }
 
-bool comparePoints(CanvasPoint point1, CanvasPoint point2) {
-  return getClockwiseAngle(point1) >= getClockwiseAngle(point2);
+std::vector<int> parseFacet(std::string line) {
+  std::vector<std::string> triangleRaw = split(line, ' ');
+  std::vector<int> triangle = {cleanFacet(triangleRaw[1]), cleanFacet(triangleRaw[2]), cleanFacet(triangleRaw[3])};
+  return triangle;
 }
 
-float area(int x1, int y1, int x2, int y2, int x3, int y3) {
-  return abs((x1*(y2-y3) + x2*(y3-y1)+ x3*(y1-y2))/2.0);
-}
- 
-bool isInTriangle(CanvasTriangle triangle, CanvasPoint testPoint) {
-  /* Calculate area of triangle ABC */
-  float A = area (triangle.v0().x, triangle.v0().y, triangle.v1().x, triangle.v1().y, triangle.v2().x, triangle.v2().y);
-
-  /* Calculate area of triangle PBC */ 
-  float A1 = area (testPoint.x, testPoint.y, triangle.v1().x, triangle.v1().y, triangle.v2().x, triangle.v2().y);
-
-  /* Calculate area of triangle PAC */ 
-  float A2 = area (triangle.v0().x, triangle.v0().y, testPoint.x, testPoint.y, triangle.v2().x, triangle.v2().y);
-
-  /* Calculate area of triangle PAB */  
-  float A3 = area (triangle.v0().x, triangle.v0().y, triangle.v1().x, triangle.v1().y, testPoint.x, testPoint.y);
-  
-  /* Check if sum of A1, A2 and A3 is same as A */
-  return (A == A1 + A2 + A3);
+std::vector<ModelTriangle> createTriangles(std::vector<glm::vec3> trianglePoints, std::vector<std::vector<int>> triangles) {
+  std::vector<ModelTriangle> modelTriangles;
+  for (int i=0; i<triangles.size(); i++) {
+    ModelTriangle modelTriangle = {trianglePoints[triangles[i][0] - 1], trianglePoints[triangles[i][1] - 1], trianglePoints[triangles[i][2] - 1], Colour()};
+    modelTriangles.push_back(modelTriangle);
+    std::cout << modelTriangle << std::endl;
+  }
+  return modelTriangles;
 }
 
-std::vector<float> boundingBox(CanvasTriangle triangle) {
-  float minX = std::min({triangle.v0().x, triangle.v1().x, triangle.v2().x});
-  float maxX = std::max({triangle.v0().x, triangle.v1().x, triangle.v2().x});
-  float minY = std::min({triangle.v0().y, triangle.v1().y, triangle.v2().y});
-  float maxY = std::max({triangle.v0().y, triangle.v1().y, triangle.v2().y});
-  // std::cout << minX << "-" << maxX << " " << minY << "-" << maxY << std::endl;
-  return {minX, maxX, minY, maxY};
-}
-
-void drawFilledTriangle(DrawingWindow &window, CanvasTriangle triangle, Colour colour) {
-  // we should be getting the smallest possible bounding box for the triangle rather than iterating over all of them
-  std::vector<float> boundedBy = boundingBox(triangle);
-  for (float x=boundedBy[0]; x<boundedBy[1]; x++) {
-    for (float y=boundedBy[2]; y<boundedBy[3]; y++) {
-      if (isInTriangle(triangle, CanvasPoint(x, y))) {
-        drawPixel(window, CanvasPoint(x, y), colour);
-      }
+void loadOBJ() {
+  std::vector<glm::vec3> trianglePoints;
+  std::vector<std::vector<int>> triangles;
+  std::ifstream filein("cornell-box.obj");
+  for (std::string line; std::getline(filein, line); ) {
+    if (line[0] == 'v') {
+      trianglePoints.push_back(parseVector(line));
+    } else if (line[0] == 'f') {
+      triangles.push_back(parseFacet(line));
     }
   }
-  drawStrokedTriangle(window, triangle, Colour(255, 255, 255));
+  std::vector<ModelTriangle> modelTriangles = createTriangles(trianglePoints, triangles);
 }
+
 
 void handleEvent(SDL_Event event, DrawingWindow &window) {
 	if (event.type == SDL_KEYDOWN) {
@@ -113,22 +96,16 @@ void handleEvent(SDL_Event event, DrawingWindow &window) {
 		else if (event.key.keysym.sym == SDLK_RIGHT) std::cout << "RIGHT" << std::endl;
 		else if (event.key.keysym.sym == SDLK_UP) std::cout << "UP" << std::endl;
 		else if (event.key.keysym.sym == SDLK_DOWN) std::cout << "DOWN" << std::endl;
-    else if (event.key.keysym.sym == SDLK_u) {
-      drawFilledTriangle(window, randomTriangle(), randomColour());
-    }
-	} else if (event.type == SDL_MOUSEBUTTONDOWN) {
-		window.savePPM("output.ppm");
-		window.saveBMP("output.bmp");
-	}
+  }
 }
 
 int main(int argc, char *argv[]) {
-	DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-	SDL_Event event;
-	while (true) {
-		// We MUST poll for events - otherwise the window will freeze !
-		if (window.pollForInputEvents(event)) handleEvent(event, window);
-		// Need to render the frame at the end, or nothing actually gets shown on the screen !
-		window.renderFrame();
-	}
+  loadOBJ();
+	// DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
+	// SDL_Event event;
+	// while (true) {
+	// 	// We MUST poll for events - otherwise the window will freeze !
+	// 	if (window.pollForInputEvents(event)) handleEvent(event, window);
+	// 	// Need to render the frame at the end, or nothing actually gets shown on the screen !
+	// 	window.renderFrame();
 }
