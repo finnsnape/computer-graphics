@@ -10,6 +10,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <map>
 
 #define WIDTH 1920 // 320
 #define HEIGHT 1200 // 240
@@ -49,9 +50,37 @@ void drawLine(DrawingWindow &window, CanvasPoint from, CanvasPoint to, Colour co
   }
 }
 
-glm::vec3 parseVector(std::string line) {
+std::vector<int> parseColourValue(std::string line) {
+  std::vector<std::string> colourRaw = split(line, ' ');
+  std::vector<int> colour = {round(std::stof(colourRaw[1]) * 255), round(std::stof(colourRaw[2]) * 255), round(std::stof(colourRaw[3]) * 255)};
+  return colour;
+}
+
+std::string parseColourName(std::string line) {
+  return split(line, ' ')[1];
+}
+
+std::map<std::string, Colour> loadColours() {
+  std::map<std::string, Colour> colourMap;
+  std::vector<std::string> colourNames;
+  std::vector<std::vector<int>> colourValues;
+  std::ifstream filein("cornell-box.mtl");
+  for (std::string line; std::getline(filein, line); ) {
+    if (line[0] == 'n') {
+      colourNames.push_back(parseColourName(line));
+    } else if (line[0] == 'K') {
+      colourValues.push_back(parseColourValue(line));
+    }
+  }
+  for (int i=0; i<colourNames.size(); i++) {
+    colourMap[colourNames[i]] = Colour(colourValues[i][0], colourValues[i][1], colourValues[i][2]);
+  }
+  return colourMap;
+}
+
+glm::vec3 parseVector(std::string line, float scaleFactor) {
   std::vector<std::string> trianglePointRaw = split(line, ' ');
-  glm::vec3 trianglePoint = {std::stof(trianglePointRaw[1]), std::stof(trianglePointRaw[2]), std::stof(trianglePointRaw[3])};
+  glm::vec3 trianglePoint = {std::stof(trianglePointRaw[1]) * scaleFactor, std::stof(trianglePointRaw[2]) * scaleFactor, std::stof(trianglePointRaw[3]) * scaleFactor};
   return trianglePoint;
 }
 
@@ -65,28 +94,33 @@ std::vector<int> parseFacet(std::string line) {
   return triangle;
 }
 
-std::vector<ModelTriangle> createTriangles(std::vector<glm::vec3> trianglePoints, std::vector<std::vector<int>> triangles) {
+std::vector<ModelTriangle> createTriangles(std::vector<glm::vec3> trianglePoints, std::vector<std::vector<int>> triangles, std::vector<std::string> colours, std::map<std::string, Colour> colourMap) {
   std::vector<ModelTriangle> modelTriangles;
   for (int i=0; i<triangles.size(); i++) {
-    ModelTriangle modelTriangle = {trianglePoints[triangles[i][0] - 1], trianglePoints[triangles[i][1] - 1], trianglePoints[triangles[i][2] - 1], Colour()};
+    Colour colour = colourMap[colours[i]];
+    ModelTriangle modelTriangle = {trianglePoints[triangles[i][0] - 1], trianglePoints[triangles[i][1] - 1], trianglePoints[triangles[i][2] - 1], colour};
     modelTriangles.push_back(modelTriangle);
-    std::cout << modelTriangle << std::endl;
+    std::cout << modelTriangle << " " << colour << std::endl;
   }
   return modelTriangles;
 }
 
-void loadOBJ() {
+void loadOBJ(float scaleFactor) {
   std::vector<glm::vec3> trianglePoints;
   std::vector<std::vector<int>> triangles;
+  std::vector<std::string> colours;
+  std::map<std::string, Colour> colourMap = loadColours();
   std::ifstream filein("cornell-box.obj");
   for (std::string line; std::getline(filein, line); ) {
     if (line[0] == 'v') {
-      trianglePoints.push_back(parseVector(line));
+      trianglePoints.push_back(parseVector(line, scaleFactor));
     } else if (line[0] == 'f') {
       triangles.push_back(parseFacet(line));
+    } else if (line[0] == 'u') {
+      colours.push_back(parseColourName(line));
     }
   }
-  std::vector<ModelTriangle> modelTriangles = createTriangles(trianglePoints, triangles);
+  std::vector<ModelTriangle> modelTriangles = createTriangles(trianglePoints, triangles, colours, colourMap);
 }
 
 
@@ -100,7 +134,9 @@ void handleEvent(SDL_Event event, DrawingWindow &window) {
 }
 
 int main(int argc, char *argv[]) {
-  loadOBJ();
+  float scaleFactor = 0.35;
+  loadOBJ(scaleFactor);
+  // loadColours();
 	// DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
 	// SDL_Event event;
 	// while (true) {
