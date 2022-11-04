@@ -73,7 +73,8 @@ std::map<std::string, Colour> loadColours() {
     }
   }
   for (int i=0; i<colourNames.size(); i++) {
-    colourMap[colourNames[i]] = Colour(colourValues[i][0], colourValues[i][1], colourValues[i][2]);
+    Colour colourValue(colourValues[i][0], colourValues[i][1], colourValues[i][2]);
+    colourMap.insert({colourNames[i], colourValue});
   }
   return colourMap;
 }
@@ -97,7 +98,7 @@ std::vector<int> parseFacet(std::string line) {
 std::vector<ModelTriangle> createTriangles(std::vector<glm::vec3> trianglePoints, std::vector<std::vector<int>> triangles, std::vector<std::string> colours, std::map<std::string, Colour> colourMap) {
   std::vector<ModelTriangle> modelTriangles;
   for (int i=0; i<triangles.size(); i++) {
-    Colour colour = colourMap[colours[i]];
+    Colour colour = colourMap.at(colours[i]);
     ModelTriangle modelTriangle = {trianglePoints[triangles[i][0] - 1], trianglePoints[triangles[i][1] - 1], trianglePoints[triangles[i][2] - 1], colour};
     modelTriangles.push_back(modelTriangle);
     std::cout << modelTriangle << " " << colour << std::endl;
@@ -111,13 +112,15 @@ void loadOBJ(float scaleFactor) {
   std::vector<std::string> colours;
   std::map<std::string, Colour> colourMap = loadColours();
   std::ifstream filein("cornell-box.obj");
+  std::string lastColourName;
   for (std::string line; std::getline(filein, line); ) {
     if (line[0] == 'v') {
       trianglePoints.push_back(parseVector(line, scaleFactor));
     } else if (line[0] == 'f') {
       triangles.push_back(parseFacet(line));
+      colours.push_back(lastColourName);
     } else if (line[0] == 'u') {
-      colours.push_back(parseColourName(line));
+      lastColourName = parseColourName(line);
     }
   }
   std::vector<ModelTriangle> modelTriangles = createTriangles(trianglePoints, triangles, colours, colourMap);
@@ -136,7 +139,7 @@ void handleEvent(SDL_Event event, DrawingWindow &window) {
 int main(int argc, char *argv[]) {
   float scaleFactor = 0.35;
   loadOBJ(scaleFactor);
-  // loadColours();
+  //loadColours();
 	// DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
 	// SDL_Event event;
 	// while (true) {
