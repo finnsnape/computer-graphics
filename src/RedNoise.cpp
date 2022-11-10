@@ -12,8 +12,8 @@
 #include <cmath>
 #include <map>
 
-#define WIDTH 1920 // 320
-#define HEIGHT 1200 // 240
+#define WIDTH 240 // 320
+#define HEIGHT 240 // 240
 
 Colour randomColour() {
   int red = rand() % 256;
@@ -26,6 +26,18 @@ CanvasPoint randomPoint() {
   float x = rand() % WIDTH;
   float y = rand() % HEIGHT;
   return CanvasPoint(x, y);
+}
+
+glm::vec3 transposePoint(glm::vec3 cameraPosition, glm::vec3 vertexPosition) {
+  return {cameraPosition.x-vertexPosition.x, cameraPosition.y-vertexPosition.y, cameraPosition.z-vertexPosition.z};
+}
+
+CanvasPoint getCanvasIntersectionPoint(glm::vec3 cameraPosition, glm::vec3 vertexPosition, float focalLength) {
+  // note +z is towards you, -z is away from you
+  glm::vec3 transposedVertexPosition = transposePoint(cameraPosition, vertexPosition);
+  float u = focalLength * (HEIGHT/2) * (transposedVertexPosition.x/transposedVertexPosition.z) + WIDTH/2;
+  float v = focalLength * (HEIGHT/2) * (transposedVertexPosition.y/transposedVertexPosition.z) + HEIGHT/2;
+  return CanvasPoint(u, v);
 }
 
 CanvasTriangle randomTriangle() {
@@ -47,6 +59,13 @@ void drawLine(DrawingWindow &window, CanvasPoint from, CanvasPoint to, Colour co
     float x = from.x + (xStepSize * i);
     float y = from.y + (yStepSize * i);
     drawPixel(window, CanvasPoint(x, y), colour);
+  }
+}
+
+void drawPointCloud(DrawingWindow &window, glm::vec3 cameraPosition, float focalLength, std::vector<glm::vec3> trianglePoints) {
+  for (int i=0; i<trianglePoints.size(); i++) {
+    CanvasPoint intersectionPoint = getCanvasIntersectionPoint(cameraPosition, trianglePoints[i], focalLength);
+    drawPixel(window, intersectionPoint, Colour(255, 255, 255));
   }
 }
 
@@ -101,12 +120,12 @@ std::vector<ModelTriangle> createTriangles(std::vector<glm::vec3> trianglePoints
     Colour colour = colourMap.at(colours[i]);
     ModelTriangle modelTriangle = {trianglePoints[triangles[i][0] - 1], trianglePoints[triangles[i][1] - 1], trianglePoints[triangles[i][2] - 1], colour};
     modelTriangles.push_back(modelTriangle);
-    std::cout << modelTriangle << " " << colour << std::endl;
+    //std::cout << modelTriangle << " " << colour << std::endl;
   }
   return modelTriangles;
 }
 
-void loadOBJ(float scaleFactor) {
+std::vector<glm::vec3> loadOBJ(float scaleFactor) {
   std::vector<glm::vec3> trianglePoints;
   std::vector<std::vector<int>> triangles;
   std::vector<std::string> colours;
@@ -115,7 +134,8 @@ void loadOBJ(float scaleFactor) {
   std::string lastColourName;
   for (std::string line; std::getline(filein, line); ) {
     if (line[0] == 'v') {
-      trianglePoints.push_back(parseVector(line, scaleFactor));
+      glm::vec3 trianglePoint = parseVector(line, scaleFactor);
+      trianglePoints.push_back(trianglePoint);
     } else if (line[0] == 'f') {
       triangles.push_back(parseFacet(line));
       colours.push_back(lastColourName);
@@ -123,7 +143,8 @@ void loadOBJ(float scaleFactor) {
       lastColourName = parseColourName(line);
     }
   }
-  std::vector<ModelTriangle> modelTriangles = createTriangles(trianglePoints, triangles, colours, colourMap);
+  //std::vector<ModelTriangle> modelTriangles = createTriangles(trianglePoints, triangles, colours, colourMap);
+  return trianglePoints;
 }
 
 
@@ -137,14 +158,18 @@ void handleEvent(SDL_Event event, DrawingWindow &window) {
 }
 
 int main(int argc, char *argv[]) {
-  float scaleFactor = 0.35;
-  loadOBJ(scaleFactor);
+  float scaleFactor = 0.35; // 0.35
+  glm::vec3 cameraPosition({0.0, 0.0, 4.0});
+  float focalLength = 2.0;
+  std::vector<glm::vec3> trianglePoints = loadOBJ(scaleFactor);
   //loadColours();
-	// DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-	// SDL_Event event;
-	// while (true) {
-	// 	// We MUST poll for events - otherwise the window will freeze !
-	// 	if (window.pollForInputEvents(event)) handleEvent(event, window);
-	// 	// Need to render the frame at the end, or nothing actually gets shown on the screen !
-	// 	window.renderFrame();
+	DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
+  drawPointCloud(window, cameraPosition, focalLength, trianglePoints);
+	SDL_Event event;
+	while (true) {
+		// We MUST poll for events - otherwise the window will freeze !
+		if (window.pollForInputEvents(event)) handleEvent(event, window);
+		// Need to render the frame at the end, or nothing actually gets shown on the screen !
+		window.renderFrame();
+  }
 }
