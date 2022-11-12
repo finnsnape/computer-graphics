@@ -1,11 +1,16 @@
 #include "TriangleUtils.h"
 #include <algorithm>
 
+#define WIDTH 480 // 320
+#define HEIGHT 480 // 240
+
 /* Drawing */
 
 void drawPixel(DrawingWindow &window, CanvasPoint point, Colour colour) {
+    int x = round(point.x);
+    int y = round(point.y);
     uint32_t colourCode = (255 << 24) + (colour.red << 16) + (colour.green << 8) + colour.blue;
-    window.setPixelColour(round(point.x), round(point.y), colourCode);
+    window.setPixelColour(x, y, colourCode);
 }
 
 /* Filled triangles */
