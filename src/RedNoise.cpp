@@ -6,6 +6,7 @@
 #include <Colour.h>
 #include <Utils.h>
 #include <TriangleUtils.h>
+#include "../libs/sdw/3DUtils.h"
 #include <FileUtils.h>
 #include <glm/glm.hpp>
 #include <vector>
@@ -13,19 +14,7 @@
 #define WIDTH 480 // 320
 #define HEIGHT 480 // 240
 
-glm::vec3 transposePoint(glm::vec3 cameraPosition, glm::vec3 vertexPosition) {
-  return {cameraPosition.x-vertexPosition.x, cameraPosition.y-vertexPosition.y, cameraPosition.z-vertexPosition.z};
-}
-
-CanvasPoint getCanvasIntersectionPoint(glm::vec3 cameraPosition, glm::vec3 vertexPosition, float focalLength) {
-  // note +z is towards you, -z is away from you
-  glm::vec3 transposedVertexPosition = transposePoint(cameraPosition, vertexPosition);
-  float u = focalLength * (HEIGHT/2) * (transposedVertexPosition.x/transposedVertexPosition.z) + WIDTH/2;
-  float v = focalLength * (HEIGHT/2) * (transposedVertexPosition.y/transposedVertexPosition.z) + HEIGHT/2;
-  return CanvasPoint(u, v);
-}
-
-void drawRasterised(DrawingWindow &window, glm::vec3 cameraPosition, float focalLength, std::vector<ModelTriangle> modelTriangles) {
+void drawRasterised(DrawingWindow &window, std::vector<std::vector<float>> &depthBuffer, glm::vec3 cameraPosition, float focalLength, std::vector<ModelTriangle> modelTriangles) {
   for (int i=0; i<modelTriangles.size(); i++) {
     ModelTriangle modelTriangle = modelTriangles[i];
     std::vector<CanvasPoint> rawTriangle;
@@ -36,7 +25,7 @@ void drawRasterised(DrawingWindow &window, glm::vec3 cameraPosition, float focal
       rawTriangle.push_back(intersectionPoint);
     }
     CanvasTriangle triangle({rawTriangle[0], rawTriangle[1], rawTriangle[2]});
-    drawFilledTriangle(window, triangle, modelTriangle.colour);
+    drawFilledTriangle(window, depthBuffer, triangle, modelTriangle.colour);
   }
 }
 
@@ -50,17 +39,18 @@ void handleEvent(SDL_Event event, DrawingWindow &window) {
 }
 
 int main(int argc, char *argv[]) {
-  float scaleFactor = 0.35; // 0.35
-  glm::vec3 cameraPosition({0.0, 0.0, 4.0});
-  float focalLength = 2.0;
-  std::vector<ModelTriangle> modelTriangles = loadOBJ(scaleFactor, "cornell-box.obj");
-  DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
-  drawRasterised(window, cameraPosition, focalLength, modelTriangles);
-	SDL_Event event;
-	while (true) {
-		// We MUST poll for events - otherwise the window will freeze !
-		if (window.pollForInputEvents(event)) handleEvent(event, window);
-		// Need to render the frame at the end, or nothing actually gets shown on the screen !
-		window.renderFrame();
-  }
+    float scaleFactor = 0.35; // 0.35
+    glm::vec3 cameraPosition({0.0, 0.0, 4.0});
+    float focalLength = 2.0;
+    std::vector<std::vector<float>> depthBuffer = emptyDepthBuffer();
+    std::vector<ModelTriangle> modelTriangles = loadOBJ(scaleFactor, "cornell-box.obj");
+    DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
+    drawRasterised(window, depthBuffer, cameraPosition, focalLength, modelTriangles);
+	    SDL_Event event;
+	    while (true) {
+		    // We MUST poll for events - otherwise the window will freeze !
+		    if (window.pollForInputEvents(event)) handleEvent(event, window);
+		    // Need to render the frame at the end, or nothing actually gets shown on the screen !
+		    window.renderFrame();
+    }
 }
