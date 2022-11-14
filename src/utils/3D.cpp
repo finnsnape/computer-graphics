@@ -65,8 +65,8 @@ void translateCameraPosition(glm::mat4 &camera, std::string axis, int sign) {
 
 glm::vec3 transposePoint(glm::mat4 &camera, glm::vec3 vertexPosition) {
     glm::mat4 worldToCamera = glm::inverse(camera);
-    glm::vec4 newVertexPosition(vertexPosition.x, vertexPosition.y, vertexPosition.z, 1.0);
-    glm::vec4 cameraPoint = worldToCamera * newVertexPosition;
+    glm::vec4 tempVertexPosition(vertexPosition.x, vertexPosition.y, vertexPosition.z, 1.0);
+    glm::vec4 cameraPoint = worldToCamera * tempVertexPosition;
     return {cameraPoint.x, cameraPoint.y, cameraPoint.z};
 }
 

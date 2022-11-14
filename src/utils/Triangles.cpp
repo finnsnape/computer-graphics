@@ -1,6 +1,9 @@
 #include "Triangles.h"
 #include <algorithm>
 
+#define WIDTH 480 // 320
+#define HEIGHT 480 // 240
+
 /* Drawing */
 
 void drawPixel(DrawingWindow &window, CanvasPoint point, Colour colour) {
@@ -42,6 +45,9 @@ void drawFilledTriangle(DrawingWindow &window, std::vector<std::vector<float>> &
             //std::cout << depth << std::endl;
             if (depth == 0) {
                 continue; // point is outside triangle
+            }
+            if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
+                continue; // point is outside frame
             }
             if (depth < depthBuffer[x][y]) {
                 continue; // something in front of our pixel has already been placed
