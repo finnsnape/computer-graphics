@@ -3,8 +3,6 @@
 #include <cmath>
 #include "Utils.h"
 
-/* General */
-
 std::vector<std::string> split(const std::string &line, char delimiter) {
 	auto haystack = line;
 	std::vector<std::string> tokens;
