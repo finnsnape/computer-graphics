@@ -27,6 +27,7 @@ void draw(DrawingWindow &window, glm::mat4 &camera, std::vector<ModelTriangle> m
 	    CanvasTriangle triangle({rawTriangle[0], rawTriangle[1], rawTriangle[2]});
 	    drawFilledTriangle(window, depthBuffer, triangle, modelTriangle.colour);
     }
+    rotateCameraPosition(camera, "y", 1);
 }
 
 void handleEvent(SDL_Event event, DrawingWindow &window, glm::mat4 &camera) {

@@ -10,7 +10,7 @@ std::vector<std::vector<float>> emptyDepthBuffer() {
 
 void rotateCameraPosition(glm::mat4 &camera, std::string axis, int sign) {
     // rotate the camera position about the centre OF THE SCENE!
-    double modifier = 0.02 * sign;
+    double modifier = 0.03 * sign;
     glm::mat4 transformationMatrix;
     if (axis == "x") {
         transformationMatrix = glm::mat4(
@@ -35,7 +35,7 @@ void rotateCameraPosition(glm::mat4 &camera, std::string axis, int sign) {
 
 void translateCameraPosition(glm::mat4 &camera, std::string axis, int sign) {
     glm::vec3 translationVector(0.0, 0.0, 0.0);
-    float modifier = 0.02 * sign;
+    float modifier = 0.03 * sign;
     if (axis == "x") {
         translationVector.x = modifier;
     } else if (axis == "y") {
