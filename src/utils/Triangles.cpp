@@ -1,8 +1,5 @@
-#include "TriangleUtils.h"
+#include "Triangles.h"
 #include <algorithm>
-
-#define WIDTH 480 // 320
-#define HEIGHT 480 // 240
 
 /* Drawing */
 
@@ -13,7 +10,7 @@ void drawPixel(DrawingWindow &window, CanvasPoint point, Colour colour) {
     window.setPixelColour(x, y, colourCode);
 }
 
-/* Filled triangles */
+/* Triangles */
 
 float calculatePointDepth(CanvasTriangle triangle, CanvasPoint point) {
     float denominator = (triangle.v1().y-triangle.v2().y)*(triangle.v0().x-triangle.v2().x)+(triangle.v2().x-triangle.v1().x)*(triangle.v0().y-triangle.v2().y);

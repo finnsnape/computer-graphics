@@ -35,6 +35,9 @@ add_executable(RedNoise
         libs/sdw/TextureMap.cpp
         libs/sdw/TexturePoint.cpp
         libs/sdw/Utils.cpp
+        src/utils/Triangles.cpp
+        src/utils/Files.cpp
+        src/utils/3D.cpp
         src/RedNoise.cpp)
 
 if (MSVC)
@@ -50,15 +53,15 @@ if (MSVC)
     endif()
 else ()
     target_compile_options(RedNoise
-        PUBLIC
-        -Wall
-        -Wextra
-        -Wcast-align
-        -Wfatal-errors
-        -Werror=return-type
-        -Wno-unused-parameter
-        -Wno-unused-variable
-        -Wno-ignored-attributes)
+            PUBLIC
+            -Wall
+            -Wextra
+            -Wcast-align
+            -Wfatal-errors
+            -Werror=return-type
+            -Wno-unused-parameter
+            -Wno-unused-variable
+            -Wno-ignored-attributes)
 
     set(DEBUG_OPTIONS -O2 -fno-omit-frame-pointer -g)
     set(RELEASE_OPTIONS -O3 -march=native -mtune=native)
@@ -66,9 +69,14 @@ else ()
 
 endif()
 
-
 target_compile_options(RedNoise PUBLIC "$<$<CONFIG:RelWithDebInfo>:${RELEASE_OPTIONS}>")
 target_compile_options(RedNoise PUBLIC "$<$<CONFIG:Release>:${RELEASE_OPTIONS}>")
 target_compile_options(RedNoise PUBLIC "$<$<CONFIG:Debug>:${DEBUG_OPTIONS}>")
- 
+
 target_link_libraries(RedNoise PRIVATE ${SDL2_LIBRARIES})
+
+add_custom_command(
+        TARGET RedNoise
+        POST_BUILD
+        COMMAND RedNoise
+)

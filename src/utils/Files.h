@@ -1,12 +1,10 @@
 #pragma once
 
-#include "Colour.h"
-#include "ModelTriangle.h"
 #include <vector>
 #include <string>
-#include <glm/glm.hpp>
 #include <map>
-#include <fstream>
+#include "Colour.h"
+#include <ModelTriangle.h>
 
 std::vector<int> parseColourValue(std::string line);
 std::string parseColourName(std::string line);

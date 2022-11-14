@@ -1,8 +1,8 @@
-#include "FileUtils.h"
+#include "Files.h"
 #include "Utils.h"
 #include <algorithm>
 
-/* Colours (.mtl) */
+/* Colour (.mtl) */
 
 std::vector<int> parseColourValue(std::string line) {
     std::vector<std::string> colourRaw = split(line, ' ');
@@ -33,7 +33,7 @@ std::map<std::string, Colour> loadColours(std::string fileName) {
     return colourMap;
 }
 
-/* Triangles (.obj) */
+/* Object (.obj) */
 
 glm::vec3 parseVector(std::string line, float scaleFactor) {
     std::vector<std::string> trianglePointRaw = split(line, ' ');
