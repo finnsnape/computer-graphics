@@ -1,5 +1,6 @@
 #include "Triangles.h"
 #include <algorithm>
+#include <cmath>
 
 #define WIDTH 480 // 320
 #define HEIGHT 480 // 240
@@ -7,8 +8,8 @@
 /* Drawing */
 
 void drawPixel(DrawingWindow &window, CanvasPoint point, Colour colour) {
-    int x = round(point.x);
-    int y = round(point.y);
+    int x = ceil(point.x);
+    int y = ceil(point.y);
     uint32_t colourCode = (255 << 24) + (colour.red << 16) + (colour.green << 8) + colour.blue;
     window.setPixelColour(x, y, colourCode);
 }

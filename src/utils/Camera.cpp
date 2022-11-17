@@ -5,8 +5,8 @@
 #define HEIGHT 480 // 240
 
 Camera::Camera(glm::vec3 _position, float _focalLength): focalLength(_focalLength), position(_position) {
-    this->lookAt({0.0, 0.0, 0.0});
     this->resetDepthBuffer();
+    this->lookAt({0.0, 0.0, 0.0});
 }
 
 void Camera::resetDepthBuffer() {
@@ -55,13 +55,26 @@ void Camera::rotate(Axis axis, int sign) {
     this->position = transformationMatrix * this->position;
 }
 
+//void Camera::lookAt(glm::vec3 vertex) {
+//    glm::vec3 forward = glm::normalize(this->position - vertex);
+//    glm::vec3 direction(0.0, 1.0, 0.0);
+//    glm::vec3 right = glm::cross(forward, direction);
+//    glm::vec3 up = glm::cross(forward, right);
+//    this->orientation = {right, up, forward};
+//}
+
 void Camera::lookAt(glm::vec3 vertex) {
     glm::vec3 forward = glm::normalize(this->position - vertex);
     glm::vec3 direction(0.0, 1.0, 0.0);
-    glm::vec3 right = glm::cross(forward, direction);
+    glm::vec3 right = glm::cross(direction, forward);
     glm::vec3 up = glm::cross(forward, right);
     this->orientation = {right, up, forward};
 }
+
+//glm::vec3 Camera::getTransposedPoint(glm::vec3 vertex) const {
+//    glm::vec3 vertexDifference = vertex - this->position;
+//    return vertexDifference * this->orientation;
+//}
 
 glm::vec3 Camera::getTransposedPoint(glm::vec3 vertex) const {
     glm::vec3 vertexDifference = vertex - this->position;
@@ -69,9 +82,16 @@ glm::vec3 Camera::getTransposedPoint(glm::vec3 vertex) const {
     return {transposedVertex.x, transposedVertex.y, -transposedVertex.z};
 }
 
+//CanvasPoint Camera::getIntersectionPoint(glm::vec3 vertex) {
+//    glm::vec3 transposedVertex = this->getTransposedPoint(vertex);
+//    float u = this->focalLength * (WIDTH/2) * (transposedVertex.x/(transposedVertex.z)) + WIDTH/2;
+//    float v = this->focalLength * (HEIGHT/2) * (transposedVertex.y/(transposedVertex.z)) + HEIGHT/2;
+//    return {u, v, transposedVertex.z};
+//}
+
 CanvasPoint Camera::getIntersectionPoint(glm::vec3 vertex) {
     glm::vec3 transposedVertex = this->getTransposedPoint(vertex);
-    float u = this->focalLength * (WIDTH/2) * (transposedVertex.x/(transposedVertex.z)) + WIDTH/2;
+    float u = -this->focalLength * (WIDTH/2) * (transposedVertex.x/(transposedVertex.z)) + WIDTH/2;
     float v = this->focalLength * (HEIGHT/2) * (transposedVertex.y/(transposedVertex.z)) + HEIGHT/2;
     return {u, v, transposedVertex.z};
 }

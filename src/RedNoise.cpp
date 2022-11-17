@@ -11,7 +11,7 @@
 #define WIDTH 480 // 320
 #define HEIGHT 480 // 240
 
-void draw(DrawingWindow &window, Camera &camera, std::vector<ModelTriangle> modelTriangles) {
+void draw(DrawingWindow &window, Camera &camera, const std::vector<ModelTriangle>& modelTriangles) {
     window.clearPixels();
     camera.resetDepthBuffer();
     for (auto modelTriangle : modelTriangles) {
@@ -24,7 +24,7 @@ void draw(DrawingWindow &window, Camera &camera, std::vector<ModelTriangle> mode
         CanvasTriangle triangle({rawTriangle[0], rawTriangle[1], rawTriangle[2]});
         drawFilledTriangle(window, camera.depthBuffer, triangle, modelTriangle.colour);
     }
-    camera.orbit(y, 1, {0.0, 0.0, 0.0});
+    camera.orbit(x, 1, {0.0, 0.0, 0.0});
 }
 
 void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera) {
@@ -43,29 +43,26 @@ void handleEvent(SDL_Event event, DrawingWindow &window, Camera &camera) {
             camera.translate(z, -1);
         } else if (event.key.keysym.sym == SDLK_w) {
             camera.rotate(x, -1);
-            camera.lookAt({0.0, 0.0, 0.0});
         } else if (event.key.keysym.sym == SDLK_s) {
             camera.rotate(x, 1);
-            camera.lookAt({0.0, 0.0, 0.0});
         } else if (event.key.keysym.sym == SDLK_a) {
             camera.rotate(y, -1);
-            camera.lookAt({0.0, 0.0, 0.0});
         } else if (event.key.keysym.sym == SDLK_d) {
             camera.rotate(y, 1);
-            camera.lookAt({0.0, 0.0, 0.0});
         }
+        camera.lookAt({0.0, 0.0, 0.0});
     }
 }
 
 int main(int argc, char *argv[]) {
     // note: we are using a right hand coordinate system
     float scaleFactor = 0.35; // 0.35
-    std::vector<ModelTriangle> modelTriangles = loadOBJ(scaleFactor, "cornell-box.obj");
     glm::vec3 initialPosition(0.0, 0.0, 4.0);
     float focalLength = 2.0;
     Camera camera(initialPosition, focalLength);
     DrawingWindow window = DrawingWindow(WIDTH, HEIGHT, false);
     SDL_Event event;
+    std::vector<ModelTriangle> modelTriangles = loadOBJ(scaleFactor, "cornell-box.obj");
     while (true) {
         // We MUST poll for events - otherwise the window will freeze !
         if (window.pollForInputEvents(event)) handleEvent(event, window, camera);

@@ -10,10 +10,10 @@ enum Axis { x, y, z };
 class Camera {
 private:
     float focalLength;
-    glm::vec3 getTransposedPoint(glm::vec3 vertex) const;
-public:
     glm::vec3 position;
     glm::mat3 orientation;
+    glm::vec3 getTransposedPoint(glm::vec3 vertex) const;
+public:
     std::vector<std::vector<float>> depthBuffer;
     Camera(glm::vec3 position, float focalLength);
     void resetDepthBuffer();
