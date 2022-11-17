@@ -20,7 +20,6 @@ float calculatePointDepth(CanvasTriangle triangle, CanvasPoint point) {
     float w0 = ((triangle.v1().y-triangle.v2().y)*(point.x-triangle.v2().x)+(triangle.v2().x-triangle.v1().x)*(point.y-triangle.v2().y))/denominator;
     float w1 = ((triangle.v2().y-triangle.v0().y)*(point.x-triangle.v2().x)+(triangle.v0().x-triangle.v2().x)*(point.y-triangle.v2().y))/denominator;
     float w2 = 1.0 - w0 - w1;
-    //std::cout << "w0: " << w0 << "|w1: " << w1 << "|w2: " << w2 << std::endl;
     if (w0 < 0 || w1 < 0 || w2 < 0) {
         return 0; // point is not inside the triangle
     }
@@ -42,7 +41,6 @@ void drawFilledTriangle(DrawingWindow &window, std::vector<std::vector<float>> &
     for (int x=boundedBy[0]; x<boundedBy[1]; x++) {
         for (int y=boundedBy[2]; y<boundedBy[3]; y++) {
             float depth = calculatePointDepth(triangle, CanvasPoint(x, y));
-            //std::cout << depth << std::endl;
             if (depth == 0) {
                 continue; // point is outside triangle
             }

@@ -37,7 +37,6 @@ add_executable(RedNoise
         libs/sdw/Utils.cpp
         src/utils/Triangles.cpp
         src/utils/Files.cpp
-        src/utils/3D.cpp
         src/utils/Camera.cpp
         src/utils/Camera.h
         src/RedNoise.cpp)
