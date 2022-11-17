@@ -393,6 +393,30 @@ src/utils/3D.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RedNoise.dir/build.make CMakeFiles/RedNoise.dir/src/utils/3D.cpp.s
 .PHONY : src/utils/3D.cpp.s
 
+src/utils/Camera.o: src/utils/Camera.cpp.o
+.PHONY : src/utils/Camera.o
+
+# target to build an object file
+src/utils/Camera.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RedNoise.dir/build.make CMakeFiles/RedNoise.dir/src/utils/Camera.cpp.o
+.PHONY : src/utils/Camera.cpp.o
+
+src/utils/Camera.i: src/utils/Camera.cpp.i
+.PHONY : src/utils/Camera.i
+
+# target to preprocess a source file
+src/utils/Camera.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RedNoise.dir/build.make CMakeFiles/RedNoise.dir/src/utils/Camera.cpp.i
+.PHONY : src/utils/Camera.cpp.i
+
+src/utils/Camera.s: src/utils/Camera.cpp.s
+.PHONY : src/utils/Camera.s
+
+# target to generate assembly for a file
+src/utils/Camera.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RedNoise.dir/build.make CMakeFiles/RedNoise.dir/src/utils/Camera.cpp.s
+.PHONY : src/utils/Camera.cpp.s
+
 src/utils/Files.o: src/utils/Files.cpp.o
 .PHONY : src/utils/Files.o
 
@@ -483,6 +507,9 @@ help:
 	@echo "... src/utils/3D.o"
 	@echo "... src/utils/3D.i"
 	@echo "... src/utils/3D.s"
+	@echo "... src/utils/Camera.o"
+	@echo "... src/utils/Camera.i"
+	@echo "... src/utils/Camera.s"
 	@echo "... src/utils/Files.o"
 	@echo "... src/utils/Files.i"
 	@echo "... src/utils/Files.s"
