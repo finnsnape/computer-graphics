@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "Colour.h"
+#include <Colour.h>
 #include <ModelTriangle.h>
 
 std::vector<int> parseColourValue(std::string line);

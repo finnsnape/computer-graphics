@@ -1,9 +1,10 @@
-#ifndef REDNOISE_CAMERA_H
-#define REDNOISE_CAMERA_H
+#pragma once
 
-#include "glm/glm.hpp"
+#include <glm/glm.hpp>
 #include <CanvasPoint.h>
 #include <vector>
+#include <ModelTriangle.h>
+#include <RayTriangleIntersection.h>
 
 enum Axis { x, y, z };
 
@@ -22,7 +23,9 @@ public:
     void lookAt(glm::vec3 vertex);
     CanvasPoint getIntersectionPoint(glm::vec3 vertex);
     void orbit(Axis axis, int sign, glm::vec3 vertex);
+    void transposeTriangle(ModelTriangle &triangle);
+    glm::vec3 getDepth(CanvasPoint canvasPoint);
+    //glm::vec3 getDirection(CanvasPoint canvasPoint);
+    static bool validateIntersection(glm::vec3 possibleSolution);
+    RayTriangleIntersection getClosestIntersection(std::vector<ModelTriangle> triangles, glm::vec3 rayDirection);
 };
-
-
-#endif //REDNOISE_CAMERA_H

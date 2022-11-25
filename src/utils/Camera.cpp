@@ -76,6 +76,12 @@ void Camera::lookAt(glm::vec3 vertex) {
 //    return vertexDifference * this->orientation;
 //}
 
+void Camera::transposeTriangle(ModelTriangle &triangle) {
+    for (auto &vertex : triangle.vertices) {
+        vertex = this->getTransposedPoint(vertex);
+    }
+}
+
 glm::vec3 Camera::getTransposedPoint(glm::vec3 vertex) const {
     glm::vec3 vertexDifference = vertex - this->position;
     glm::vec3 transposedVertex = vertexDifference * this->orientation;
@@ -96,7 +102,66 @@ CanvasPoint Camera::getIntersectionPoint(glm::vec3 vertex) {
     return {u, v, transposedVertex.z};
 }
 
+glm::vec3 Camera::getDepth(CanvasPoint canvasPoint) {
+    float x = canvasPoint.x - WIDTH/2;
+    float y = -canvasPoint.y + HEIGHT/2;
+    float z = 0.0;
+    glm::vec3 canvasPoint3D(x, y, z);
+    return glm::normalize(canvasPoint3D - this->position);
+}
+
+//glm::vec3 Camera::getDirection(CanvasPoint canvasPoint) {
+//    float z = this->getDepth(canvasPoint);
+//    //float x = canvasPoint.x/(-this->focalLength * WIDTH/2);
+//    //float y = canvasPoint.y/(this->focalLength * HEIGHT/2);
+//    float x = (z * (canvasPoint.x - WIDTH/2))/(-this->focalLength * WIDTH/2);
+//    float y = (z * (canvasPoint.y - HEIGHT/2))/(this->focalLength * HEIGHT/2);
+//    glm::vec3 ray(x, y, z);
+//    return glm::normalize(ray);
+//}
+
+bool Camera::validateIntersection(glm::vec3 possibleSolution) {
+    float t = possibleSolution.x;
+    float u = possibleSolution.y;
+    float v = possibleSolution.z;
+
+    if (t < 0.0) { // ensure point is in front of us
+        return false;
+    } else if (u < 0.0 || u > 1.0) { // ensure point is actually inside triangle (V)
+        return false;
+    } else if (v < 0.0 || v > 1.0) {
+        return false;
+    } else if (u + v > 1.0) {
+        return false;
+    }
+    return true;
+}
+
+RayTriangleIntersection Camera::getClosestIntersection(std::vector<ModelTriangle> triangles, glm::vec3 rayDirection) {
+    RayTriangleIntersection solution;
+    solution.distanceFromCamera = INFINITY;
+    for (size_t i=0; i<triangles.size(); i++) {
+        ModelTriangle triangle = triangles[i];
+        glm::vec3 e0 = triangle.vertices[1] - triangle.vertices[0];
+        glm::vec3 e1 = triangle.vertices[2] - triangle.vertices[0];
+        glm::vec3 SPVector = this->position - triangle.vertices[0];
+        glm::mat3 DEMatrix(-rayDirection, e0, e1);
+        glm::vec3 possibleSolution = glm::inverse(DEMatrix) * SPVector;
+        if (possibleSolution.x > solution.distanceFromCamera) {
+            continue;
+        }
+        if (!validateIntersection(possibleSolution)) {
+            continue;
+        }
+        glm::vec3 intersectionPoint = possibleSolution.x * rayDirection;
+        solution = {intersectionPoint, possibleSolution.x, triangle, i};
+    }
+    return solution;
+}
+
+
 void Camera::orbit(Axis axis, int sign, glm::vec3 vertex) {
+    // doesn't work for x axis, need to change direction vector?
     this->rotate(axis, sign);
     this->lookAt(vertex);
 }
