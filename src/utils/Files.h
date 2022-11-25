@@ -6,7 +6,8 @@
 #include <Colour.h>
 #include <ModelTriangle.h>
 
-std::vector<int> parseColourValue(std::string line);
+int parseRawColour(std::string raw);
+Colour parseColourValue(std::string line);
 std::string parseColourName(std::string line);
 std::map<std::string, Colour> loadColours(std::string fileName);
 glm::vec3 parseVector(std::string line, float scaleFactor);

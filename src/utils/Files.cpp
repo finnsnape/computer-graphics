@@ -1,12 +1,17 @@
 #include "Files.h"
-#include "Utils.h"
+#include <Utils.h>
 #include <algorithm>
 
 /* Colour (.mtl) */
 
-std::vector<int> parseColourValue(std::string line) {
+int parseRawColour(std::string raw) {
+    int val = (int) std::lround(std::stof(raw) * 255.0);
+    return val;
+}
+
+Colour parseColourValue(std::string line) {
     std::vector<std::string> colourRaw = split(line, ' ');
-    std::vector<int> colour = {round(std::stof(colourRaw[1]) * 255), round(std::stof(colourRaw[2]) * 255), round(std::stof(colourRaw[3]) * 255)};
+    Colour colour(parseRawColour(colourRaw[1]), parseRawColour(colourRaw[2]), parseRawColour(colourRaw[3]));
     return colour;
 }
 
@@ -17,7 +22,7 @@ std::string parseColourName(std::string line) {
 std::map<std::string, Colour> loadColours(std::string fileName) {
     std::map<std::string, Colour> colourMap;
     std::vector<std::string> colourNames;
-    std::vector<std::vector<int>> colourValues;
+    std::vector<Colour> colourValues;
     std::ifstream filein(fileName); // "cornell-box.mtl"
     for (std::string line; std::getline(filein, line); ) {
         if (line[0] == 'n') {
@@ -27,8 +32,7 @@ std::map<std::string, Colour> loadColours(std::string fileName) {
         }
     }
     for (int i=0; i<colourNames.size(); i++) {
-        Colour colourValue(colourValues[i][0], colourValues[i][1], colourValues[i][2]);
-        colourMap.insert({colourNames[i], colourValue});
+        colourMap.insert({colourNames[i], colourValues[i]});
     }
     return colourMap;
 }
