@@ -13,7 +13,9 @@ private:
     float focalLength;
     glm::vec3 position;
     glm::mat3 orientation;
-    glm::vec3 getTransposedPoint(glm::vec3 vertex) const;
+    glm::vec3 getTransposedPoint(glm::vec3 vertex);
+    glm::vec3 getRaySolution(ModelTriangle triangle, glm::vec3 rayDirection);
+    static glm::vec3 getRayIntersection(ModelTriangle triangle, glm::vec3 possibleSolution);
 public:
     std::vector<std::vector<float>> depthBuffer;
     Camera(glm::vec3 position, float focalLength);
@@ -23,9 +25,7 @@ public:
     void lookAt(glm::vec3 vertex);
     CanvasPoint getIntersectionPoint(glm::vec3 vertex);
     void orbit(Axis axis, int sign, glm::vec3 vertex);
-    void transposeTriangle(ModelTriangle &triangle);
-    glm::vec3 getDepth(CanvasPoint canvasPoint);
-    //glm::vec3 getDirection(CanvasPoint canvasPoint);
-    static bool validateIntersection(glm::vec3 possibleSolution);
+    glm::vec3 getRayDirection(CanvasPoint canvasPoint);
+    static bool validateRaySolution(glm::vec3 possibleSolution);
     RayTriangleIntersection getClosestIntersection(std::vector<ModelTriangle> triangles, glm::vec3 rayDirection);
 };
