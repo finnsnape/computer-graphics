@@ -39,9 +39,10 @@ add_executable(RedNoise
         libs/sdw/Utils.cpp
         src/classes/Camera.cpp
         src/classes/Scene.cpp
+        src/utils/RayTracingUtils.cpp
+        src/utils/RasterisingUtils.cpp
         src/utils/FilesUtils.cpp
         src/utils/TriangleUtils.cpp
-        src/utils/RayTracingUtils.cpp
         src/RedNoise.cpp)
 
 if (MSVC)
