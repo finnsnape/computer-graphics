@@ -1,6 +1,5 @@
-#include "Triangles.h"
+#include "TriangleUtils.h"
 #include <algorithm>
-#include <cmath>
 
 /* Drawing */
 
