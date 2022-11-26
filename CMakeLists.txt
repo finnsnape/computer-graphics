@@ -25,6 +25,7 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS})
 include_directories(libs/sdw)
 include_directories(src/utils)
+include_directories(src/classes)
 
 add_executable(RedNoise
         libs/sdw/CanvasPoint.cpp
@@ -36,9 +37,11 @@ add_executable(RedNoise
         libs/sdw/TextureMap.cpp
         libs/sdw/TexturePoint.cpp
         libs/sdw/Utils.cpp
-        src/utils/Camera.cpp
-        src/utils/Files.cpp
-        src/utils/Triangles.cpp
+        src/classes/Camera.cpp
+        src/classes/Scene.cpp
+        src/utils/FilesUtils.cpp
+        src/utils/TriangleUtils.cpp
+        src/utils/RayTracingUtils.cpp
         src/RedNoise.cpp)
 
 if (MSVC)
