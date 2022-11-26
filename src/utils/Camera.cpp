@@ -1,8 +1,12 @@
 #include "Camera.h"
 #include <cmath>
+#include <signal.h>
+#include <memory>
+#include <iostream>
 
-#define WIDTH 480
-#define HEIGHT 480
+#define WIDTH 240
+#define HEIGHT 240
+
 
 Camera::Camera(glm::vec3 _position, float _focalLength): focalLength(_focalLength), position(_position) {
     this->resetDepthBuffer();
@@ -82,21 +86,32 @@ CanvasPoint Camera::getIntersectionPoint(glm::vec3 vertex) {
 
 /// @brief Calculates the direction vector for a given ray originating from the camera position
 glm::vec3 Camera::getRayDirection(CanvasPoint canvasPoint) {
-    float x = 2 * (canvasPoint.x - WIDTH/2)/(WIDTH/2 * this->focalLength);
-    float y = 2 * (canvasPoint.y - HEIGHT/2)/(HEIGHT/2 * -this->focalLength);
     float z = 2.0;
+    auto x = z * (canvasPoint.x - WIDTH/2)/(WIDTH/2 * this->focalLength);
+    auto y = z * (canvasPoint.y - HEIGHT/2)/(HEIGHT/2 * -this->focalLength);
     glm::vec3 canvasPoint3D(x, y, z);
     return glm::normalize(canvasPoint3D - this->position);
 }
 
-/// @brief Calculates a possible ray solution
-glm::vec3 Camera::getRaySolution(ModelTriangle triangle, glm::vec3 rayDirection) {
+void printMatrix(glm::mat3 matrix) {
+    std::cout << "Matrix: " <<
+    matrix[0][0] << " " << matrix[1][0] << " " << matrix[2][0] << std::endl <<
+    matrix[0][1] << " " << matrix[1][1] << " " << matrix[2][1] << std::endl <<
+    matrix[0][2] << " " << matrix[1][2] << " " << matrix[2][2] << std::endl <<
+    std::endl;
+}
+
+glm::mat3 Camera::getDEMatrix(ModelTriangle triangle, glm::vec3 rayDirection) {
     glm::vec3 e0 = triangle.vertices[1] - triangle.vertices[0];
     glm::vec3 e1 = triangle.vertices[2] - triangle.vertices[0];
-    glm::vec3 SPVector = this->position - triangle.vertices[0];
     glm::mat3 DEMatrix(-rayDirection, e0, e1);
-    glm::mat3 invDEMatrix = glm::inverse(DEMatrix);
-    glm::vec3 possibleSolution = invDEMatrix * SPVector;
+    return DEMatrix;
+}
+
+/// @brief Calculates a possible ray solution
+glm::vec3 Camera::getRaySolution(ModelTriangle triangle, glm::mat3 DEMatrix) {
+    glm::vec3 SPVector = this->position - triangle.vertices[0];
+    glm::vec3 possibleSolution = glm::inverse(DEMatrix) * SPVector;
     return possibleSolution;
 }
 
@@ -127,13 +142,11 @@ RayTriangleIntersection Camera::getClosestIntersection(std::vector<ModelTriangle
     solution.distanceFromCamera = FLT_MAX;
     for (size_t i=0; i<triangles.size(); i++) {
         ModelTriangle triangle = triangles[i];
-        glm::vec3 possibleSolution = this->getRaySolution(triangle, rayDirection);
-        if (!this->validateRaySolution(possibleSolution)) {
-            continue;
-        }
-        if (possibleSolution.x >= solution.distanceFromCamera) {
-            continue;
-        }
+        glm::mat3 DEMatrix = this->getDEMatrix(triangle, rayDirection);
+        if (glm::determinant(DEMatrix) == 0) continue; // would be dividing by 0
+        glm::vec3 possibleSolution = this->getRaySolution(triangle, DEMatrix);
+        if (!this->validateRaySolution(possibleSolution)) continue;
+        if (possibleSolution.x >= solution.distanceFromCamera) continue; // something closer already exists
         glm::vec3 intersectionPoint = this->getRayIntersection(triangle, possibleSolution);
         solution = {true, intersectionPoint, possibleSolution.x, triangle, i}; // TODO: don't need to do this every time
     }

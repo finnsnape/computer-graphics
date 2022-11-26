@@ -14,7 +14,8 @@ private:
     glm::vec3 position;
     glm::mat3 orientation;
     glm::vec3 getTransposedPoint(glm::vec3 vertex);
-    glm::vec3 getRaySolution(ModelTriangle triangle, glm::vec3 rayDirection);
+    glm::vec3 getRaySolution(ModelTriangle triangle, glm::mat3 DEMatrix);
+    static glm::mat3 getDEMatrix(ModelTriangle triangle, glm::vec3 rayDirection);
     static glm::vec3 getRayIntersection(ModelTriangle triangle, glm::vec3 possibleSolution);
 public:
     std::vector<std::vector<float>> depthBuffer;
