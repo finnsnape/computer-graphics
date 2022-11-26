@@ -56,21 +56,21 @@ void DrawingWindow::savePPM(const std::string &filename) const {
 }
 
 bool DrawingWindow::pollForInputEvents(SDL_Event &event) {
-	if (SDL_PollEvent(&event)) {
-		if ((event.type == SDL_QUIT) || ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_ESCAPE))) {
-			SDL_DestroyTexture(texture);
-			SDL_DestroyRenderer(renderer);
-			SDL_DestroyWindow(window);
-			SDL_Quit();
-			printMessageAndQuit("Exiting", nullptr);
-		}
-		SDL_Event dummy;
-		// Clear the event queue by getting all available events
-		// This seems like bad practice (because it will skip some events) however preventing backlog is paramount !
-		while (SDL_PollEvent(&dummy));
-		return true;
-	}
-	return false;
+    if (SDL_PollEvent(&event)) {
+        if ((event.type == SDL_QUIT) || ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_ESCAPE))) {
+            SDL_DestroyTexture(texture);
+            SDL_DestroyRenderer(renderer);
+            SDL_DestroyWindow(window);
+            SDL_Quit();
+            printMessageAndQuit("Exiting", nullptr);
+        }
+        SDL_Event dummy;
+        // Clear the event queue by getting all available events
+        // This seems like bad practice (because it will skip some events) however preventing backlog is paramount !
+        while (SDL_PollEvent(&dummy));
+        return true;
+    }
+    return false;
 }
 
 void DrawingWindow::setPixelColour(size_t x, size_t y, uint32_t colour) {
