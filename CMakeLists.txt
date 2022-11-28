@@ -1,10 +1,10 @@
 # Invoking the CMake build from the command line is a two step process, first, *generate* a build by running the following:
 #
 #   cmake -Bbuild -H. -DCMAKE_BUILD_TYPE=Release
-# 
+#
 # Where `Release` can be replaced with `Debug`, which contains gdb and address sanitiser definitions already written for you.
 # Once a build is created, proceed with *compilation*:
-# 
+#
 #   cmake --build build --target RedNoise --config Release # optionally, for parallel build, append -j $(nproc)
 #
 # This creates the executable in the build directory. You only need to *generate* a build if you modify the CMakeList.txt file.
@@ -24,6 +24,8 @@ find_package(SDL2 REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS})
 include_directories(libs/sdw)
+include_directories(src/utils)
+include_directories(src/classes)
 
 add_executable(RedNoise
         libs/sdw/CanvasPoint.cpp
@@ -35,10 +37,12 @@ add_executable(RedNoise
         libs/sdw/TextureMap.cpp
         libs/sdw/TexturePoint.cpp
         libs/sdw/Utils.cpp
-        src/utils/Triangles.cpp
-        src/utils/Files.cpp
-        src/utils/Camera.cpp
-        src/utils/Camera.h
+        src/classes/Camera.cpp
+        src/classes/Scene.cpp
+        src/utils/RayTracingUtils.cpp
+        src/utils/RasterisingUtils.cpp
+        src/utils/FilesUtils.cpp
+        src/utils/TriangleUtils.cpp
         src/RedNoise.cpp)
 
 if (MSVC)
@@ -66,18 +70,19 @@ else ()
 
     set(DEBUG_OPTIONS -O2 -fno-omit-frame-pointer -g)
     set(RELEASE_OPTIONS -O3 -march=native -mtune=native)
+    set(FUSSY_OPTIONS -Werror -pedantic)
+    SET(SANITIZER_OPTIONS -O1 -fsanitize=undefined -fsanitize=address -fno-omit-frame-pointer)
+    SET(SPEEDY_OPTIONS -Ofast -funsafe-math-optimizations -march=native)
     target_link_libraries(RedNoise PUBLIC $<$<CONFIG:Debug>:-Wl,-lasan>)
 
 endif()
 
+
 target_compile_options(RedNoise PUBLIC "$<$<CONFIG:RelWithDebInfo>:${RELEASE_OPTIONS}>")
 target_compile_options(RedNoise PUBLIC "$<$<CONFIG:Release>:${RELEASE_OPTIONS}>")
 target_compile_options(RedNoise PUBLIC "$<$<CONFIG:Debug>:${DEBUG_OPTIONS}>")
+target_compile_options(RedNoise PUBLIC "$<$<CONFIG:Diagnostic>:${FUSSY_OPTIONS} ${SANITIZER_OPTIONS}>")
+target_compile_options(RedNoise PUBLIC "$<$<CONFIG:Speedy>:${SPEEDY_OPTIONS}>")
+
 
 target_link_libraries(RedNoise PRIVATE ${SDL2_LIBRARIES})
-
-add_custom_command(
-        TARGET RedNoise
-        POST_BUILD
-        COMMAND RedNoise
-)
