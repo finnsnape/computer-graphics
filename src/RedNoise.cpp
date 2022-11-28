@@ -13,48 +13,29 @@
 #define WIDTH 240
 #define HEIGHT 240
 
-void drawRayTraced(Scene &scene) {
-    for (int x=0; x<scene.width; x++) {
-        for (int y=0; y<scene.height; y++) {
-            CanvasPoint canvasPoint((float) x, (float) y);
-            RayTriangleIntersection closestTriangle = RayTracingUtils::findClosestTriangle(scene, canvasPoint);
-            if (closestTriangle.distanceFromCamera != FLT_MAX) {
-                TriangleUtils::drawPixel(scene.window, canvasPoint, closestTriangle.intersectedTriangle.colour);
-            }
-        }
-    }
-}
-
-void drawRasterised(Scene &scene) {
-    scene.camera.resetDepthBuffer();
-    for (const auto &triangle : scene.triangles) {
-        CanvasTriangle canvasTriangle = RasterisingUtils::makeCanvasTriangle(scene, triangle);
-        TriangleUtils::drawFilledTriangle(scene, canvasTriangle, triangle.colour);
-    }
-}
-
-void draw(Scene &scene) {
-    // can add this as a method to Scene
-    scene.window.clearPixels();
-    drawRasterised(scene);
-    //drawRayTraced(scene);
-}
-
 void handleEvent(SDL_Event event) {
     //std::cout << event.type << std::endl;
 }
 
-int main(int argc, char *argv[]) {
-    float scaleFactor = 0.35;
-    glm::vec3 initialPosition(0.0, 0.0, 4.0);
-    float focalLength = 2.0;
+Scene init(Mode mode, float scaleFactor, float focalLength, glm::vec3 initialPosition) {
+    std::string objFileName = "cornell-box.obj";
+    std::string mtlFileName = "cornell-box.mtl";
     Camera camera(WIDTH, HEIGHT, focalLength, initialPosition);
-    std::vector<ModelTriangle> triangles = FilesUtils::loadOBJ(scaleFactor, "cornell-box.obj", "cornell-box.mtl");
+    std::vector<ModelTriangle> triangles = FilesUtils::loadOBJ(scaleFactor, objFileName, mtlFileName);
     Scene scene(WIDTH, HEIGHT, triangles, camera);
+    return scene;
+}
+
+int main(int argc, char *argv[]) {
+    Mode mode = RASTERISED; // RASTERISED, RAYTRACED, WIRE_FRAME
+    float scaleFactor = 0.35;
+    float focalLength = 2.0;
+    glm::vec3 initialPosition(0.0, 0.0, 4.0);
+    Scene scene = init(mode, scaleFactor, focalLength, initialPosition);
     SDL_Event event;
     while(true) {
         if (scene.window.pollForInputEvents(event)) handleEvent(event);
-        draw(scene);
+        scene.draw(mode);
         scene.window.renderFrame();
     }
 }
