@@ -8,12 +8,12 @@
 #include "TriangleUtils.h"
 #include "FilesUtils.h"
 #include "RayTracingUtils.h"
+#include "RasterisingUtils.h"
 
-#define WIDTH 480
-#define HEIGHT 480
+#define WIDTH 240
+#define HEIGHT 240
 
 void drawRayTraced(Scene &scene) {
-    scene.window.clearPixels();
     for (int x=0; x<scene.width; x++) {
         for (int y=0; y<scene.height; y++) {
             CanvasPoint canvasPoint((float) x, (float) y);
@@ -25,22 +25,19 @@ void drawRayTraced(Scene &scene) {
     }
 }
 
-//void drawRasterised(Scene &scene) {
-//    scene.window.clearPixels();
-//    scene.camera.resetDepthBuffer();
-//    for (auto triangle : scene.triangles) {
-//        // transpose triangle
-//        //
-//        std::vector<CanvasPoint> rawTriangle;
-//        for (int j = 0; j < 3; j++) {
-//            glm::vec3 vertex = modelTriangle.vertices[j];
-//            CanvasPoint intersectionPoint = camera.getIntersectionPoint(vertex);
-//            rawTriangle.push_back(intersectionPoint);
-//        }
-//        CanvasTriangle triangle({rawTriangle[0], rawTriangle[1], rawTriangle[2]});
-//        drawFilledTriangle(window, camera.depthBuffer, triangle, modelTriangle.colour);
-//    }
-//}
+void drawRasterised(Scene &scene) {
+    scene.camera.resetDepthBuffer();
+    for (const auto &triangle : scene.triangles) {
+        CanvasTriangle canvasTriangle = RasterisingUtils::makeCanvasTriangle(scene, triangle);
+        TriangleUtils::drawFilledTriangle(scene, canvasTriangle, triangle.colour);
+    }
+}
+
+void draw(Scene &scene) {
+    // can add this as a method to Scene
+    scene.window.clearPixels();
+    drawRasterised(scene);
+}
 
 void handleEvent(SDL_Event event) {
     //std::cout << event.type << std::endl;
@@ -56,7 +53,7 @@ int main(int argc, char *argv[]) {
     SDL_Event event;
     while(true) {
         if (scene.window.pollForInputEvents(event)) handleEvent(event);
-        drawRayTraced(scene);
+        draw(scene);
         scene.window.renderFrame();
     }
 }
