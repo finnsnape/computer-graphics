@@ -1,4 +1,11 @@
 #include "RayTracingUtils.h"
+#include <glm/glm.hpp>
+#include <CanvasPoint.h>
+#include <ModelTriangle.h>
+#include <RayTriangleIntersection.h>
+#include <Camera.h>
+#include "Scene.h"
+#include "TriangleUtils.h"
 
 namespace {
     glm::vec3 calculateRawIntersection(Camera &camera, ModelTriangle triangle, glm::mat3 DEMatrix) {
@@ -35,12 +42,10 @@ namespace {
     glm::vec3 calculateRayDirection(Scene &scene, CanvasPoint canvasPoint) {
         float z = 2.0;
         float x = z * (canvasPoint.x - scene.width/2)/(scene.width/2 * scene.camera.focalLength);
-        auto y = z * (canvasPoint.y - scene.height/2)/(scene.height/2 * -scene.camera.focalLength);
+        float y = z * (canvasPoint.y - scene.height/2)/(scene.height/2 * -scene.camera.focalLength);
         return glm::normalize(glm::vec3(x, y, z) - scene.camera.position);
     }
-}
 
-namespace RayTracingUtils {
     /// @brief Returns the triangle that the ray corresponding to the given canvas point first intersects with
     RayTriangleIntersection findClosestTriangle(Scene &scene, CanvasPoint canvasPoint) {
         glm::vec3 rayDirection = calculateRayDirection(scene, canvasPoint);
@@ -57,5 +62,20 @@ namespace RayTracingUtils {
             closestTriangle = {intersectionPoint, rawIntersection.x, triangle, i};
         }
         return closestTriangle;
+    }
+
+}
+
+namespace RayTracingUtils {
+    void draw(Scene &scene) {
+        for (int x=0; x<scene.width; x++) {
+            for (int y=0; y<scene.height; y++) {
+                CanvasPoint canvasPoint((float) x, (float) y);
+                RayTriangleIntersection closestTriangle = findClosestTriangle(scene, canvasPoint);
+                if (closestTriangle.distanceFromCamera != FLT_MAX) {
+                    TriangleUtils::drawPixel(scene.window, canvasPoint, closestTriangle.intersectedTriangle.colour);
+                }
+            }
+        }
     }
 }
