@@ -37,6 +37,7 @@ void draw(Scene &scene) {
     // can add this as a method to Scene
     scene.window.clearPixels();
     drawRasterised(scene);
+    //drawRayTraced(scene);
 }
 
 void handleEvent(SDL_Event event) {
