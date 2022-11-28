@@ -1,4 +1,11 @@
 #include "RasterisingUtils.h"
+#include "Camera.h"
+#include "Scene.h"
+#include <glm/glm.hpp>
+#include <ModelTriangle.h>
+#include <CanvasTriangle.h>
+#include <CanvasPoint.h>
+#include "TriangleUtils.h"
 
 namespace {
     glm::vec3 transposePoint(Camera &camera, glm::vec3 vertex) {
@@ -13,9 +20,7 @@ namespace {
         float v = -scene.camera.focalLength * (scene.height/2) * (transposedVertex.y/transposedVertex.z) + scene.height/2;
         return {u, v, transposedVertex.z};
     }
-}
 
-namespace RasterisingUtils {
     CanvasTriangle makeCanvasTriangle(Scene &scene, ModelTriangle triangle) {
         CanvasTriangle canvasTriangle;
         for (int i=0; i<3; i++) {
@@ -24,6 +29,23 @@ namespace RasterisingUtils {
             canvasTriangle.vertices[i] = canvasIntersection;
         }
         return canvasTriangle;
+    }
+}
+
+namespace RasterisingUtils {
+    void drawFilled(Scene &scene) {
+        scene.camera.resetDepthBuffer();
+        for (const auto &triangle : scene.triangles) {
+            CanvasTriangle canvasTriangle = makeCanvasTriangle(scene, triangle);
+            TriangleUtils::drawFilledTriangle(scene, canvasTriangle, triangle.colour);
+        }
+    }
+
+    void drawStroked(Scene &scene) {
+        for (const auto &triangle : scene.triangles) {
+            CanvasTriangle canvasTriangle = makeCanvasTriangle(scene, triangle);
+            TriangleUtils::drawStrokedTriangle(scene, canvasTriangle);
+        }
     }
 }
 
