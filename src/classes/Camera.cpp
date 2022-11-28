@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include <cmath>
+#include <CanvasPoint.h>
 
 Camera::Camera(float _width, float _height, float _focalLength, glm::vec3 _position): width(_width), height(_height), focalLength(_focalLength), position(_position) {
     this->resetDepthBuffer();

@@ -1,10 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <CanvasPoint.h>
 #include <vector>
-#include <ModelTriangle.h>
-#include <RayTriangleIntersection.h>
 
 enum Axis { x, y, z };
 
