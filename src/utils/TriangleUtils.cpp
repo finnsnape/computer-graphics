@@ -18,20 +18,17 @@ namespace {
         float maxX = std::max({triangle.v0().x, triangle.v1().x, triangle.v2().x});
         float minY = std::min({triangle.v0().y, triangle.v1().y, triangle.v2().y});
         float maxY = std::max({triangle.v0().y, triangle.v1().y, triangle.v2().y});
-        //std::cout << minX << "-" << maxX << " " << minY << "-" << maxY << std::endl;
         return {minX, maxX, minY, maxY};
     }
 }
 
 namespace TriangleUtils {
     void drawPixel(DrawingWindow &window, CanvasPoint point, Colour colour) {
-//    int x = ceil(point.x);
-//    int y = ceil(point.y);
         uint32_t colourCode = (255 << 24) + (colour.red << 16) + (colour.green << 8) + colour.blue;
         window.setPixelColour(point.x, point.y, colourCode);
     }
 
-    void drawFilledTriangle(DrawingWindow &window, std::vector<std::vector<float>> &depthBuffer, CanvasTriangle triangle, Colour colour) {
+    void drawFilledTriangle(Scene &scene, CanvasTriangle triangle, Colour colour) {
         // we should be getting the smallest possible bounding box for the triangle rather than iterating over all of them
         std::vector<float> boundedBy = boundingBox(triangle);
         for (int x=boundedBy[0]; x<boundedBy[1]; x++) {
@@ -40,14 +37,14 @@ namespace TriangleUtils {
                 if (depth == 0) {
                     continue; // point is outside triangle
                 }
-                if (x < 0 || x >= (int) window.width || y < 0 || y >= (int) window.height) {
+                if (x < 0 || x >= (int) scene.window.width || y < 0 || y >= (int) scene.window.height) {
                     continue; // point is outside frame
                 }
-                if (depth < depthBuffer[x][y]) {
+                if (depth < scene.camera.depthBuffer[x][y]) {
                     continue; // something in front of our pixel has already been placed
                 }
-                drawPixel(window, CanvasPoint(x, y), colour);
-                depthBuffer[x][y] = depth;
+                drawPixel(scene.window, CanvasPoint(x, y), colour);
+                scene.camera.depthBuffer[x][y] = depth;
             }
         }
     }
