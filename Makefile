@@ -83,12 +83,13 @@ $(BUILD_DIR)/%.o: $(SDW_DIR)%.cpp
 # Rule for building all our src/classes classes
 $(BUILD_DIR)/%.o: $(CLASSES_DIR)%.cpp
 	@mkdir -p $(BUILD_DIR)
-	$(COMPILER) $(COMPILER_OPTIONS) -c -o $@ $^ $(SDL_COMPILER_FLAGS) $(GLM_COMPILER_FLAGS) $(SDW_COMPILER_FLAGS)
+	$(COMPILER) $(COMPILER_OPTIONS) -c -o $@ $^ $(SDL_COMPILER_FLAGS) $(GLM_COMPILER_FLAGS) $(SDW_COMPILER_FLAGS) $(UTILS_COMPILER_FLAGS)
 
 # Rule for building all our src/utils files
 $(BUILD_DIR)/%.o: $(UTILS_DIR)%.cpp
 	@mkdir -p $(BUILD_DIR)
 	$(COMPILER) $(COMPILER_OPTIONS) -c -o $@ $^ $(SDL_COMPILER_FLAGS) $(GLM_COMPILER_FLAGS) $(SDW_COMPILER_FLAGS) $(CLASSES_COMPILER_FLAGS)
+
 
 # Files to remove during clean
 clean:
