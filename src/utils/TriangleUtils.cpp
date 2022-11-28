@@ -1,5 +1,8 @@
 #include "TriangleUtils.h"
 #include <algorithm>
+#include <vector>
+#include <cmath>
+#include "Scene.h"
 
 namespace {
     float calculatePointDepth(CanvasTriangle triangle, CanvasPoint point) {
@@ -20,12 +23,32 @@ namespace {
         float maxY = std::max({triangle.v0().y, triangle.v1().y, triangle.v2().y});
         return {minX, maxX, minY, maxY};
     }
+
+    void drawLine(DrawingWindow &window, CanvasPoint from, CanvasPoint to, Colour colour) {
+        float xDiff = to.x - from.x;
+        float yDiff = to.y - from.y;
+        float numSteps = std::max(abs(xDiff), abs(yDiff));
+        float xStepSize = xDiff / numSteps;
+        float yStepSize = yDiff / numSteps;
+        for (float i=0.0; i<numSteps; i++) {
+            float x = from.x + (xStepSize * i);
+            float y = from.y + (yStepSize * i);
+            TriangleUtils::drawPixel(window, CanvasPoint(x, y), colour);
+        }
+    }
 }
 
 namespace TriangleUtils {
     void drawPixel(DrawingWindow &window, CanvasPoint point, Colour colour) {
         uint32_t colourCode = (255 << 24) + (colour.red << 16) + (colour.green << 8) + colour.blue;
         window.setPixelColour(point.x, point.y, colourCode);
+    }
+
+    void drawStrokedTriangle(Scene &scene, CanvasTriangle triangle) {
+        Colour colour(255, 255, 255);
+        drawLine(scene.window, triangle.v0(), triangle.v1(), colour);
+        drawLine(scene.window, triangle.v1(), triangle.v2(), colour);
+        drawLine(scene.window, triangle.v2(), triangle.v0(), colour);
     }
 
     void drawFilledTriangle(Scene &scene, CanvasTriangle triangle, Colour colour) {
