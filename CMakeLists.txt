@@ -70,9 +70,6 @@ else ()
 
     set(DEBUG_OPTIONS -O2 -fno-omit-frame-pointer -g)
     set(RELEASE_OPTIONS -O3 -march=native -mtune=native)
-    set(FUSSY_OPTIONS -Werror -pedantic)
-    SET(SANITIZER_OPTIONS -O1 -fsanitize=undefined -fsanitize=address -fno-omit-frame-pointer)
-    SET(SPEEDY_OPTIONS -Ofast -funsafe-math-optimizations -march=native)
     target_link_libraries(RedNoise PUBLIC $<$<CONFIG:Debug>:-Wl,-lasan>)
 
 endif()
@@ -81,8 +78,6 @@ endif()
 target_compile_options(RedNoise PUBLIC "$<$<CONFIG:RelWithDebInfo>:${RELEASE_OPTIONS}>")
 target_compile_options(RedNoise PUBLIC "$<$<CONFIG:Release>:${RELEASE_OPTIONS}>")
 target_compile_options(RedNoise PUBLIC "$<$<CONFIG:Debug>:${DEBUG_OPTIONS}>")
-target_compile_options(RedNoise PUBLIC "$<$<CONFIG:Diagnostic>:${FUSSY_OPTIONS} ${SANITIZER_OPTIONS}>")
-target_compile_options(RedNoise PUBLIC "$<$<CONFIG:Speedy>:${SPEEDY_OPTIONS}>")
 
 
 target_link_libraries(RedNoise PRIVATE ${SDL2_LIBRARIES})

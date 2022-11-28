@@ -42,7 +42,7 @@ SDW_LINKER_FLAGS := $(SDW_OBJECT_FILES)
 CLASSES_LINKER_FLAGS := $(CLASSES_OBJECT_FILES)
 UTILS_LINKER_FLAGS := $(UTILS_OBJECT_FILES)
 
-default: debug
+default: speedy
 
 # Rule to compile and link for use with a debugger (although works fine even if you aren't using a debugger !)
 debug: $(SDW_OBJECT_FILES) $(CLASSES_OBJECT_FILES) $(UTILS_OBJECT_FILES)
