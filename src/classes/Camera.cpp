@@ -1,6 +1,5 @@
 #include "Camera.h"
 #include <cmath>
-#include <iostream>
 
 Camera::Camera(float _width, float _height, float _focalLength, glm::vec3 _position): width(_width), height(_height), focalLength(_focalLength), position(_position) {
     this->resetDepthBuffer();
@@ -70,11 +69,3 @@ void Camera::orbit(Axis axis, int sign, glm::vec3 vertex) {
     this->rotate(axis, sign);
     this->lookAt(vertex);
 }
-
-//void printMatrix(glm::mat3 matrix) {
-//    std::cout << "Matrix: " <<
-//    matrix[0][0] << " " << matrix[1][0] << " " << matrix[2][0] << std::endl <<
-//    matrix[0][1] << " " << matrix[1][1] << " " << matrix[2][1] << std::endl <<
-//    matrix[0][2] << " " << matrix[1][2] << " " << matrix[2][2] << std::endl <<
-//    std::endl;
-//}
