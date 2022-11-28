@@ -1,6 +1,8 @@
 #include "FilesUtils.h"
 #include <Utils.h>
 #include <algorithm>
+#include <map>
+#include <Colour.h>
 
 namespace {
     /* Colour (.mtl) */
