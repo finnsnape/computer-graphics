@@ -1,10 +1,10 @@
 #include "RasterisingUtils.h"
 #include "Camera.h"
 #include "Scene.h"
-#include <glm/glm.hpp>
 #include <ModelTriangle.h>
 #include <CanvasTriangle.h>
 #include <CanvasPoint.h>
+#include <glm/glm.hpp>
 #include "TriangleUtils.h"
 
 namespace {
