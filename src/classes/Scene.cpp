@@ -24,7 +24,7 @@ void Scene::draw(Mode mode) {
     this->window.clearPixels();
     switch(mode) {
         case RAY_TRACED:
-            RayTracingUtils::draw(*this);
+            RayTracingUtils::draw(*this, false);
             break;
         case RASTERISED:
             RasterisingUtils::drawFilled(*this);
@@ -32,6 +32,8 @@ void Scene::draw(Mode mode) {
         case WIRE_FRAME:
             RasterisingUtils::drawStroked(*this);
             break;
+        case RAY_TRACED_SHADOWS:
+            RayTracingUtils::draw(*this, true);
         default:
             break;
     }
