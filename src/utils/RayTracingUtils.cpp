@@ -7,12 +7,14 @@
 #include "TriangleUtils.h"
 
 namespace {
+    /// @brief Gets the absolute distance along ray (t), and proportional distances along triangle edges (u, v)
     glm::vec3 calculateRawIntersection(glm::vec3 from, ModelTriangle triangle, glm::mat3 DEMatrix) {
         glm::vec3 SPVector = from - triangle.vertices[0];
         glm::vec3 rawIntersection = glm::inverse(DEMatrix) * SPVector;
         return rawIntersection;
     }
 
+    /// @brief Ensures the distances are on the triangle edges, and the distance along the ray is positive
     bool validateRawIntersection(glm::vec3 rawIntersection) {
         float t = rawIntersection.x;
         float u = rawIntersection.y;
@@ -23,6 +25,7 @@ namespace {
         return false;
     }
 
+    /// @brief Finds the relevant 3D point on the intersecting triangle
     glm::vec3 calculateIntersection(glm::mat3 DEMatrix, ModelTriangle triangle, glm::vec3 rawIntersection) {
         glm::vec3 e0 = DEMatrix[1];
         glm::vec3 e1 = DEMatrix[2];
@@ -48,7 +51,7 @@ namespace {
         return glm::normalize(glm::vec3(x, y, z) - scene.camera.position);
     }
 
-    /// @brief Returns the triangle that the ray corresponding to the given canvas point first intersects with
+    /// @brief Returns the triangle that the given ray intersects with first, using position "from" (camera or light source)
     RayTriangleIntersection findClosestTriangle(Scene &scene, glm::vec3 rayDirection, glm::vec3 from) {
         RayTriangleIntersection closestTriangle;
         closestTriangle.distanceFromCamera = FLT_MAX;
@@ -65,7 +68,8 @@ namespace {
         return closestTriangle;
     }
 
-    bool canSeeLight(Scene &scene, RayTriangleIntersection closestTriangle) {
+    /// @brief Checks if the point we want to draw on an intersecting triangle is able to see the light source
+    bool canSeeLight(Scene &scene, const RayTriangleIntersection &closestTriangle) {
         // ray from intersection to light source
         glm::vec3 rayDirection = glm::normalize(closestTriangle.intersectionPoint - scene.lightSource);
         // get triangle closest to light source
