@@ -3,26 +3,28 @@
 #include "RasterisingUtils.h"
 
 
-Scene::Scene(float _width, float _height, std::vector<ModelTriangle> _triangles, Camera _camera):
+Scene::Scene(float _width, float _height, Mode _mode, std::vector<ModelTriangle> _triangles, Camera _camera):
     width(_width),
     height(_height),
+    mode(_mode),
     triangles(std::move(_triangles)),
     camera(std::move(_camera)) {
     this->window = DrawingWindow((int) width, (int) height, false);
 }
 
-Scene::Scene(float _width, float _height, std::vector<ModelTriangle> _triangles, Camera _camera, glm::vec3 _lightSource):
+Scene::Scene(float _width, float _height, Mode _mode, std::vector<ModelTriangle> _triangles, Camera _camera, glm::vec3 _lightSource):
         width(_width),
         height(_height),
+        mode(_mode),
         triangles(std::move(_triangles)),
         camera(std::move(_camera)),
         lightSource(_lightSource) {
     this->window = DrawingWindow((int) width, (int) height, false);
 }
 
-void Scene::draw(Mode mode) {
+void Scene::draw() {
     this->window.clearPixels();
-    switch(mode) {
+    switch(this->mode) {
         case RAY_TRACED:
             RayTracingUtils::draw(*this, false);
             break;
