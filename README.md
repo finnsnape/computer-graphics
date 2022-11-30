@@ -1,4 +1,6 @@
 # RedNoise
+## Status
+- W6T7 (completeq)
 ## Todo
 - Fix x orbit
 - Fix ray tracing orbit (need to utilise orientation)
