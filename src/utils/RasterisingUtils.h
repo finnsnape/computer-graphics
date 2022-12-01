@@ -5,5 +5,5 @@ class Camera;
 
 namespace RasterisingUtils {
     void drawFilled(Scene &scene);
-    void drawStroked(Camera &camera);
+    void drawStroked(Scene &scene);
 }
