@@ -26,7 +26,7 @@ namespace {
     }
 
     /// @brief Finds the relevant 3D point on the intersecting triangle
-    glm::vec3 calculateIntersection(glm::mat3 DEMatrix, ModelTriangle triangle, glm::vec3 rawIntersection) {
+    glm::vec3 calculateIntersection(Camera &camera, glm::mat3 DEMatrix, ModelTriangle triangle, glm::vec3 rawIntersection) {
         glm::vec3 e0 = DEMatrix[1];
         glm::vec3 e1 = DEMatrix[2];
         glm::vec3 intersectionPoint = triangle.vertices[0] + rawIntersection.y * e0 + rawIntersection.z * e1;
@@ -48,7 +48,8 @@ namespace {
         float y = z * (canvasPoint.y - scene.height/2)/(scene.height/2 * -scene.camera.focalLength);
         // then ray is normalised difference:
         // note we should do orientation * what we return!
-        return glm::normalize(glm::vec3(x, y, z) - scene.camera.position);
+
+        return glm::normalize(scene.camera.orientation * (glm::vec3(x, y, z) - scene.camera.position));
     }
 
     /// @brief Returns the triangle that the given ray intersects with first, using position "from" (camera or light source)
@@ -62,7 +63,7 @@ namespace {
             glm::vec3 rawIntersection = calculateRawIntersection(from, triangle, DEMatrix);
             if (!validateRawIntersection(rawIntersection)) continue;
             if (rawIntersection.x >= closestTriangle.distanceFromCamera) continue; // something closer already exists
-            glm::vec3 intersectionPoint = calculateIntersection(DEMatrix, triangle, rawIntersection);
+            glm::vec3 intersectionPoint = calculateIntersection(scene.camera, DEMatrix, triangle, rawIntersection);
             closestTriangle = {intersectionPoint, rawIntersection.x, triangle, i};
         }
         return closestTriangle;
@@ -88,7 +89,9 @@ namespace RayTracingUtils {
         for (int x=0; x<scene.width; x++) {
             for (int y=0; y<scene.height; y++) {
                 CanvasPoint canvasPoint((float) x, (float) y);
+                if (!TriangleUtils::isInsideCanvas(scene.window, canvasPoint)) continue;
                 glm::vec3 rayDirection = calculateRayDirection(scene, canvasPoint);
+                //rayDirection.z = -rayDirection.z;
                 RayTriangleIntersection closestTriangle = findClosestTriangle(scene, rayDirection, scene.camera.position);
                 if (closestTriangle.distanceFromCamera == FLT_MAX) {
                     continue; // no triangle intersection found
@@ -97,6 +100,7 @@ namespace RayTracingUtils {
                 if (shadows && !canSeeLight(scene, closestTriangle)) {
                     pixelColour = {0, 0, 0}; // in shadow
                 }
+                // FIXME: need to handle drawing pixels outside window
                 TriangleUtils::drawPixel(scene.window, canvasPoint, pixelColour);
             }
         }

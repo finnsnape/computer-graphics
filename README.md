@@ -6,9 +6,14 @@
 - Fix ray tracing orbit (need to utilise orientation)
 - Ensure we are translating correctly
 - Add comments
-- Figure out global WIDTH, HEIGHT
+- ~~Figure out global WIDTH, HEIGHT~~
 - Potentially split into more classes
 - Try fix event being missed (CTRL+C sometimes won't exit)
 - Fix rounding errors and type warnings
 - Check our depth buffer is x by y and not y by x
 - Separate what's required (e.g., not all types of camera need a depth buffer)
+- Reduce duplicate functions (e.g., transposing)
+- Improve function names
+## Notes
+- negative z is away from us
+- a * b in glm is same as a * b in maths (for matrices)

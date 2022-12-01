@@ -32,11 +32,14 @@ void Scene::draw() {
             RasterisingUtils::drawFilled(*this);
             break;
         case WIRE_FRAME:
-            RasterisingUtils::drawStroked(*this);
+            //RasterisingUtils::drawStroked(*this);
             break;
         case RAY_TRACED_SHADOWS:
             RayTracingUtils::draw(*this, true);
         default:
             break;
+    }
+    if (this->camera.orbit) {
+        this->camera.rotate(Camera::y, 1);
     }
 }

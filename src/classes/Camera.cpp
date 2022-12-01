@@ -2,7 +2,7 @@
 #include <cmath>
 #include <CanvasPoint.h>
 
-Camera::Camera(float _width, float _height, float _focalLength, glm::vec3 _position): width(_width), height(_height), focalLength(_focalLength), position(_position) {
+Camera::Camera(float _width, float _height, float _focalLength, glm::vec3 _position, bool _orbit): width(_width), height(_height), focalLength(_focalLength), position(_position), orbit(_orbit) {
     this->resetDepthBuffer();
     this->lookAt({0.0, 0.0, 0.0});
 }
@@ -10,6 +10,16 @@ Camera::Camera(float _width, float _height, float _focalLength, glm::vec3 _posit
 /// @brief Sets all the values in the depth buffer to zero
 void Camera::resetDepthBuffer() {
     this->depthBuffer = std::vector<std::vector<float>>(this->height, std::vector<float>(this->width, 0.0));
+}
+
+void Camera::printMatrix(glm::mat4 matrix) {
+    std::cout <<
+    matrix[0][0] << " " << matrix[1][0] << " " << matrix[2][0] << " " << matrix[3][0] << std::endl <<
+    matrix[0][1] << " " << matrix[1][1] << " " << matrix[2][1] << " " << matrix[3][1] << std::endl <<
+    matrix[0][2] << " " << matrix[1][2] << " " << matrix[2][2] << " " << matrix[3][2] << std::endl <<
+    matrix[0][3] << " " << matrix[1][3] << " " << matrix[2][3] << " " << matrix[3][3] << std::endl <<
+    std::endl;
+
 }
 
 /// @brief Translates camera position
@@ -53,6 +63,9 @@ void Camera::rotate(Axis axis, int sign) {
             break;
     }
     this->position = transformationMatrix * this->position;
+    this->lookAt({0.0, 0.0, 0.0}); // without this, we are rotating the scene instead of camera
+    // FIXME: should we just rotate orientation instead?
+    // ^ doesn't work for ray tracing
 }
 
 /// @brief Alters the camera orientation to face a given vertex
@@ -62,11 +75,4 @@ void Camera::lookAt(glm::vec3 vertex) {
     glm::vec3 right = glm::cross(direction, forward);
     glm::vec3 up = glm::cross(forward, right);
     this->orientation = {right, up, forward};
-}
-
-/// @brief Rotates the camera position and then adjusts orientation to look at the given vertex
-void Camera::orbit(Axis axis, int sign, glm::vec3 vertex) {
-    // doesn't work for x axis, need to change direction vector?
-    this->rotate(axis, sign);
-    this->lookAt(vertex);
 }

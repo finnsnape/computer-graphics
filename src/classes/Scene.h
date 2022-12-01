@@ -5,15 +5,14 @@
 #include <DrawingWindow.h>
 #include <ModelTriangle.h>
 
-enum Mode {
-    WIRE_FRAME,
-    RASTERISED,
-    RAY_TRACED,
-    RAY_TRACED_SHADOWS
-};
-
 class Scene {
 public:
+    enum Mode {
+        WIRE_FRAME,
+        RASTERISED,
+        RAY_TRACED,
+        RAY_TRACED_SHADOWS
+    };
     float width;
     float height;
     Mode mode;
