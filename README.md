@@ -19,7 +19,7 @@
 - Consider texture mapping
 - Test on vagrant
 - ~lookAt~
-- Ensure lookAt works after translations, rotations etc.,
+- Ensure lookAt works after translations, rotations etc. Should investigate glm::lookAt
 
 ## Notes
 - negative z is away from us
