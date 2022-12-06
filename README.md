@@ -19,6 +19,7 @@
 - Consider texture mapping
 - Test on vagrant
 - ~lookAt~
+- Ensure lookAt works after translations, rotations etc.,
 
 ## Notes
 - negative z is away from us
