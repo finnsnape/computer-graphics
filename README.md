@@ -15,6 +15,7 @@
 - Separate what's required (e.g., not all types of camera need a depth buffer)
 - Reduce duplicate functions (e.g., transposing)
 - Improve function names
+- Potentially add own implementations of trivial functions (rotate, perspective)
 
 ## Notes
 - negative z is away from us
