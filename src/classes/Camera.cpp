@@ -9,22 +9,17 @@ Camera::Camera(float _width, float _height, glm::vec3 _position, bool _orbit): w
     //this->lookAt({0.0, 0.0, 0.0});
     this->rotate(y, 1);
     this->projection = glm::perspective(glm::radians(-45.0f), -width/height, 0.1f, 100.0f);
+    this->near = 0.1f;
+    this->far = 100.f;
     this->model = glm::translate(glm::mat4(1.0f), {0.0f, 0.0f, 0.0f});
+    // FIXME: maybe we alter the rotation of this, instead of the perspective being negative?
+    updateMVP();
 }
 
 /// @brief Sets all the values in the depth buffer to zero
 void Camera::resetDepthBuffer() {
     this->depthBuffer = std::vector<std::vector<float>>(this->height, std::vector<float>(this->width, 0.0));
 }
-
-//void Camera::printMatrix(glm::mat4 matrix) {
-//    std::cout <<
-//    matrix[0][0] << " " << matrix[1][0] << " " << matrix[2][0] << " " << matrix[3][0] << std::endl <<
-//    matrix[0][1] << " " << matrix[1][1] << " " << matrix[2][1] << " " << matrix[3][1] << std::endl <<
-//    matrix[0][2] << " " << matrix[1][2] << " " << matrix[2][2] << " " << matrix[3][2] << std::endl <<
-//    matrix[0][3] << " " << matrix[1][3] << " " << matrix[2][3] << " " << matrix[3][3] << std::endl <<
-//    std::endl;
-//}
 
 /// @brief Translates camera position
 void Camera::translate(Axis axis, int sign) {
@@ -42,6 +37,7 @@ void Camera::translate(Axis axis, int sign) {
         default:
             break;
     }
+    updateMVP();
 }
 
 /// @brief Rotates camera position anti-clockwise about the camera coordinate system origin
@@ -60,6 +56,14 @@ void Camera::rotate(Axis axis, int sign) {
             return;
     }
     this->rotation = glm::rotate(this->rotation, glm::radians(modifier), axisVector);
+    updateMVP();
+}
+
+void Camera::updateMVP() {
+    glm::mat4 T0 = glm::translate(glm::mat4(1.f), this->position);
+    glm::mat4 cameraMatrix = this->rotation * T0; // M
+    glm::mat4 view = glm::inverse(cameraMatrix); // V
+    this->mvp = this->projection * view * this->model;
 }
 
 /// @brief Alters the camera orientation to face a given vertex

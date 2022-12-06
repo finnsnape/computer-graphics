@@ -7,13 +7,16 @@ class Camera {
 private:
     float width;
     float height;
-    //glm::vec4 position;
+    glm::mat4 projection;
+    glm::mat4 model;
+    void updateMVP();
 public:
     enum Axis { x, y, z };
     glm::vec3 position;
     glm::mat4 rotation;
-    glm::mat4 projection;
-    glm::mat4 model;
+    glm::mat4 mvp;
+    float near;
+    float far;
     bool orbit;
     std::vector<std::vector<float>> depthBuffer;
     Camera(float width, float height, glm::vec3 position, bool orbit);
