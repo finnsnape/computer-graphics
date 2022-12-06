@@ -5,6 +5,7 @@
 #include "Scene.h"
 
 namespace {
+    /// @brief Uses barycentric coords to figure out depth of point within triangle
     float calculatePointDepth(CanvasTriangle triangle, CanvasPoint point) {
         float denominator = (triangle.v1().y-triangle.v2().y)*(triangle.v0().x-triangle.v2().x)+(triangle.v2().x-triangle.v1().x)*(triangle.v0().y-triangle.v2().y);
         float w0 = ((triangle.v1().y-triangle.v2().y)*(point.x-triangle.v2().x)+(triangle.v2().x-triangle.v1().x)*(point.y-triangle.v2().y))/denominator;
@@ -16,6 +17,7 @@ namespace {
         return 1/((w0 * triangle.v0().depth) + (w1 * triangle.v1().depth) + (w2 * triangle.v2().depth));
     }
 
+    /// @brief Makes the smallest possible rectangle around a given triangle
     std::vector<float> boundingBox(CanvasTriangle triangle) {
         float minX = std::min({triangle.v0().x, triangle.v1().x, triangle.v2().x});
         float maxX = std::max({triangle.v0().x, triangle.v1().x, triangle.v2().x});
@@ -24,6 +26,7 @@ namespace {
         return {minX, maxX, minY, maxY};
     }
 
+    /// @brief Draws a coloured line on canvas from given point to another
     void drawLine(DrawingWindow &window, CanvasPoint from, CanvasPoint to, Colour colour) {
         float xDiff = to.x - from.x;
         float yDiff = to.y - from.y;
@@ -41,12 +44,14 @@ namespace {
 }
 
 namespace TriangleUtils {
+    /// @brief Checks if given point is outside of canvas bounds
     bool isInsideCanvas(DrawingWindow &window, CanvasPoint point) {
         if (point.x < 0 || point.x >= window.width || point.y < 0 || point.y >= window.height) {
             return false; // point is outside frame
         }
         return true;
     }
+
     void drawPixel(DrawingWindow &window, CanvasPoint point, Colour colour) {
         uint32_t colourCode = (255 << 24) + (colour.red << 16) + (colour.green << 8) + colour.blue;
         window.setPixelColour(point.x, point.y, colourCode);
