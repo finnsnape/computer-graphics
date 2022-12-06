@@ -39,4 +39,7 @@ void Scene::draw() {
         default:
             break;
     }
+    if (this->camera.orbit) {
+        this->camera.rotate(Camera::y, 1);
+    }
 }

@@ -37,6 +37,7 @@ add_executable(RedNoise
         libs/sdw/TextureMap.cpp
         libs/sdw/TexturePoint.cpp
         libs/sdw/Utils.cpp
+        libs/sdw/Ray.cpp
         src/classes/Camera.cpp
         src/classes/Scene.cpp
         src/utils/RayTracingUtils.cpp

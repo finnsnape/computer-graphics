@@ -3,21 +3,25 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-enum Axis { x, y, z };
-
 class Camera {
 private:
     float width;
     float height;
+    glm::mat4 projection;
+    glm::mat4 model;
+    void updateMVP();
 public:
-    float focalLength;
+    enum Axis { x, y, z };
     glm::vec3 position;
-    glm::mat3 orientation;
+    glm::mat4 rotation;
+    glm::mat4 mvp;
+    float near;
+    float far;
+    bool orbit;
     std::vector<std::vector<float>> depthBuffer;
-    Camera(float width, float height, float focalLength, glm::vec3 position);
+    Camera(float width, float height, glm::vec3 position, bool orbit);
     void resetDepthBuffer();
     void translate(Axis axis, int sign);
     void rotate(Axis axis, int sign);
     void lookAt(glm::vec3 vertex);
-    void orbit(Axis axis, int sign, glm::vec3 vertex);
 };

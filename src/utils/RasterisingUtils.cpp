@@ -1,5 +1,4 @@
 #include "RasterisingUtils.h"
-#include "Camera.h"
 #include "Scene.h"
 #include <ModelTriangle.h>
 #include <CanvasTriangle.h>
@@ -8,24 +7,22 @@
 #include "TriangleUtils.h"
 
 namespace {
-    glm::vec3 transposePoint(Camera &camera, glm::vec3 vertex) {
-        glm::vec3 vertexDifference = vertex - camera.position;
-        glm::vec3 transposedPoint = vertexDifference * camera.orientation;
-        return {transposedPoint.x, transposedPoint.y, -transposedPoint.z};
+    /// @brief Converts a point in model space to a canvas point
+    CanvasPoint modelToCanvas(Scene &scene, glm::vec3 vertex) {
+        float n = scene.camera.near;
+        float f = scene.camera.far;
+        glm::vec4 clipPos = scene.camera.mvp * glm::vec4(vertex, 1.0);
+        glm::vec3 ndsPos(clipPos.x/clipPos.w, clipPos.y/clipPos.w, clipPos.z/clipPos.w); // normalised device space
+        CanvasPoint screenPos(scene.width/2 * (ndsPos.x + 1), scene.height/2 * (ndsPos.y + 1), ndsPos.z * (f - n)/2 + (f + n)/2);
+        return screenPos;
     }
 
-    CanvasPoint calculateCanvasIntersection(Scene &scene, glm::vec3 vertex) {
-        glm::vec3 transposedVertex = transposePoint(scene.camera, vertex);
-        float u = scene.camera.focalLength * (scene.width/2) * (transposedVertex.x/transposedVertex.z) + scene.width/2;
-        float v = -scene.camera.focalLength * (scene.height/2) * (transposedVertex.y/transposedVertex.z) + scene.height/2;
-        return {u, v, transposedVertex.z};
-    }
-
+    /// @brief Takes triangles in model space and makes them into triangles with canvas points
     CanvasTriangle makeCanvasTriangle(Scene &scene, ModelTriangle triangle) {
         CanvasTriangle canvasTriangle;
         for (int i=0; i<3; i++) {
             glm::vec3 vertex = triangle.vertices[i];
-            CanvasPoint canvasIntersection = calculateCanvasIntersection(scene, vertex);
+            CanvasPoint canvasIntersection = modelToCanvas(scene, vertex);
             canvasTriangle.vertices[i] = canvasIntersection;
         }
         return canvasTriangle;
@@ -33,6 +30,7 @@ namespace {
 }
 
 namespace RasterisingUtils {
+    /// @brief Default rasterised
     void drawFilled(Scene &scene) {
         scene.camera.resetDepthBuffer();
         for (const auto &triangle : scene.triangles) {
@@ -41,6 +39,7 @@ namespace RasterisingUtils {
         }
     }
 
+    /// @brief Wire frame
     void drawStroked(Scene &scene) {
         for (const auto &triangle : scene.triangles) {
             CanvasTriangle canvasTriangle = makeCanvasTriangle(scene, triangle);

@@ -5,6 +5,7 @@
 #include "Scene.h"
 
 namespace {
+    /// @brief Uses barycentric coords to figure out depth of point within triangle
     float calculatePointDepth(CanvasTriangle triangle, CanvasPoint point) {
         float denominator = (triangle.v1().y-triangle.v2().y)*(triangle.v0().x-triangle.v2().x)+(triangle.v2().x-triangle.v1().x)*(triangle.v0().y-triangle.v2().y);
         float w0 = ((triangle.v1().y-triangle.v2().y)*(point.x-triangle.v2().x)+(triangle.v2().x-triangle.v1().x)*(point.y-triangle.v2().y))/denominator;
@@ -16,6 +17,7 @@ namespace {
         return 1/((w0 * triangle.v0().depth) + (w1 * triangle.v1().depth) + (w2 * triangle.v2().depth));
     }
 
+    /// @brief Makes the smallest possible rectangle around a given triangle
     std::vector<float> boundingBox(CanvasTriangle triangle) {
         float minX = std::min({triangle.v0().x, triangle.v1().x, triangle.v2().x});
         float maxX = std::max({triangle.v0().x, triangle.v1().x, triangle.v2().x});
@@ -24,6 +26,7 @@ namespace {
         return {minX, maxX, minY, maxY};
     }
 
+    /// @brief Draws a coloured line on canvas from given point to another
     void drawLine(DrawingWindow &window, CanvasPoint from, CanvasPoint to, Colour colour) {
         float xDiff = to.x - from.x;
         float yDiff = to.y - from.y;
@@ -33,12 +36,22 @@ namespace {
         for (float i=0.0; i<numSteps; i++) {
             float x = from.x + (xStepSize * i);
             float y = from.y + (yStepSize * i);
-            TriangleUtils::drawPixel(window, CanvasPoint(x, y), colour);
+            CanvasPoint canvasPoint(x, y);
+            if (!TriangleUtils::isInsideCanvas(window, canvasPoint)) continue;
+            TriangleUtils::drawPixel(window, canvasPoint, colour);
         }
     }
 }
 
 namespace TriangleUtils {
+    /// @brief Checks if given point is outside of canvas bounds
+    bool isInsideCanvas(DrawingWindow &window, CanvasPoint point) {
+        if (point.x < 0 || point.x >= window.width || point.y < 0 || point.y >= window.height) {
+            return false; // point is outside frame
+        }
+        return true;
+    }
+
     void drawPixel(DrawingWindow &window, CanvasPoint point, Colour colour) {
         uint32_t colourCode = (255 << 24) + (colour.red << 16) + (colour.green << 8) + colour.blue;
         window.setPixelColour(point.x, point.y, colourCode);
@@ -56,17 +69,14 @@ namespace TriangleUtils {
         std::vector<float> boundedBy = boundingBox(triangle);
         for (int x=boundedBy[0]; x<boundedBy[1]; x++) {
             for (int y=boundedBy[2]; y<boundedBy[3]; y++) {
-                float depth = calculatePointDepth(triangle, CanvasPoint(x, y));
-                if (depth == 0) {
-                    continue; // point is outside triangle
-                }
-                if (x < 0 || x >= (int) scene.window.width || y < 0 || y >= (int) scene.window.height) {
-                    continue; // point is outside frame
-                }
+                CanvasPoint canvasPoint(x, y);
+                float depth = calculatePointDepth(triangle, canvasPoint);
+                if (depth == 0) continue; // point is outside triangle
+                if (!isInsideCanvas(scene.window, canvasPoint)) continue;
                 if (depth < scene.camera.depthBuffer[x][y]) {
                     continue; // something in front of our pixel has already been placed
                 }
-                drawPixel(scene.window, CanvasPoint(x, y), colour);
+                drawPixel(scene.window, canvasPoint, colour);
                 scene.camera.depthBuffer[x][y] = depth;
             }
         }
