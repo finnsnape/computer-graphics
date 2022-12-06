@@ -1,5 +1,5 @@
 #include "Scene.h"
-//#include "RayTracingUtils.h"
+#include "RayTracingUtils.h"
 #include "RasterisingUtils.h"
 
 
@@ -26,7 +26,7 @@ void Scene::draw() {
     this->window.clearPixels();
     switch(this->mode) {
         case RAY_TRACED:
-            //RayTracingUtils::draw(*this, false);
+            RayTracingUtils::draw(*this, false);
             break;
         case RASTERISED:
             RasterisingUtils::drawFilled(*this);
@@ -35,7 +35,7 @@ void Scene::draw() {
             RasterisingUtils::drawStroked(*this);
             break;
         case RAY_TRACED_SHADOWS:
-            //RayTracingUtils::draw(*this, true);
+            RayTracingUtils::draw(*this, true);
         default:
             break;
     }
