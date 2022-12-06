@@ -43,13 +43,8 @@ Scene initScene(Scene::Mode mode, float scaleFactor, glm::vec3 initialPosition, 
     return scene;
 }
 
-void tests() {
-
-}
-
 int main(int argc, char *argv[]) {
-    tests();
-    Scene::Mode mode = Scene::RASTERISED;
+    Scene::Mode mode = Scene::RAY_TRACED_SHADOWS;
     float scaleFactor = 0.35;
     glm::vec3 lightSource(0.0, 0.35, 0.0);
     glm::vec3 initialPosition(0.0, 0.0, 4.0);
