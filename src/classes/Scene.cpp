@@ -4,11 +4,11 @@
 
 
 Scene::Scene(float _width, float _height, Mode _mode, std::vector<ModelTriangle> _triangles, Camera _camera):
-    width(_width),
-    height(_height),
-    mode(_mode),
-    triangles(std::move(_triangles)),
-    camera(std::move(_camera)) {
+        width(_width),
+        height(_height),
+        mode(_mode),
+        triangles(std::move(_triangles)),
+        camera(std::move(_camera)) {
     this->window = DrawingWindow((int) width, (int) height, false);
 }
 
