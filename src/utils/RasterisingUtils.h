@@ -1,7 +1,9 @@
 #pragma once
 
+#include <glm/glm.hpp>
+#include <CanvasPoint.h>
+
 class Scene; // pre-declare to avoid circular dependency
-class Camera;
 
 namespace RasterisingUtils {
     void drawFilled(Scene &scene);
