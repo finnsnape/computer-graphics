@@ -52,9 +52,9 @@ int main(int argc, char *argv[]) {
     Scene scene = initScene(mode, scaleFactor, initialPosition, lightSource);
     SDL_Event event;
     printInstructions();
+    scene.draw();
     while(true) {
         if (scene.window.pollForInputEvents(event)) EventUtils::handleEvent(event, scene);
-        scene.draw();
         scene.window.renderFrame();
     }
 }

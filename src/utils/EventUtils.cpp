@@ -67,5 +67,6 @@ namespace EventUtils {
         } else {
             doOperation(key, scene.camera, event); // rotate, translate
         }
+        scene.draw();
     }
 }
