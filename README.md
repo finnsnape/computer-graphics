@@ -1,6 +1,6 @@
 # RedNoise
 ## Status
-- W6T7 (complete)
+- W7T2 (ongoing)
 ## Todo
 - ~Fix x orbit~
 - ~Fix ray tracing orbit (need to utilise orientation)~
@@ -20,6 +20,7 @@
 - Test on vagrant
 - ~lookAt~
 - Ensure lookAt works after translations, rotations etc. Should investigate glm::lookAt
+- Fix proximity lighting to work when light is very close to intersection
 
 ## Notes
 - negative z is away from us

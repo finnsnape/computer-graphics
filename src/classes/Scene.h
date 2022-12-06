@@ -22,5 +22,6 @@ public:
     glm::vec3 lightSource;
     Scene(float width, float height, Mode mode, std::vector<ModelTriangle> triangles, Camera camera);
     Scene(float width, float height, Mode mode, std::vector<ModelTriangle> triangles, Camera camera, glm::vec3 lightSource);
+    void moveLight(Camera::Axis axis, int sign);
     void draw();
 };

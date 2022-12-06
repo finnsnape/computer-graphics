@@ -22,6 +22,23 @@ Scene::Scene(float _width, float _height, Mode _mode, std::vector<ModelTriangle>
     this->window = DrawingWindow((int) width, (int) height, false);
 }
 
+void Scene::moveLight(Camera::Axis axis, int sign) {
+    float modifier = 0.1f * sign;
+    switch(axis) {
+        case Camera::Axis::x:
+            this->lightSource.x += modifier;
+            break;
+        case Camera::Axis::y:
+            this->lightSource.y += modifier;
+            break;
+        case Camera::Axis::z:
+            this->lightSource.z += modifier;
+            break;
+        default:
+            break;
+    }
+}
+
 void Scene::draw() {
     this->window.clearPixels();
     switch(this->mode) {

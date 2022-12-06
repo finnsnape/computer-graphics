@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "TriangleUtils.h"
 #include <Ray.h>
+#include <cmath>
 
 namespace {
     /// @brief Gets the absolute distance along ray (t), and proportional distances along triangle edges (u, v)
@@ -77,9 +78,28 @@ namespace {
         return closestTriangle;
     }
 
+    void applyHardShadows(RayTriangleIntersection &closestTriangle) {
+        closestTriangle.intersectedTriangle.colour = Colour(0, 0, 0);
+    }
+
+    Colour applyProximityLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
+        float distance = glm::length(closestTriangle.intersectionPoint - scene.lightSource);
+        float intensity = 1.f/(1 * glm::pi<float>() * pow(distance, 2));
+        //std::cout << intensity << std::endl;
+        // FIXME: don't make a new variable
+        Colour existingColour = closestTriangle.intersectedTriangle.colour;
+        Colour newColour(
+                existingColour.red * intensity,
+                existingColour.green * intensity,
+                existingColour.blue * intensity
+        );
+        return newColour;
+    }
+
     /// @brief Checks if the point we want to draw on an intersecting triangle is able to see the light source
     bool canSeeLight(Scene &scene, const RayTriangleIntersection &closestTriangle) {
         // ray using intersection and light source
+        //glm::vec3 difference = ;
         glm::vec3 direction = glm::normalize(closestTriangle.intersectionPoint - scene.lightSource);
         glm::vec3 origin = scene.lightSource;
         Ray ray(origin, direction);
@@ -107,7 +127,11 @@ namespace RayTracingUtils {
                 }
                 Colour pixelColour = closestTriangle.intersectedTriangle.colour;
                 if (shadows && !canSeeLight(scene, closestTriangle)) {
-                    pixelColour = {0, 0, 0}; // in shadow
+                    pixelColour = applyProximityLighting(scene, closestTriangle);
+                    //pixelColour = {255, 255, 0};
+                    //continue;
+                    //applyHardShadows(closestTriangle);
+                    //pixelColour 2= {0, 0, 0}; // in shadow
                 }
                 TriangleUtils::drawPixel(scene.window, canvasPoint, pixelColour);
             }

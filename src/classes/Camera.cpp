@@ -5,7 +5,8 @@
 
 Camera::Camera(float _width, float _height, glm::vec3 _position, bool _orbit): width(_width), height(_height), position(_position), orbit(_orbit) {
     this->lookAt({0.0, 0.0, 0.0});
-    //this->rotation = glm::rotate(glm::mat4(1.f), glm::radians(0.f), {0.f, 1.f, 0.f}); // no rotation to start
+    //
+    // this->rotation = glm::rotate(glm::mat4(1.f), glm::radians(0.f), {0.f, 1.f, 0.f}); // no rotation to start
     this->model = glm::translate(glm::mat4(1.f), {0.f, 0.f, 0.f});
     // FIXME: maybe we alter the rotation of this, instead of the perspective being negative?
     updateMVP();

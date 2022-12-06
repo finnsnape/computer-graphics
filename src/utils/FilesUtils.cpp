@@ -26,7 +26,7 @@ namespace {
         std::map<std::string, Colour> colourMap;
         std::vector<std::string> colourNames;
         std::vector<Colour> colourValues;
-        std::ifstream filein(mtlFileName); // "cornell-box.mtl"
+        std::ifstream filein("models/" + mtlFileName); // "cornell-box.mtl"
         for (std::string line; std::getline(filein, line); ) {
             if (line[0] == 'n') {
                 colourNames.push_back(parseColourName(line));
@@ -76,7 +76,7 @@ namespace FilesUtils {
         std::vector<std::vector<int>> triangles;
         std::vector<std::string> colours;
         std::map<std::string, Colour> colourMap = loadColours(mtlFileName);
-        std::ifstream filein(objFileName); // "cornell-box.obj"
+        std::ifstream filein("models/" + objFileName); // "cornell-box.obj"
         std::string lastColourName;
         for (std::string line; std::getline(filein, line); ) {
             if (line[0] == 'v') {

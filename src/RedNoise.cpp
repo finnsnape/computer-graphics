@@ -19,6 +19,14 @@ void printInstructions() {
     "3: Ray Traced" << std::endl <<
     "4: Ray Traced (Shadows)" << std::endl <<
     std::endl <<
+    "LIGHT OPERATIONS: " << std::endl <<
+    "H: Translate (y, positive)" << std::endl <<
+    "N: Translate (y, negative)" << std::endl <<
+    "B: Translate (x, negative)" << std::endl <<
+    "M: Translate (x, positive)" << std::endl <<
+    "J: Translate (z, positive)" << std::endl <<
+    "K: Translate (z, negative)" << std::endl <<
+    std::endl <<
     "CAMERA OPERATIONS: " << std::endl <<
     "O: Orbit (y, positive)" << std::endl <<
     "W: Translate (y, positive)" << std::endl <<
@@ -44,7 +52,7 @@ Scene initScene(Scene::Mode mode, float scaleFactor, glm::vec3 initialPosition, 
 }
 
 int main(int argc, char *argv[]) {
-    Scene::Mode mode = Scene::RAY_TRACED_SHADOWS;
+    Scene::Mode mode = Scene::RASTERISED;
     float scaleFactor = 0.35;
     glm::vec3 lightSource(0.0, 0.35, 0.0);
     glm::vec3 initialPosition(0.0, 0.0, 4.0);
