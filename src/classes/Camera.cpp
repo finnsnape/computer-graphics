@@ -4,8 +4,8 @@
 
 
 Camera::Camera(float _width, float _height, glm::vec3 _position, bool _orbit): width(_width), height(_height), position(_position), orbit(_orbit) {
-    //this->lookAt({0.0, 0.0, 0.0});
-    this->rotation = glm::rotate(glm::mat4(1.f), glm::radians(0.f), {0.f, 1.f, 0.f}); // no rotation to start
+    this->lookAt({0.0, 0.0, 0.0});
+    //this->rotation = glm::rotate(glm::mat4(1.f), glm::radians(0.f), {0.f, 1.f, 0.f}); // no rotation to start
     this->model = glm::translate(glm::mat4(1.f), {0.f, 0.f, 0.f});
     // FIXME: maybe we alter the rotation of this, instead of the perspective being negative?
     updateMVP();
@@ -67,5 +67,5 @@ void Camera::lookAt(glm::vec3 vertex) {
     glm::vec3 direction(0.0, 1.0, 0.0);
     glm::vec3 right = glm::cross(direction, forward);
     glm::vec3 up = glm::cross(forward, right);
-    //this->orientation = {right, up, forward};
+    this->rotation = {glm::vec4(right, 0.f), glm::vec4(up, 0.f), glm::vec4(forward, 0.f), glm::vec4(0.f, 0.f, 0.f, 1.f)};
 }
