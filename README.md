@@ -18,7 +18,7 @@
 - Potentially add own implementations of trivial functions (rotate, perspective)
 - Consider texture mapping
 - Test on vagrant
-- lookAt
+- ~lookAt~
 
 ## Notes
 - negative z is away from us
