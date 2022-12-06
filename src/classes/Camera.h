@@ -7,13 +7,13 @@ class Camera {
 private:
     float width;
     float height;
-    glm::mat4 projection;
+    glm::vec3 position;
+    glm::mat4 rotation;
     glm::mat4 model;
+    glm::mat4 projection;
     void updateMVP();
 public:
     enum Axis { x, y, z };
-    glm::vec3 position;
-    glm::mat4 rotation;
     glm::mat4 mvp;
     float near;
     float far;
