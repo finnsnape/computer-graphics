@@ -1,6 +1,6 @@
 # RedNoise
 ## Status
-- W7T2 (ongoing)
+- W7T2 (complete)
 ## Todo
 - ~Fix x orbit~
 - ~Fix ray tracing orbit (need to utilise orientation)~
