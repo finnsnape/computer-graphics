@@ -44,7 +44,7 @@ namespace {
     /* Object (.obj) */
 
     glm::vec3 calculateSurfaceNormal(std::vector<glm::vec3> trianglePoints) {
-        return glm::cross(trianglePoints[1] - trianglePoints[0], trianglePoints[2] - trianglePoints[0]);
+        return glm::cross(trianglePoints[0] - trianglePoints[1], trianglePoints[0] - trianglePoints[2]);
     }
 
     glm::vec3 parseVector(std::string line, float scaleFactor) {

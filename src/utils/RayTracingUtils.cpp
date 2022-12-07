@@ -5,7 +5,7 @@
 #include <RayTriangleIntersection.h>
 #include "Scene.h"
 #include "TriangleUtils.h"
-#include "ShadowUtils.h"
+#include "LightingUtils.h"
 #include <Ray.h>
 #include <cmath>
 
@@ -110,9 +110,10 @@ namespace RayTracingUtils {
                 if (closestTriangle.distanceFromCamera == FLT_MAX) {
                     continue; // no triangle intersection found
                 }
-                if (scene.mode != Scene::RAY_TRACED && !canSeeLight(scene, closestTriangle)) {
-                    ShadowUtils::applyShadows(scene, closestTriangle);
-                }
+                ShadowUtils::applyShadows(scene, closestTriangle);
+//                if (scene.mode != Scene::RAY_TRACED && !canSeeLight(scene, closestTriangle)) {
+//                    ShadowUtils::applyShadows(scene, closestTriangle);
+//                }
                 TriangleUtils::drawPixel(scene.window, canvasPoint, closestTriangle.intersectedTriangle.colour);
             }
         }

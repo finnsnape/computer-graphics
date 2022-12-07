@@ -45,7 +45,7 @@ add_executable(RedNoise
         src/utils/FilesUtils.cpp
         src/utils/TriangleUtils.cpp
         src/utils/EventUtils.cpp
-        src/utils/ShadowUtils.cpp
+        src/utils/LightingUtils.cpp
         src/RedNoise.cpp)
 
 if (MSVC)

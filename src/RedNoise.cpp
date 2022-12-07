@@ -56,7 +56,7 @@ Scene initScene(Scene::Mode mode, float scaleFactor, glm::vec3 initialPosition, 
 int main(int argc, char *argv[]) {
     Scene::Mode mode = Scene::RASTERISED;
     float scaleFactor = 0.35;
-    glm::vec3 lightSource(0.0, 0.35, 0.0);
+    glm::vec3 lightSource(0.0, 0.8, 0.0);
     glm::vec3 initialPosition(0.0, 0.0, 4.0);
     Camera camera(WIDTH, HEIGHT, initialPosition, false);
     Scene scene = initScene(mode, scaleFactor, initialPosition, lightSource);

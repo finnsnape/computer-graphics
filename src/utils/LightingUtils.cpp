@@ -1,5 +1,6 @@
-#include "ShadowUtils.h"
+#include "LightingUtils.h"
 #include "Scene.h"
+#include <cmath>
 
 namespace {
     void applyHardShadows(RayTriangleIntersection &closestTriangle) {
@@ -17,7 +18,16 @@ namespace {
     }
 
     void applyAngleOfIncidenceLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
-
+        Colour &colour = closestTriangle.intersectedTriangle.colour;
+        glm::vec3 direction = glm::normalize(scene.lightSource - closestTriangle.intersectionPoint); // point to light
+        float angle = glm::dot(glm::normalize(closestTriangle.intersectedTriangle.normal), direction);
+        float intensity = abs(angle);
+        if (intensity >= 1 || intensity <= 0) {
+            std::cout << intensity << std::endl;
+        }
+        colour.red *= intensity;
+        colour.green *= intensity;
+        colour.blue *= intensity;
     }
 }
 

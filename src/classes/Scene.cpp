@@ -40,6 +40,7 @@ void Scene::moveLight(Camera::Axis axis, int sign) {
 }
 
 void Scene::draw() {
+    // FIXME: add a mode for lighting and a mode for shadows?
     this->window.clearPixels();
     switch(this->mode) {
         case WIRE_FRAME:
@@ -55,6 +56,9 @@ void Scene::draw() {
             RayTracingUtils::draw(*this);
             break;
         case RAY_TRACED_PROXIMITY:
+            RayTracingUtils::draw(*this);
+            break;
+        case RAY_TRACED_INCIDENCE:
             RayTracingUtils::draw(*this);
             break;
         default:
