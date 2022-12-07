@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <map>
 #include <Colour.h>
+#include <glm/glm.hpp>
 
 namespace {
     /* Colour (.mtl) */
@@ -42,6 +43,10 @@ namespace {
 
     /* Object (.obj) */
 
+    glm::vec3 calculateSurfaceNormal(std::vector<glm::vec3> trianglePoints) {
+        return glm::cross(trianglePoints[1] - trianglePoints[0], trianglePoints[2] - trianglePoints[0]);
+    }
+
     glm::vec3 parseVector(std::string line, float scaleFactor) {
         std::vector<std::string> trianglePointRaw = split(line, ' ');
         glm::vec3 trianglePoint = {std::stof(trianglePointRaw[1]) * scaleFactor, std::stof(trianglePointRaw[2]) * scaleFactor, std::stof(trianglePointRaw[3]) * scaleFactor};
@@ -62,7 +67,9 @@ namespace {
         std::vector<ModelTriangle> modelTriangles;
         for (int i=0; i<triangles.size(); i++) {
             Colour colour = colourMap.at(colours[i]);
+            glm::vec3 normal = calculateSurfaceNormal(trianglePoints);
             ModelTriangle modelTriangle = {trianglePoints[triangles[i][0] - 1], trianglePoints[triangles[i][1] - 1], trianglePoints[triangles[i][2] - 1], colour};
+            modelTriangle.normal = normal;
             modelTriangles.push_back(modelTriangle);
             //std::cout << modelTriangle << " " << colour << std::endl;
         }
