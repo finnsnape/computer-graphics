@@ -5,6 +5,7 @@
 #include <RayTriangleIntersection.h>
 #include "Scene.h"
 #include "TriangleUtils.h"
+#include "ShadowUtils.h"
 #include <Ray.h>
 #include <cmath>
 
@@ -78,19 +79,7 @@ namespace {
         return closestTriangle;
     }
 
-    void applyHardShadows(RayTriangleIntersection &closestTriangle) {
-        closestTriangle.intersectedTriangle.colour = Colour(0, 0, 0);
-    }
 
-    void applyProximityLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
-        Colour &colour = closestTriangle.intersectedTriangle.colour;
-        float distance = glm::length(closestTriangle.intersectionPoint - scene.lightSource);
-        float intensity = 1.f/(1 * glm::pi<float>() * pow(distance, 2));
-        intensity = std::min(intensity, 1.f);
-        colour.red *= intensity;
-        colour.green *= intensity;
-        colour.blue *= intensity;
-    }
 
     /// @brief Checks if the point we want to draw on an intersecting triangle is able to see the light source
     bool canSeeLight(Scene &scene, const RayTriangleIntersection &closestTriangle) {
@@ -111,7 +100,7 @@ namespace {
 }
 
 namespace RayTracingUtils {
-    void draw(Scene &scene, bool shadows) {
+    void draw(Scene &scene) {
         for (int x=0; x<scene.width; x++) {
             for (int y=0; y<scene.height; y++) {
                 CanvasPoint canvasPoint((float) x, (float) y);
@@ -121,9 +110,8 @@ namespace RayTracingUtils {
                 if (closestTriangle.distanceFromCamera == FLT_MAX) {
                     continue; // no triangle intersection found
                 }
-                if (shadows && !canSeeLight(scene, closestTriangle)) {
-                    applyProximityLighting(scene, closestTriangle);
-                    //applyHardShadows(closestTriangle);
+                if (scene.mode != Scene::RAY_TRACED && !canSeeLight(scene, closestTriangle)) {
+                    ShadowUtils::applyShadows(scene, closestTriangle);
                 }
                 TriangleUtils::drawPixel(scene.window, canvasPoint, closestTriangle.intersectedTriangle.colour);
             }

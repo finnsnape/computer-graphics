@@ -6,5 +6,5 @@
 class Scene; // pre-declare to avoid circular dependency
 
 namespace RayTracingUtils {
-    void draw(Scene &scene, bool shadows);
+    void draw(Scene &scene);
 }

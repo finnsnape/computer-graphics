@@ -11,7 +11,9 @@ public:
         WIRE_FRAME,
         RASTERISED,
         RAY_TRACED,
-        RAY_TRACED_SHADOWS
+        RAY_TRACED_HARD,
+        RAY_TRACED_PROXIMITY,
+        RAY_TRACED_INCIDENCE
     };
     float width;
     float height;

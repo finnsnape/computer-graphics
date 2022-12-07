@@ -42,17 +42,21 @@ void Scene::moveLight(Camera::Axis axis, int sign) {
 void Scene::draw() {
     this->window.clearPixels();
     switch(this->mode) {
-        case RAY_TRACED:
-            RayTracingUtils::draw(*this, false);
+        case WIRE_FRAME:
+            RasterisingUtils::drawStroked(*this);
             break;
         case RASTERISED:
             RasterisingUtils::drawFilled(*this);
             break;
-        case WIRE_FRAME:
-            RasterisingUtils::drawStroked(*this);
+        case RAY_TRACED:
+            RayTracingUtils::draw(*this);
             break;
-        case RAY_TRACED_SHADOWS:
-            RayTracingUtils::draw(*this, true);
+        case RAY_TRACED_HARD:
+            RayTracingUtils::draw(*this);
+            break;
+        case RAY_TRACED_PROXIMITY:
+            RayTracingUtils::draw(*this);
+            break;
         default:
             break;
     }

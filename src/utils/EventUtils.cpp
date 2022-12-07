@@ -6,7 +6,9 @@ std::map<SDL_Keycode, Scene::Mode> modeMap = {
         {SDLK_1, Scene::WIRE_FRAME},
         {SDLK_2, Scene::RASTERISED},
         {SDLK_3, Scene::RAY_TRACED},
-        {SDLK_4, Scene::RAY_TRACED_SHADOWS}
+        {SDLK_4, Scene::RAY_TRACED_HARD},
+        {SDLK_5, Scene::RAY_TRACED_PROXIMITY},
+        {SDLK_6, Scene::RAY_TRACED_INCIDENCE},
 };
 
 namespace {

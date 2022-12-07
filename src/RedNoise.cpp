@@ -17,7 +17,9 @@ void printInstructions() {
     "1: Wire Frame" << std::endl <<
     "2: Rasterised" << std::endl <<
     "3: Ray Traced" << std::endl <<
-    "4: Ray Traced (Shadows)" << std::endl <<
+    "4: Ray Traced (Hard Shadows)" << std::endl <<
+    "5: Ray Traced (Proximity Lighting)" << std::endl <<
+    "6: Ray Traced (Angle of Incidence Lighting)" << std::endl <<
     std::endl <<
     "LIGHT OPERATIONS: " << std::endl <<
     "H: Translate (y, positive)" << std::endl <<
