@@ -82,18 +82,14 @@ namespace {
         closestTriangle.intersectedTriangle.colour = Colour(0, 0, 0);
     }
 
-    Colour applyProximityLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
+    void applyProximityLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
+        Colour &colour = closestTriangle.intersectedTriangle.colour;
         float distance = glm::length(closestTriangle.intersectionPoint - scene.lightSource);
         float intensity = 1.f/(1 * glm::pi<float>() * pow(distance, 2));
-        //std::cout << intensity << std::endl;
-        // FIXME: don't make a new variable
-        Colour existingColour = closestTriangle.intersectedTriangle.colour;
-        Colour newColour(
-                existingColour.red * intensity,
-                existingColour.green * intensity,
-                existingColour.blue * intensity
-        );
-        return newColour;
+        intensity = std::min(intensity, 1.f);
+        colour.red *= intensity;
+        colour.green *= intensity;
+        colour.blue *= intensity;
     }
 
     /// @brief Checks if the point we want to draw on an intersecting triangle is able to see the light source
@@ -125,15 +121,11 @@ namespace RayTracingUtils {
                 if (closestTriangle.distanceFromCamera == FLT_MAX) {
                     continue; // no triangle intersection found
                 }
-                Colour pixelColour = closestTriangle.intersectedTriangle.colour;
                 if (shadows && !canSeeLight(scene, closestTriangle)) {
-                    pixelColour = applyProximityLighting(scene, closestTriangle);
-                    //pixelColour = {255, 255, 0};
-                    //continue;
+                    applyProximityLighting(scene, closestTriangle);
                     //applyHardShadows(closestTriangle);
-                    //pixelColour 2= {0, 0, 0}; // in shadow
                 }
-                TriangleUtils::drawPixel(scene.window, canvasPoint, pixelColour);
+                TriangleUtils::drawPixel(scene.window, canvasPoint, closestTriangle.intersectedTriangle.colour);
             }
         }
     }
