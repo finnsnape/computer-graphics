@@ -43,8 +43,8 @@ namespace {
 
     /* Object (.obj) */
 
-    glm::vec3 calculateSurfaceNormal(std::vector<glm::vec3> trianglePoints) {
-        return glm::cross(trianglePoints[0] - trianglePoints[1], trianglePoints[0] - trianglePoints[2]);
+    glm::vec3 calculateSurfaceNormal(std::array<glm::tvec3<float>, 3> vertices) {
+        return glm::normalize(glm::cross(vertices[1] - vertices[0], vertices[2] - vertices[0]));
     }
 
     glm::vec3 parseVector(std::string line, float scaleFactor) {
@@ -67,11 +67,10 @@ namespace {
         std::vector<ModelTriangle> modelTriangles;
         for (int i=0; i<triangles.size(); i++) {
             Colour colour = colourMap.at(colours[i]);
-            glm::vec3 normal = calculateSurfaceNormal(trianglePoints);
             ModelTriangle modelTriangle = {trianglePoints[triangles[i][0] - 1], trianglePoints[triangles[i][1] - 1], trianglePoints[triangles[i][2] - 1], colour};
+            glm::vec3 normal = calculateSurfaceNormal(modelTriangle.vertices);
             modelTriangle.normal = normal;
             modelTriangles.push_back(modelTriangle);
-            //std::cout << modelTriangle << " " << colour << std::endl;
         }
         return modelTriangles;
     }
