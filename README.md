@@ -1,6 +1,6 @@
 # RedNoise
 ## Status
-- W7T3 (in progress)
+- W7T3 (complete)
 ## Todo
 - ~Fix x orbit~
 - ~Fix ray tracing orbit (need to utilise orientation)~
@@ -11,7 +11,7 @@
 - Try fix event being missed (CTRL+C sometimes won't exit)
 - ^ Events sometimes not registered, maybe we need &window? or \*/\*\*
 - Fix rounding errors and type warnings
-- Check our depth buffer is x by y and not y by x
+- ~Check our depth buffer is x by y and not y by x~
 - Separate what's required (~e.g., not all types of camera need a depth buffer~)
 - Reduce duplicate functions (e.g., transposing)
 - Improve function names
@@ -21,6 +21,8 @@
 - ~lookAt~
 - Ensure lookAt works after translations, rotations etc. Should investigate glm::lookAt
 - Fix proximity lighting to work when light is very close to intersection
+- Find way to use perspective logic in our demo
+- Remove unused imports
 
 ## Notes
 - negative z is away from us
