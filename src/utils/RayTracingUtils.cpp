@@ -2,7 +2,6 @@
 #include <glm/glm.hpp>
 #include <CanvasPoint.h>
 #include <ModelTriangle.h>
-#include <RayTriangleIntersection.h>
 #include "Scene.h"
 #include "TriangleUtils.h"
 #include "LightingUtils.h"
@@ -78,13 +77,12 @@ namespace {
         }
         return closestTriangle;
     }
+}
 
-
-
+namespace RayTracingUtils {
     /// @brief Checks if the point we want to draw on an intersecting triangle is able to see the light source
     bool canSeeLight(Scene &scene, const RayTriangleIntersection &closestTriangle) {
         // ray using intersection and light source
-        //glm::vec3 difference = ;
         glm::vec3 direction = glm::normalize(closestTriangle.intersectionPoint - scene.lightSource);
         glm::vec3 origin = scene.lightSource;
         Ray ray(origin, direction);
@@ -97,9 +95,7 @@ namespace {
         }
         return false;
     }
-}
 
-namespace RayTracingUtils {
     void draw(Scene &scene) {
         for (int x=0; x<scene.width; x++) {
             for (int y=0; y<scene.height; y++) {
@@ -110,10 +106,7 @@ namespace RayTracingUtils {
                 if (closestTriangle.distanceFromCamera == FLT_MAX) {
                     continue; // no triangle intersection found
                 }
-                ShadowUtils::applyShadows(scene, closestTriangle);
-//                if (scene.mode != Scene::RAY_TRACED && !canSeeLight(scene, closestTriangle)) {
-//                    ShadowUtils::applyShadows(scene, closestTriangle);
-//                }
+                LightingUtils::applyLighting(scene, closestTriangle); // modifies colour
                 TriangleUtils::drawPixel(scene.window, canvasPoint, closestTriangle.intersectedTriangle.colour);
             }
         }
