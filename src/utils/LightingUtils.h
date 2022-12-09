@@ -4,6 +4,6 @@
 
 class Scene;
 
-namespace ShadowUtils {
-    void applyShadows(Scene &scene, RayTriangleIntersection &closestTriangle);
+namespace LightingUtils {
+    void applyLighting(Scene &scene, RayTriangleIntersection &closestTriangle);
 }
