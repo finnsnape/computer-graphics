@@ -1,7 +1,10 @@
 # RedNoise
 ## Status
-- W7T3 (complete)
-## Todo
+- W7T4 (complete)
+## Tasks
+- Specular lighting
+- Make animation
+## Fixes
 - ~Fix x orbit~
 - ~Fix ray tracing orbit (need to utilise orientation)~
 - ~Ensure we are translating correctly~

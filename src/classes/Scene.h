@@ -10,15 +10,15 @@ public:
     enum RenderMode {
         WIRE_FRAME,
         RASTERISED,
-        RAY_TRACED,
+        RAY_TRACED
     };
     enum LightingMode {
         DEFAULT,
         HARD_SHADOWS,
         PROXIMITY,
         ANGLE_OF_INCIDENCE,
-        SPECULAR,
-        AMBIENT
+        AMBIENT,
+        SPECULAR
     };
     float width;
     float height;

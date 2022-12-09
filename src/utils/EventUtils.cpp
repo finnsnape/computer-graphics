@@ -11,7 +11,9 @@ std::map<SDL_Keycode, Scene::RenderMode> renderModeMap = {
 std::map<SDL_Keycode, Scene::LightingMode> lightingModeMap = {
         {SDLK_4, Scene::HARD_SHADOWS},
         {SDLK_5, Scene::PROXIMITY},
-        {SDLK_6, Scene::ANGLE_OF_INCIDENCE}
+        {SDLK_6, Scene::ANGLE_OF_INCIDENCE},
+        {SDLK_7, Scene::AMBIENT},
+        {SDLK_8, Scene::SPECULAR},
 };
 
 namespace {

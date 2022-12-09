@@ -29,12 +29,13 @@ namespace {
         setIntensity(intensity, closestTriangle);
     }
 
-    void applyAngleOfIncidenceLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
+    void applyAngleOfIncidenceLighting(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
         // works well with 0,0.9,0.7
         float brightness = calculateBrightness(scene, closestTriangle);
         glm::vec3 direction = glm::normalize(scene.lightSource - closestTriangle.intersectionPoint); // point to light
         float angle = glm::dot(closestTriangle.intersectedTriangle.normal, direction);
-        float ambient = 0.2; // min light amount
+        float ambient = 0.f; // min light amount
+        if (useAmbient) ambient = 0.3f;
         float intensity = glm::clamp(angle * brightness * 4, ambient, 1.f);
         setIntensity(intensity, closestTriangle);
     }
@@ -52,7 +53,10 @@ namespace LightingUtils {
                 applyProximityLighting(scene, closestTriangle);
                 break;
             case Scene::ANGLE_OF_INCIDENCE:
-                applyAngleOfIncidenceLighting(scene, closestTriangle);
+                applyAngleOfIncidenceLighting(scene, closestTriangle, false);
+                break;
+            case Scene::AMBIENT:
+                applyAngleOfIncidenceLighting(scene, closestTriangle, true);
                 break;
             default:
                 break;

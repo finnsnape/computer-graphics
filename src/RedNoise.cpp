@@ -22,6 +22,7 @@ void printInstructions() {
     "4: Hard Shadows" << std::endl <<
     "5: Proximity" << std::endl <<
     "6: Angle of Incidence" << std::endl <<
+    "7: Ambient" << std::endl <<
     std::endl <<
     "LIGHT POSITION OPERATIONS: " << std::endl <<
     "H: Translate (y, positive)" << std::endl <<
