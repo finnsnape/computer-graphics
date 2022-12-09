@@ -2,20 +2,11 @@
 #include "RayTracingUtils.h"
 #include "RasterisingUtils.h"
 
-
-Scene::Scene(float _width, float _height, Mode _mode, std::vector<ModelTriangle> _triangles, Camera _camera):
+Scene::Scene(float _width, float _height, RenderMode _renderMode, LightingMode _lightingMode, std::vector<ModelTriangle> _triangles, Camera _camera, glm::vec3 _lightSource):
         width(_width),
         height(_height),
-        mode(_mode),
-        triangles(std::move(_triangles)),
-        camera(std::move(_camera)) {
-    this->window = DrawingWindow((int) width, (int) height, false);
-}
-
-Scene::Scene(float _width, float _height, Mode _mode, std::vector<ModelTriangle> _triangles, Camera _camera, glm::vec3 _lightSource):
-        width(_width),
-        height(_height),
-        mode(_mode),
+        renderMode(_renderMode),
+        lightingMode(_lightingMode),
         triangles(std::move(_triangles)),
         camera(std::move(_camera)),
         lightSource(_lightSource) {
@@ -40,9 +31,8 @@ void Scene::moveLight(Camera::Axis axis, int sign) {
 }
 
 void Scene::draw() {
-    // FIXME: add a mode for lighting and a mode for shadows?
     this->window.clearPixels();
-    switch(this->mode) {
+    switch(this->renderMode) {
         case WIRE_FRAME:
             RasterisingUtils::drawStroked(*this);
             break;
@@ -50,15 +40,6 @@ void Scene::draw() {
             RasterisingUtils::drawFilled(*this);
             break;
         case RAY_TRACED:
-            RayTracingUtils::draw(*this);
-            break;
-        case RAY_TRACED_HARD:
-            RayTracingUtils::draw(*this);
-            break;
-        case RAY_TRACED_PROXIMITY:
-            RayTracingUtils::draw(*this);
-            break;
-        case RAY_TRACED_INCIDENCE:
             RayTracingUtils::draw(*this);
             break;
         default:
