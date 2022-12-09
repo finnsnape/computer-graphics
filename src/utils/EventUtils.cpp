@@ -2,13 +2,16 @@
 #include "Scene.h"
 #include <map>
 
-std::map<SDL_Keycode, Scene::Mode> modeMap = {
+std::map<SDL_Keycode, Scene::RenderMode> renderModeMap = {
         {SDLK_1, Scene::WIRE_FRAME},
         {SDLK_2, Scene::RASTERISED},
         {SDLK_3, Scene::RAY_TRACED},
-        {SDLK_4, Scene::RAY_TRACED_HARD},
-        {SDLK_5, Scene::RAY_TRACED_PROXIMITY},
-        {SDLK_6, Scene::RAY_TRACED_INCIDENCE},
+};
+
+std::map<SDL_Keycode, Scene::LightingMode> lightingModeMap = {
+        {SDLK_4, Scene::HARD_SHADOWS},
+        {SDLK_5, Scene::PROXIMITY},
+        {SDLK_6, Scene::ANGLE_OF_INCIDENCE}
 };
 
 namespace {
@@ -71,10 +74,17 @@ namespace {
         //std::cout << "Doing operation: " << SDL_GetKeyName(key) << "..." << std::endl;
     }
 
-    void changeMode(SDL_Keycode key, Scene &scene) {
-        Scene::Mode newMode = modeMap[key];
-        scene.mode = newMode;
-        std::cout << "Setting mode to: " << newMode + 1 << "..." << std::endl;
+    void changeRenderMode(SDL_Keycode key, Scene &scene) {
+        Scene::RenderMode newMode = renderModeMap[key];
+        scene.renderMode = newMode;
+        std::cout << "Setting render mode to: " << newMode + 1 << "..." << std::endl;
+    }
+
+    void changeLightingMode(SDL_Keycode key, Scene &scene) {
+        Scene::LightingMode newMode = lightingModeMap[key];
+        scene.renderMode = Scene::RAY_TRACED;
+        scene.lightingMode = newMode;
+        std::cout << "Setting lighting mode to: " << newMode + 3 << "..." << std::endl;
     }
 }
 
@@ -82,10 +92,12 @@ namespace EventUtils {
     void handleEvent(SDL_Event event, Scene &scene) {
         if (event.type != SDL_KEYDOWN) return;
         SDL_Keycode key = event.key.keysym.sym;
-        if (modeMap.count(key)) {
-            changeMode(key, scene); // wire frame, ray traced, etc.
+        if (renderModeMap.count(key)) {
+            changeRenderMode(key, scene); // wire frame, ray traced, etc.,
+        } else if (lightingModeMap.count(key)) {
+            changeLightingMode(key, scene); // hard shadows, proximity, etc.,
         } else {
-            doOperation(key, scene, event); // rotate, translate
+            doOperation(key, scene, event); // rotate, translate, etc.,
         }
         scene.draw();
     }
