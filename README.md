@@ -1,10 +1,11 @@
 # RedNoise
 ## Status
-- W7T4 (complete)
+- W7T4 (in progress)
 ## Tasks
 - Specular lighting
-- Make animation
+- Export of image files and creation of animated video
 ## Fixes
+- Try moving model (or part of model, e.g., just one box!)
 - ~Fix x orbit~
 - ~Fix ray tracing orbit (need to utilise orientation)~
 - ~Ensure we are translating correctly~

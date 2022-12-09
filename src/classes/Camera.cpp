@@ -5,7 +5,6 @@
 
 Camera::Camera(float _width, float _height, glm::vec3 _position, bool _orbit): width(_width), height(_height), position(_position), orbit(_orbit) {
     this->lookAt({0.0, 0.0, 0.0});
-    //
     // this->rotation = glm::rotate(glm::mat4(1.f), glm::radians(0.f), {0.f, 1.f, 0.f}); // no rotation to start
     this->model = glm::translate(glm::mat4(1.f), {0.f, 0.f, 0.f});
     // FIXME: maybe we alter the rotation of this, instead of the perspective being negative?
@@ -36,11 +35,10 @@ void Camera::translate(Axis axis, int sign) {
     updateMVP();
 }
 
-/// @brief Rotates camera position anti-clockwise about the camera coordinate system origin
+/// @brief Rotates camera position anti-clockwise about the world origin
 void Camera::rotate(Axis axis, int sign) {
     float modifier = 3 * sign;
     glm::vec3 axisVector;
-    // FIXME: a rotation of 0 is _slightly_ rotated because of floating point issues
     switch(axis) {
         case x:
             axisVector = {1.0f, 0.0f, 0.0f};
@@ -69,4 +67,5 @@ void Camera::lookAt(glm::vec3 vertex) {
     glm::vec3 right = glm::cross(direction, forward);
     glm::vec3 up = glm::cross(forward, right);
     this->rotation = {glm::vec4(right, 0.f), glm::vec4(up, 0.f), glm::vec4(forward, 0.f), glm::vec4(0.f, 0.f, 0.f, 1.f)};
+    updateMVP();
 }

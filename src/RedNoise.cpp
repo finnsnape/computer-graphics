@@ -19,10 +19,11 @@ void printInstructions() {
     "3: Ray Traced" << std::endl <<
     std::endl <<
     "LIGHTING MODES (Ray Traced): " << std::endl <<
-    "4: Hard Shadows" << std::endl <<
-    "5: Proximity" << std::endl <<
-    "6: Angle of Incidence" << std::endl <<
-    "7: Ambient" << std::endl <<
+    "4: Default" << std::endl <<
+    "5: Hard Shadows" << std::endl <<
+    "6: Proximity" << std::endl <<
+    "7: Angle of Incidence" << std::endl <<
+    "8: Ambient" << std::endl <<
     std::endl <<
     "LIGHT POSITION OPERATIONS: " << std::endl <<
     "H: Translate (y, positive)" << std::endl <<
@@ -60,7 +61,7 @@ int main(int argc, char *argv[]) {
     Scene::RenderMode renderMode = Scene::RAY_TRACED;
     Scene::LightingMode lightingMode = Scene::ANGLE_OF_INCIDENCE;
     float scaleFactor = 0.35;
-    glm::vec3 lightSource(0.0, 0.9, 0.7);
+    glm::vec3 lightSource(0.0, 0.55, 0.7);
     glm::vec3 initialPosition(0.0, 0.0, 4.0);
     Camera camera(WIDTH, HEIGHT, initialPosition, false);
     Scene scene = initScene(renderMode, lightingMode, scaleFactor, initialPosition, lightSource);

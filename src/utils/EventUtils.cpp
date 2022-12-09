@@ -9,11 +9,12 @@ std::map<SDL_Keycode, Scene::RenderMode> renderModeMap = {
 };
 
 std::map<SDL_Keycode, Scene::LightingMode> lightingModeMap = {
-        {SDLK_4, Scene::HARD_SHADOWS},
-        {SDLK_5, Scene::PROXIMITY},
-        {SDLK_6, Scene::ANGLE_OF_INCIDENCE},
-        {SDLK_7, Scene::AMBIENT},
-        {SDLK_8, Scene::SPECULAR},
+        {SDLK_4, Scene::DEFAULT},
+        {SDLK_5, Scene::HARD_SHADOWS},
+        {SDLK_6, Scene::PROXIMITY},
+        {SDLK_7, Scene::ANGLE_OF_INCIDENCE},
+        {SDLK_8, Scene::AMBIENT},
+        {SDLK_9, Scene::SPECULAR},
 };
 
 namespace {
@@ -86,7 +87,7 @@ namespace {
         Scene::LightingMode newMode = lightingModeMap[key];
         scene.renderMode = Scene::RAY_TRACED;
         scene.lightingMode = newMode;
-        std::cout << "Setting lighting mode to: " << newMode + 3 << "..." << std::endl;
+        std::cout << "Setting lighting mode to: " << newMode + 4 << "..." << std::endl;
     }
 }
 
