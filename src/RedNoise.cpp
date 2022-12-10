@@ -24,6 +24,7 @@ void printInstructions() {
     "6: Proximity" << std::endl <<
     "7: Angle of Incidence" << std::endl <<
     "8: Ambient" << std::endl <<
+    "9: Specular" << std::endl <<
     std::endl <<
     "LIGHT POSITION OPERATIONS: " << std::endl <<
     "H: Translate (y, positive)" << std::endl <<
@@ -59,9 +60,10 @@ Scene initScene(Scene::RenderMode renderMode, Scene::LightingMode lightingMode, 
 
 int main(int argc, char *argv[]) {
     Scene::RenderMode renderMode = Scene::RAY_TRACED;
-    Scene::LightingMode lightingMode = Scene::ANGLE_OF_INCIDENCE;
+    Scene::LightingMode lightingMode = Scene::SPECULAR;
     float scaleFactor = 0.35;
-    glm::vec3 lightSource(0.0, 0.55, 0.7);
+    //glm::vec3 lightSource(0.0, 0.55, 0.7);
+    glm::vec3 lightSource(0.8, 0.8, -0.8);
     glm::vec3 initialPosition(0.0, 0.0, 4.0);
     Camera camera(WIDTH, HEIGHT, initialPosition, false);
     Scene scene = initScene(renderMode, lightingMode, scaleFactor, initialPosition, lightSource);
