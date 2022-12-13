@@ -1,4 +1,4 @@
-# RedNoise
+# Computer Graphics
 ## Main tasks
 - Specular lighting (in progress)
 - Fix lookAt
