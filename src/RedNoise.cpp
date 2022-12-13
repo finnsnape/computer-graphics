@@ -35,6 +35,7 @@ void printInstructions() {
     "K: Translate (z, negative)" << std::endl <<
     std::endl <<
     "CAMERA POSITION OPERATIONS: " << std::endl <<
+    "L: Look At (0, 0, 0)" << std::endl <<
     "O: Orbit (y, positive)" << std::endl <<
     "W: Translate (y, positive)" << std::endl <<
     "S: Translate (y, negative)" << std::endl <<
@@ -46,6 +47,9 @@ void printInstructions() {
     "DOWN: Rotate (x, positive)" << std::endl <<
     "LEFT: Rotate (y, negative)" << std::endl <<
     "RIGHT: Rotate (y, positive)" << std::endl <<
+    std::endl <<
+    "MISC: " << std::endl <<
+    "F: Save as file" << std::endl <<
     "=================================" << std::endl;
 }
 

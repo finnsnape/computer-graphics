@@ -27,7 +27,7 @@ namespace {
         std::map<std::string, Colour> colourMap;
         std::vector<std::string> colourNames;
         std::vector<Colour> colourValues;
-        std::ifstream filein("models/" + mtlFileName); // "cornell-box.mtl"
+        std::ifstream filein("resources/models/" + mtlFileName); // "cornell-box.mtl"
         for (std::string line; std::getline(filein, line); ) {
             if (line[0] == 'n') {
                 colourNames.push_back(parseColourName(line));
@@ -77,12 +77,15 @@ namespace {
 }
 
 namespace FilesUtils {
+    void saveAsImage(DrawingWindow &window) {
+        window.savePPM("output/output.ppm");
+    }
     std::vector<ModelTriangle> loadOBJ(float scaleFactor, std::string objFileName, std::string mtlFileName) {
         std::vector<glm::vec3> trianglePoints;
         std::vector<std::vector<int>> triangles;
         std::vector<std::string> colours;
         std::map<std::string, Colour> colourMap = loadColours(mtlFileName);
-        std::ifstream filein("models/" + objFileName); // "cornell-box.obj"
+        std::ifstream filein("resources/models/" + objFileName); // "cornell-box.obj"
         std::string lastColourName;
         for (std::string line; std::getline(filein, line); ) {
             if (line[0] == 'v') {

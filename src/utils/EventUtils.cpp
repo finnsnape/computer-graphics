@@ -1,6 +1,7 @@
 #include "EventUtils.h"
 #include "Scene.h"
 #include <map>
+#include "FilesUtils.h"
 
 std::map<SDL_Keycode, Scene::RenderMode> renderModeMap = {
         {SDLK_1, Scene::WIRE_FRAME},
@@ -50,8 +51,15 @@ namespace {
             case SDLK_RIGHT:
                 scene.camera.rotate(Camera::y, 1);
                 break;
+            case SDLK_f:
+                std::cout << "Saving..." << std::endl;
+                FilesUtils::saveAsImage(scene.window);
+                break;
             case SDLK_o:
                 scene.camera.orbit = !scene.camera.orbit;
+                break;
+            case SDLK_l:
+                scene.camera.lookAt({0.0, 0.0, 0.0});
                 break;
             case SDLK_h:
                 scene.moveLight(Camera::Axis::y, 1);
