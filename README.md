@@ -1,11 +1,9 @@
 # RedNoise
-## Status
-- W7T4 (in progress)
 ## Main tasks
-- Specular lighting
+- Specular lighting (in progress)
 - Fix lookAt
 - Export of image files and creation of animated video
-- Mirrors
+- Mirrors (in progress)
 - Test on vagrant
 ## General
 - Try moving model (or part of model, e.g., just one box!)
