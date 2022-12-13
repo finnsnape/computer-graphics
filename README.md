@@ -23,6 +23,7 @@
 - a * b in glm is same as a * b in maths (for matrices)
 
 # Computer Graphics
+## Description
 Program that implements both rasterised and ray traced rendering methods.
 
 Also features more complex techniques such as:
@@ -32,3 +33,10 @@ Also features more complex techniques such as:
 - Ambient lighting 
 - Specular lighting 
 - Mirrors
+
+## Requirements
+- `clang++`
+- `sdl2`
+
+## Running
+- `make`
