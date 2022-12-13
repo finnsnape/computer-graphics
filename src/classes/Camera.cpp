@@ -62,13 +62,15 @@ void Camera::updateMVP() {
 
 /// @brief Alters the camera orientation to face a given vertex
 void Camera::lookAt(glm::vec3 vertex) {
-    glm::vec3 forward = glm::normalize(this->position - vertex);
-    glm::vec3 direction(0.0, 1.0, 0.0);
-    glm::vec3 right = glm::cross(direction, forward);
-    glm::vec3 up = glm::cross(forward, right);
-    glm::mat4 newRotation(glm::vec4(right, 0.f), glm::vec4(up, 0.f), glm::vec4(forward, 0.f), glm::vec4(0.f, 0.f, 0.f, 1.f));
-    glm::mat4 T0 = glm::translate(glm::mat4(1.f), this->position);
-    glm::mat4 cameraMatrix = newRotation * T0; // M
-    glm::mat4 view = glm::inverse(cameraMatrix); // V
+    glm::vec3 forward = glm::normalize(vertex - this->position);
+    glm::vec3 up(0.f, 1.f, 0.f);
+    glm::vec3 right = glm::normalize(glm::cross(forward, up));
+    up = glm::cross(right, forward);
+    glm::mat4 view(
+        right.x, up.x, -forward.x, 1.f,
+        right.y, up.y, -forward.y, 1.f,
+        right.z, up.z, -forward.z, 1.f,
+        -glm::dot(right, this->position), -glm::dot(up, this->position), glm::dot(forward, this->position), 1.f
+    );
     this->mvp = this->projection * view * this->model;
 }
