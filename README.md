@@ -1,4 +1,4 @@
-# Computer Graphics
+# TODO
 ## Main tasks
 - Specular lighting (in progress)
 - Fix lookAt
@@ -21,3 +21,14 @@
 ## Notes
 - negative z is away from us
 - a * b in glm is same as a * b in maths (for matrices)
+
+# Computer Graphics
+Program that implements both rasterised and ray traced rendering methods.
+
+Also features more complex techniques such as:
+- Shadows 
+- Proximity lighting 
+- Angle of incidence lighting 
+- Ambient lighting 
+- Specular lighting 
+- Mirrors
