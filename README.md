@@ -3,6 +3,7 @@
 - W7T4 (in progress)
 ## Tasks
 - Specular lighting
+- lookAt (0,0,0) as a key
 - Export of image files and creation of animated video
 ## Fixes
 - Try moving model (or part of model, e.g., just one box!)

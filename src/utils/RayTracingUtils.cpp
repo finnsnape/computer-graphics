@@ -5,7 +5,6 @@
 #include "Scene.h"
 #include "TriangleUtils.h"
 #include "LightingUtils.h"
-#include <Ray.h>
 #include <cmath>
 
 namespace {
@@ -60,9 +59,11 @@ namespace {
         glm::vec4 direction(glm::normalize(glm::inverse(scene.camera.mvp) * farPos)); // adjust far pos to world and normalise
         return {glm::vec3(origin), glm::vec3(direction)};
     }
+}
 
+namespace RayTracingUtils {
     /// @brief Returns the triangle that the given ray intersects with first, using given ray (camera or light source)
-    RayTriangleIntersection findClosestTriangle(Scene &scene, Ray ray) {
+    RayTriangleIntersection findClosestTriangle(Scene &scene, Ray ray, bool mirror, int k) {
         RayTriangleIntersection closestTriangle;
         closestTriangle.distanceFromCamera = FLT_MAX;
         for (size_t i=0; i<scene.triangles.size(); i++) {
@@ -71,15 +72,14 @@ namespace {
             if (glm::determinant(DEMatrix) == 0) continue; // would be dividing by 0
             glm::vec3 rawIntersection = calculateRawIntersection(ray.origin, triangle, DEMatrix);
             if (!validateRawIntersection(rawIntersection)) continue;
-            if (rawIntersection.x >= closestTriangle.distanceFromCamera) continue; // something closer already exists
+            if (rawIntersection.x >= closestTriangle.distanceFromCamera || closestTriangle.distanceFromCamera <= 0) continue; // something closer already exists
+            if (mirror && i == k) continue; // same triangle we are reflecting from
             glm::vec3 intersectionPoint = calculateIntersection(scene, DEMatrix, triangle, rawIntersection);
             closestTriangle = {intersectionPoint, rawIntersection.x, triangle, i};
         }
         return closestTriangle;
     }
-}
 
-namespace RayTracingUtils {
     /// @brief Checks if the point we want to draw on an intersecting triangle is able to see the light source
     bool canSeeLight(Scene &scene, const RayTriangleIntersection &closestTriangle) {
         // ray using intersection and light source
@@ -87,7 +87,7 @@ namespace RayTracingUtils {
         glm::vec3 origin = scene.lightSource;
         Ray ray(origin, direction);
         // get triangle closest to light source
-        RayTriangleIntersection newClosestTriangle = findClosestTriangle(scene, ray);
+        RayTriangleIntersection newClosestTriangle = findClosestTriangle(scene, ray, false, -1);
         // if triangle we are trying to draw is the triangle closest to the light source
         // then that means it can see the light. otherwise, it cannot as it's behind another one
         if (closestTriangle.triangleIndex == newClosestTriangle.triangleIndex) {
@@ -102,7 +102,7 @@ namespace RayTracingUtils {
                 CanvasPoint canvasPoint((float) x, (float) y);
                 if (!TriangleUtils::isInsideCanvas(scene.window, canvasPoint)) continue;
                 Ray ray = calculateRayFromCamera(scene, canvasPoint);
-                RayTriangleIntersection closestTriangle = findClosestTriangle(scene, ray);
+                RayTriangleIntersection closestTriangle = findClosestTriangle(scene, ray, false, -1);
                 if (closestTriangle.distanceFromCamera == FLT_MAX) {
                     continue; // no triangle intersection found
                 }

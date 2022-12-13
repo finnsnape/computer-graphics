@@ -47,6 +47,30 @@ namespace {
         return fmax(intensity, 0.f);
     }
 
+    /// @brief Checks if the provided colour is equal to the object colour we have set to be a mirror
+    bool isMirror(Colour colour) {
+        // check if colou
+        if (colour.red == 178 && colour.green == 178 && colour.blue == 178) return true;
+        return false;
+    }
+
+    void applyMirror(Scene &scene, RayTriangleIntersection &closestTriangle) {
+        if (!isMirror(closestTriangle.intersectedTriangle.colour)) return;
+        glm::vec3 viewDir = glm::normalize(scene.camera.position - closestTriangle.intersectionPoint);
+        glm::vec3 reflectDir = glm::reflect(-viewDir, closestTriangle.intersectedTriangle.normal);
+        Ray ray(closestTriangle.intersectionPoint, reflectDir);
+        RayTriangleIntersection newClosestTriangle = RayTracingUtils::findClosestTriangle(scene, ray, true, closestTriangle.triangleIndex);
+        if (newClosestTriangle.distanceFromCamera == FLT_MAX) {
+            closestTriangle.intersectedTriangle.colour = Colour(0, 0, 0);
+            return;
+        }
+        closestTriangle.intersectedTriangle.colour = newClosestTriangle.intersectedTriangle.colour;
+        // FIXME: maybe we shouldn't actually update the colour, just set the pixel?
+        // FIXME: perhaps incorrect normals are causing weird reflections?
+        // FIXME: maybe we need to get the next triangle that's not this one?
+        std::cout << newClosestTriangle.intersectedTriangle.colour << std::endl;
+    }
+
     void applyAngleOfIncidenceLighting(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
         // works well with 0,0.9,0.7
         float intensity = calculateIncidenceIntensity(scene, closestTriangle, useAmbient);
@@ -77,6 +101,7 @@ namespace LightingUtils {
     void applyLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
         switch (scene.lightingMode) {
             case Scene::DEFAULT:
+                applyMirror(scene, closestTriangle);
                 break;
             case Scene::HARD_SHADOWS:
                 applyHardShadows(scene, closestTriangle);
