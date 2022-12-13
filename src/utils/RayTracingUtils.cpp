@@ -83,8 +83,8 @@ namespace RayTracingUtils {
     /// @brief Checks if the point we want to draw on an intersecting triangle is able to see the light source
     bool canSeeLight(Scene &scene, const RayTriangleIntersection &closestTriangle) {
         // ray using intersection and light source
-        glm::vec3 direction = glm::normalize(closestTriangle.intersectionPoint - scene.lightSource);
-        glm::vec3 origin = scene.lightSource;
+        glm::vec3 direction = glm::normalize(closestTriangle.intersectionPoint - scene.light.position);
+        glm::vec3 origin = scene.light.position;
         Ray ray(origin, direction);
         // get triangle closest to light source
         RayTriangleIntersection newClosestTriangle = findClosestTriangle(scene, ray, false, -1);

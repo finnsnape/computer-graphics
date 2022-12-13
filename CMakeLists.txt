@@ -46,7 +46,7 @@ add_executable(RedNoise
         src/utils/TriangleUtils.cpp
         src/utils/EventUtils.cpp
         src/utils/LightingUtils.cpp
-        src/RedNoise.cpp)
+        src/RedNoise.cpp libs/sdw/Light.cpp libs/sdw/Light.h)
 
 if (MSVC)
     target_compile_options(RedNoise

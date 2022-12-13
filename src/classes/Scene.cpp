@@ -2,14 +2,14 @@
 #include "RayTracingUtils.h"
 #include "RasterisingUtils.h"
 
-Scene::Scene(float _width, float _height, RenderMode _renderMode, LightingMode _lightingMode, std::vector<ModelTriangle> _triangles, Camera _camera, glm::vec3 _lightSource):
+Scene::Scene(float _width, float _height, RenderMode _renderMode, Light _light, std::vector<ModelTriangle> _triangles, Camera _camera):
         width(_width),
         height(_height),
         renderMode(_renderMode),
-        lightingMode(_lightingMode),
+        light(_light),
         triangles(std::move(_triangles)),
-        camera(std::move(_camera)),
-        lightSource(_lightSource) {
+        camera(std::move(_camera))
+        {
     this->window = DrawingWindow((int) width, (int) height, false);
 }
 
@@ -17,13 +17,13 @@ void Scene::moveLight(Camera::Axis axis, int sign) {
     float modifier = 0.1f * sign;
     switch(axis) {
         case Camera::Axis::x:
-            this->lightSource.x += modifier;
+            this->light.position.x += modifier;
             break;
         case Camera::Axis::y:
-            this->lightSource.y += modifier;
+            this->light.position.y += modifier;
             break;
         case Camera::Axis::z:
-            this->lightSource.z += modifier;
+            this->light.position.z += modifier;
             break;
         default:
             break;

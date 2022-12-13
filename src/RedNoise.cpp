@@ -49,24 +49,26 @@ void printInstructions() {
     "=================================" << std::endl;
 }
 
-Scene initScene(Scene::RenderMode renderMode, Scene::LightingMode lightingMode, float scaleFactor, glm::vec3 initialPosition, glm::vec3 lightSource) {
+Scene initScene(Scene::RenderMode renderMode, Light light, float scaleFactor, glm::vec3 initialPosition) {
     std::string objFileName = "cornell-box.obj";
     std::string mtlFileName = "cornell-box.mtl";
     Camera camera(WIDTH, HEIGHT, initialPosition, false);
     std::vector<ModelTriangle> triangles = FilesUtils::loadOBJ(scaleFactor, objFileName, mtlFileName);
-    Scene scene(WIDTH, HEIGHT, renderMode, lightingMode, triangles, camera, lightSource);
+    Scene scene(WIDTH, HEIGHT, renderMode, light, triangles, camera);
     return scene;
 }
 
 int main(int argc, char *argv[]) {
     Scene::RenderMode renderMode = Scene::RAY_TRACED;
-    Scene::LightingMode lightingMode = Scene::SPECULAR;
-    float scaleFactor = 0.35;
+    Light::Mode lightMode = Light::SPECULAR;
     glm::vec3 lightSource(0.0, 0.55, 0.7);
+    Light light(lightSource, lightMode);
+    float scaleFactor = 0.35;
+
     //glm::vec3 lightSource(0.8, 0.8, -0.8);
     glm::vec3 initialPosition(0.0, 0.0, 4.0);
     Camera camera(WIDTH, HEIGHT, initialPosition, false);
-    Scene scene = initScene(renderMode, lightingMode, scaleFactor, initialPosition, lightSource);
+    Scene scene = initScene(renderMode, light, scaleFactor, initialPosition);
     SDL_Event event;
     printInstructions();
     scene.draw();

@@ -19,14 +19,14 @@ namespace {
 
     /// @brief Gets brightness based on distance from light source
     float calculateProximityIntensity(Scene &scene, RayTriangleIntersection &closestTriangle) {
-        float distance = glm::length(scene.lightSource - closestTriangle.intersectionPoint);
+        float distance = glm::length(scene.light.position - closestTriangle.intersectionPoint);
         float brightness = 1.f/(0.5f * glm::pi<float>() * pow(distance, 2));
         return fmin(brightness, 1.f);
     }
 
     float calculateIncidenceIntensity(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
         float brightness = calculateProximityIntensity(scene, closestTriangle);
-        glm::vec3 direction = glm::normalize(scene.lightSource - closestTriangle.intersectionPoint); // point to light
+        glm::vec3 direction = glm::normalize(scene.light.position - closestTriangle.intersectionPoint); // point to light
         float angle = glm::dot(closestTriangle.intersectedTriangle.normal, direction);
         return fmax(angle, 0.f);
         //float ambient = 0.f; // min light amount
@@ -37,12 +37,12 @@ namespace {
 
     float calculateSpecularIntensity(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
         float specularStrength = 0.5f;
-        glm::vec3 lightDir = glm::normalize(scene.lightSource - closestTriangle.intersectionPoint); // point to light
+        glm::vec3 lightDir = glm::normalize(scene.light.position - closestTriangle.intersectionPoint); // point to light
         glm::vec3 viewDir = glm::normalize(scene.camera.position - closestTriangle.intersectionPoint);
         glm::vec3 reflectDir = glm::reflect(-lightDir, closestTriangle.intersectedTriangle.normal);
         //std::cout << glm::dot(viewDir, reflectDir) << std::endl;
         float specFactor = fmax(glm::dot(viewDir, reflectDir), 0.f);
-        float spec = pow(specFactor, 64);
+        float spec = pow(specFactor, 64.f);
         float intensity = specularStrength * spec;
         return fmax(intensity, 0.f);
     }
@@ -68,7 +68,6 @@ namespace {
         // FIXME: maybe we shouldn't actually update the colour, just set the pixel?
         // FIXME: perhaps incorrect normals are causing weird reflections?
         // FIXME: maybe we need to get the next triangle that's not this one?
-        std::cout << newClosestTriangle.intersectedTriangle.colour << std::endl;
     }
 
     void applyAngleOfIncidenceLighting(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
@@ -99,23 +98,23 @@ namespace {
 
 namespace LightingUtils {
     void applyLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
-        switch (scene.lightingMode) {
-            case Scene::DEFAULT:
+        switch (scene.light.mode) {
+            case Light::DEFAULT:
                 applyMirror(scene, closestTriangle);
                 break;
-            case Scene::HARD_SHADOWS:
+            case Light::HARD_SHADOWS:
                 applyHardShadows(scene, closestTriangle);
                 break;
-            case Scene::PROXIMITY:
+            case Light::PROXIMITY:
                 applyProximityLighting(scene, closestTriangle);
                 break;
-            case Scene::ANGLE_OF_INCIDENCE:
+            case Light::ANGLE_OF_INCIDENCE:
                 applyAngleOfIncidenceLighting(scene, closestTriangle, false);
                 break;
-            case Scene::AMBIENT:
+            case Light::AMBIENT:
                 applyAngleOfIncidenceLighting(scene, closestTriangle, true);
                 break;
-            case Scene::SPECULAR:
+            case Light::SPECULAR:
                 applySpecularLighting(scene, closestTriangle, false);
                 break;
             default:

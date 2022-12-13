@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include <DrawingWindow.h>
 #include <ModelTriangle.h>
+#include <Light.h>
 
 class Scene {
 public:
@@ -12,23 +13,22 @@ public:
         RASTERISED,
         RAY_TRACED
     };
-    enum LightingMode {
-        DEFAULT,
-        HARD_SHADOWS,
-        PROXIMITY,
-        ANGLE_OF_INCIDENCE,
-        AMBIENT,
-        SPECULAR
-    };
+//    enum LightingMode {
+//        DEFAULT,
+//        HARD_SHADOWS,
+//        PROXIMITY,
+//        ANGLE_OF_INCIDENCE,
+//        AMBIENT,
+//        SPECULAR
+//    };
     float width;
     float height;
     RenderMode renderMode;
-    LightingMode lightingMode;
+    Light light;
     std::vector<ModelTriangle> triangles;
     Camera camera;
     DrawingWindow window;
-    glm::vec3 lightSource;
-    Scene(float width, float height, RenderMode renderMode, LightingMode lightingMode, std::vector<ModelTriangle> triangles, Camera camera, glm::vec3 lightSource);
+    Scene(float width, float height, RenderMode renderMode, Light light, std::vector<ModelTriangle> triangles, Camera camera);
     void moveLight(Camera::Axis axis, int sign);
     void draw();
 };
