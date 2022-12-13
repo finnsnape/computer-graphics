@@ -71,7 +71,6 @@ int main(int argc, char *argv[]) {
 
     //glm::vec3 lightSource(0.8, 0.8, -0.8);
     glm::vec3 initialPosition(0.0, 0.0, 4.0);
-    Camera camera(WIDTH, HEIGHT, initialPosition, false);
     Scene scene = initScene(renderMode, light, scaleFactor, initialPosition);
     SDL_Event event;
     printInstructions();

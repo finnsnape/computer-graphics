@@ -4,8 +4,8 @@
 
 
 Camera::Camera(float _width, float _height, glm::vec3 _position, bool _orbit): width(_width), height(_height), position(_position), orbit(_orbit) {
-    this->lookAt({0.0, 0.0, 0.0});
-    // this->rotation = glm::rotate(glm::mat4(1.f), glm::radians(0.f), {0.f, 1.f, 0.f}); // no rotation to start
+    //this->lookAt({0.0, 0.0, 0.0});
+    this->rotation = glm::rotate(glm::mat4(1.f), glm::radians(0.f), {0.f, 1.f, 0.f}); // no rotation to start
     this->model = glm::translate(glm::mat4(1.f), {0.f, 0.f, 0.f});
     // FIXME: maybe we alter the rotation of this, instead of the perspective being negative?
     this->updateMVP();
@@ -60,6 +60,15 @@ void Camera::updateMVP() {
     this->mvp = this->projection * view * this->model;
 }
 
+void pm(glm::mat4 m) {
+    std::cout <<
+    m[0].x << "," << m[0].y << "," << m[0].z << "," << m[0].w << std::endl <<
+    m[1].x << "," << m[1].y << "," << m[1].z << "," << m[1].w << std::endl <<
+    m[2].x << "," << m[2].y << "," << m[2].z << "," << m[2].w << std::endl <<
+    m[3].x << "," << m[3].y << "," << m[3].z << "," << m[3].w << std::endl <<
+    std::endl;
+}
+
 /// @brief Alters the camera orientation to face a given vertex
 void Camera::lookAt(glm::vec3 vertex) {
     glm::vec3 forward = glm::normalize(vertex - this->position);
@@ -72,5 +81,9 @@ void Camera::lookAt(glm::vec3 vertex) {
         right.z, up.z, -forward.z, 1.f,
         -glm::dot(right, this->position), -glm::dot(up, this->position), glm::dot(forward, this->position), 1.f
     );
+    // FIXME: we need to either update rotation or position as well
+    //glm::mat4 T0 = glm::translate(glm::mat4(1.f), this->position);
+    //this->rotation = glm::inverse(view) * glm::inverse(T0);
+    //this->position = glm::vec3(-view[3]);
     this->mvp = this->projection * view * this->model;
 }
