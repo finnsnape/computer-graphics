@@ -22,34 +22,34 @@ namespace {
     void doOperation(SDL_Keycode key, Scene &scene, SDL_Event event) {
         switch(key) {
             case SDLK_w:
-                scene.camera.translate(Camera::y, 1);
+                scene.camera.translate(Camera::y, 1.f);
                 break;
             case SDLK_s:
-                scene.camera.translate(Camera::y, -1);
+                scene.camera.translate(Camera::y, -1.f);
                 break;
             case SDLK_a:
-                scene.camera.translate(Camera::x, -1);
+                scene.camera.translate(Camera::x, -1.f);
                 break;
             case SDLK_d:
-                scene.camera.translate(Camera::x, 1);
+                scene.camera.translate(Camera::x, 1.f);
                 break;
             case SDLK_MINUS:
-                scene.camera.translate(Camera::z, 1);
+                scene.camera.translate(Camera::z, 1.f);
                 break;
             case SDLK_EQUALS:
-                scene.camera.translate(Camera::z, -1);
+                scene.camera.translate(Camera::z, -1.f);
                 break;
             case SDLK_UP:
-                scene.camera.rotate(Camera::x, -1);
+                scene.camera.rotate(Camera::x, -1.f);
                 break;
             case SDLK_DOWN:
-                scene.camera.rotate(Camera::x, 1);
+                scene.camera.rotate(Camera::x, 1.f);
                 break;
             case SDLK_LEFT:
-                scene.camera.rotate(Camera::y, -1);
+                scene.camera.rotate(Camera::y, -1.f);
                 break;
             case SDLK_RIGHT:
-                scene.camera.rotate(Camera::y, 1);
+                scene.camera.rotate(Camera::y, 1.f);
                 break;
             case SDLK_f:
                 std::cout << "Saving..." << std::endl;
