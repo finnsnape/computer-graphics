@@ -13,14 +13,6 @@ public:
         RASTERISED,
         RAY_TRACED
     };
-//    enum LightingMode {
-//        DEFAULT,
-//        HARD_SHADOWS,
-//        PROXIMITY,
-//        ANGLE_OF_INCIDENCE,
-//        AMBIENT,
-//        SPECULAR
-//    };
     float width;
     float height;
     RenderMode renderMode;
