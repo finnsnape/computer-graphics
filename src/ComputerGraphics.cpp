@@ -76,6 +76,10 @@ int main(int argc, char *argv[]) {
     scene.draw();
     while(true) {
         if (scene.window.pollForInputEvents(event)) EventUtils::handleEvent(event, scene);
+        if (scene.camera.orbit) {
+            scene.camera.rotate(Camera::Axis::y, 1.f);
+            scene.draw();
+        }
         scene.window.renderFrame();
     }
 }
