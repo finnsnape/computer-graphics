@@ -49,8 +49,8 @@ namespace {
 
     /// @brief Checks if the provided colour is equal to the object colour we have set to be a mirror
     bool isMirror(Colour colour) {
-        // check if colou
-        if (colour.red == 255 && colour.green == 0 && colour.blue == 255) return true;
+        Colour mirrorColour(178, 178, 178);
+        if (colour == mirrorColour) return true;
         return false;
     }
 
