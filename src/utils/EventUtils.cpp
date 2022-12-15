@@ -22,34 +22,34 @@ namespace {
     void doOperation(SDL_Keycode key, Scene &scene, SDL_Event event) {
         switch(key) {
             case SDLK_w:
-                scene.camera.translate(Camera::y, 1);
+                scene.camera.translate(Camera::y, 1.f);
                 break;
             case SDLK_s:
-                scene.camera.translate(Camera::y, -1);
+                scene.camera.translate(Camera::y, -1.f);
                 break;
             case SDLK_a:
-                scene.camera.translate(Camera::x, -1);
+                scene.camera.translate(Camera::x, -1.f);
                 break;
             case SDLK_d:
-                scene.camera.translate(Camera::x, 1);
+                scene.camera.translate(Camera::x, 1.f);
                 break;
             case SDLK_MINUS:
-                scene.camera.translate(Camera::z, 1);
+                scene.camera.translate(Camera::z, 1.f);
                 break;
             case SDLK_EQUALS:
-                scene.camera.translate(Camera::z, -1);
+                scene.camera.translate(Camera::z, -1.f);
                 break;
             case SDLK_UP:
-                scene.camera.rotate(Camera::x, -1);
+                scene.camera.rotate(Camera::x, -1.f);
                 break;
             case SDLK_DOWN:
-                scene.camera.rotate(Camera::x, 1);
+                scene.camera.rotate(Camera::x, 1.f);
                 break;
             case SDLK_LEFT:
-                scene.camera.rotate(Camera::y, -1);
+                scene.camera.rotate(Camera::y, -1.f);
                 break;
             case SDLK_RIGHT:
-                scene.camera.rotate(Camera::y, 1);
+                scene.camera.rotate(Camera::y, 1.f);
                 break;
             case SDLK_f:
                 std::cout << "Saving..." << std::endl;
@@ -59,25 +59,25 @@ namespace {
                 scene.camera.orbit = !scene.camera.orbit;
                 break;
             case SDLK_l:
-                scene.camera.lookAt({0.0, 0.0, 0.0});
+                scene.camera.lookAt({0.f, 0.f, 0.f});
                 break;
             case SDLK_h:
-                scene.moveLight(Camera::Axis::y, 1);
+                scene.moveLight(Camera::Axis::y, 1.f);
                 break;
             case SDLK_n:
-                scene.moveLight(Camera::Axis::y, -1);
+                scene.moveLight(Camera::Axis::y, -1.f);
                 break;
             case SDLK_b:
-                scene.moveLight(Camera::Axis::x, -1);
+                scene.moveLight(Camera::Axis::x, -1.f);
                 break;
             case SDLK_m:
-                scene.moveLight(Camera::Axis::x, 1);
+                scene.moveLight(Camera::Axis::x, 1.f);
                 break;
             case SDLK_j:
-                scene.moveLight(Camera::Axis::z, 1);
+                scene.moveLight(Camera::Axis::z, 1.f);
                 break;
             case SDLK_k:
-                scene.moveLight(Camera::Axis::z, -1);
+                scene.moveLight(Camera::Axis::z, -1.f);
                 break;
             default:
                 return;

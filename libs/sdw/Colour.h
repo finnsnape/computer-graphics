@@ -13,3 +13,5 @@ struct Colour {
 };
 
 std::ostream &operator<<(std::ostream &os, const Colour &colour);
+
+bool operator==(const Colour &c1, const Colour &c2);

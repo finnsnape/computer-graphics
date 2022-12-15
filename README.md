@@ -1,18 +1,20 @@
 # TODO
 ## Main tasks
 - Specular lighting (in progress)
-- Fix lookAt
 - Export of image files and creation of animated video
-- Mirrors (in progress)
+- Mirrors (in progress) -- need to do all the lighting calculations, then add mirror effect
 - Test on vagrant
+- Orbit needs to work differently now, since our draw isn't in a while loop
 ## General
+- Modes 7 and 8 seem to be functioning the same at the moment
 - Try moving model (or part of model, e.g., just one box!)
+- Stretch model?
 - Add comments
 - Potentially split into more classes
 - Fix rounding errors and type warnings
 - Reduce duplicate functions (e.g., transposing)
 - Improve function names
-- Potentially add own implementations of trivial functions (rotate, perspective)
+- Potentially add own implementations of trivial functions (~rotate~, perspective)
 - Consider texture mapping
 - Fix proximity lighting to work when light is very close to intersection
 - Find way to use perspective logic in our demo
@@ -27,6 +29,7 @@
 Program that implements both rasterised and ray traced rendering methods.
 
 Also features more complex techniques such as:
+- Translation, rotation and lookAt
 - Shadows 
 - Proximity lighting 
 - Angle of incidence lighting 

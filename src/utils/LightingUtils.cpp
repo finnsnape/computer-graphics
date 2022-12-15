@@ -49,8 +49,8 @@ namespace {
 
     /// @brief Checks if the provided colour is equal to the object colour we have set to be a mirror
     bool isMirror(Colour colour) {
-        // check if colou
-        if (colour.red == 255 && colour.green == 255 && colour.blue == 0) return true;
+        Colour mirrorColour(178, 178, 178);
+        if (colour == mirrorColour) return true;
         return false;
     }
 
@@ -76,7 +76,6 @@ namespace {
         setIntensity(intensity, closestTriangle);
     }
 
-
     void applyProximityLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
         float intensity = calculateProximityIntensity(scene, closestTriangle);
         setIntensity(intensity, closestTriangle);
@@ -88,9 +87,6 @@ namespace {
         float incidence = calculateIncidenceIntensity(scene, closestTriangle, useAmbient);
         float specular = calculateSpecularIntensity(scene, closestTriangle, useAmbient);
         if (incidence > 1) std::cout << incidence;
-        //std::cout << "specular: " << specular << std::endl;
-        //std::cout << "indidence: " << incidence << std::endl;
-        //std::cout << "brightness: " << brightness << std::endl;
         float intensity = glm::clamp(specular + ambient + brightness * 4 * incidence, 0.f, 1.f);
         setIntensity(intensity, closestTriangle);
     }

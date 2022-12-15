@@ -13,17 +13,17 @@ Scene::Scene(float _width, float _height, RenderMode _renderMode, Light _light, 
     this->window = DrawingWindow((int) width, (int) height, false);
 }
 
-void Scene::moveLight(Camera::Axis axis, int sign) {
-    float modifier = 0.1f * sign;
+void Scene::moveLight(Camera::Axis axis, float sign) {
+    float delta = 0.1f * sign;
     switch(axis) {
         case Camera::Axis::x:
-            this->light.position.x += modifier;
+            this->light.position.x += delta;
             break;
         case Camera::Axis::y:
-            this->light.position.y += modifier;
+            this->light.position.y += delta;
             break;
         case Camera::Axis::z:
-            this->light.position.z += modifier;
+            this->light.position.z += delta;
             break;
         default:
             break;
@@ -46,6 +46,6 @@ void Scene::draw() {
             break;
     }
     if (this->camera.orbit) {
-        this->camera.rotate(Camera::y, 1);
+        this->camera.rotate(Camera::y, 1.f);
     }
 }
