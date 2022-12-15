@@ -63,8 +63,18 @@ void Camera::updateMVP() {
 
 /// @brief Alters the camera orientation to face a given vertex
 void Camera::lookAt(glm::vec3 vertex) {
+    // FIXME: if we rotate upside down and then lookAt, everything is swapped
+    // i.e., left is now right, right is now left
+    // may relate to our negatives in perspective function
+    glm::vec3 forward = glm::normalize(vertex - this->position);
     glm::vec3 up(0.f, 1.f, 0.f);
-    // FIXME: figure out ourselves
-    this->view = glm::lookAt(this->position, vertex, up);
+    glm::vec3 right = glm::normalize(glm::cross(forward, up));
+    up = glm::cross(right, forward);
+    this->view = glm::mat4(
+            right.x, up.x, -forward.x, 0.f,
+            right.y, up.y, -forward.y, 0.f,
+            right.z, up.z, -forward.z, 0.f,
+            -glm::dot(right, this->position), -glm::dot(up, this->position), glm::dot(forward, this->position), 1.f
+    );
     this->updateMVP();
 }
