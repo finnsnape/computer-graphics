@@ -106,8 +106,8 @@ namespace RayTracingUtils {
                 if (closestTriangle.distanceFromCamera == FLT_MAX) {
                     continue; // no triangle intersection found
                 }
-                LightingUtils::applyLighting(scene, closestTriangle); // modifies colour
-                TriangleUtils::drawPixel(scene.window, canvasPoint, closestTriangle.intersectedTriangle.colour);
+                Colour colour = LightingUtils::applyLighting(scene, closestTriangle); // modifies colour
+                TriangleUtils::drawPixel(scene.window, canvasPoint, colour);
             }
         }
     }

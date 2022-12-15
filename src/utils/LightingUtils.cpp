@@ -4,17 +4,19 @@
 #include "RayTracingUtils.h"
 
 namespace {
-    void setIntensity(float intensity, RayTriangleIntersection &closestTriangle) {
-        Colour &colour = closestTriangle.intersectedTriangle.colour;
+    Colour setIntensity(float intensity, RayTriangleIntersection closestTriangle) {
+        Colour colour = closestTriangle.intersectedTriangle.colour;
         colour.red *= intensity;
         colour.green *= intensity;
         colour.blue *= intensity;
+        return colour;
     }
 
-    void applyHardShadows(Scene &scene, RayTriangleIntersection &closestTriangle) {
+    Colour applyHardShadows(Scene &scene, RayTriangleIntersection closestTriangle) {
         if (!RayTracingUtils::canSeeLight(scene, closestTriangle)) {
-            closestTriangle.intersectedTriangle.colour = Colour(0, 0, 0);
+            return Colour(0, 0, 0);
         }
+        return closestTriangle.intersectedTriangle.colour;
     }
 
     /// @brief Gets brightness based on distance from light source
@@ -49,72 +51,76 @@ namespace {
 
     /// @brief Checks if the provided colour is equal to the object colour we have set to be a mirror
     bool isMirror(Colour colour) {
-        Colour mirrorColour(178, 178, 178);
+        Colour mirrorColour(255, 0, 0);
         if (colour == mirrorColour) return true;
         return false;
     }
 
-    void applyMirror(Scene &scene, RayTriangleIntersection &closestTriangle) {
-        if (!isMirror(closestTriangle.intersectedTriangle.colour)) return;
+    Colour applyMirror(Scene &scene, RayTriangleIntersection closestTriangle) {
+        if (!isMirror(closestTriangle.intersectedTriangle.colour)) return closestTriangle.intersectedTriangle.colour;
         glm::vec3 viewDir = glm::normalize(scene.camera.position - closestTriangle.intersectionPoint);
         glm::vec3 reflectDir = glm::reflect(-viewDir, closestTriangle.intersectedTriangle.normal);
         Ray ray(closestTriangle.intersectionPoint, reflectDir);
         RayTriangleIntersection newClosestTriangle = RayTracingUtils::findClosestTriangle(scene, ray, true, closestTriangle.triangleIndex);
         if (newClosestTriangle.distanceFromCamera == FLT_MAX) {
-            closestTriangle.intersectedTriangle.colour = Colour(0, 0, 0);
-            return;
+            //closestTriangle.intersectedTriangle.colour = Colour(0, 0, 0);
+            return Colour(0, 0, 0);
         }
-        closestTriangle.intersectedTriangle.colour = newClosestTriangle.intersectedTriangle.colour;
+        return newClosestTriangle.intersectedTriangle.colour;
         // FIXME: maybe we shouldn't actually update the colour, just set the pixel?
         // FIXME: perhaps incorrect normals are causing weird reflections?
         // FIXME: maybe we need to get the next triangle that's not this one?
     }
 
-    void applyAngleOfIncidenceLighting(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
+    Colour applyAngleOfIncidenceLighting(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
         // works well with 0,0.9,0.7
         float intensity = calculateIncidenceIntensity(scene, closestTriangle, useAmbient);
-        setIntensity(intensity, closestTriangle);
+        return setIntensity(intensity, closestTriangle);
     }
 
-    void applyProximityLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
+    Colour applyProximityLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
         float intensity = calculateProximityIntensity(scene, closestTriangle);
-        setIntensity(intensity, closestTriangle);
+        return setIntensity(intensity, closestTriangle);
     }
 
-    void applySpecularLighting(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
+    Colour applySpecularLighting(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
         float brightness = calculateProximityIntensity(scene, closestTriangle);
         float ambient = 0.15f;
         float incidence = calculateIncidenceIntensity(scene, closestTriangle, useAmbient);
         float specular = calculateSpecularIntensity(scene, closestTriangle, useAmbient);
         if (incidence > 1) std::cout << incidence;
         float intensity = glm::clamp(specular + ambient + brightness * 4 * incidence, 0.f, 1.f);
-        setIntensity(intensity, closestTriangle);
+        return setIntensity(intensity, closestTriangle);
     }
 }
 
 namespace LightingUtils {
-    void applyLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
+    // FIXME: we're setting the colour of entire triangles as opposed to pixels
+    // should do this individually. however, may complicate the mirror process
+    Colour applyLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
+        Colour colour;
         switch (scene.light.mode) {
             case Light::DEFAULT:
-                applyMirror(scene, closestTriangle);
+                colour = applyMirror(scene, closestTriangle);
                 break;
             case Light::HARD_SHADOWS:
-                applyHardShadows(scene, closestTriangle);
+                colour = applyHardShadows(scene, closestTriangle);
                 break;
             case Light::PROXIMITY:
-                applyProximityLighting(scene, closestTriangle);
+                colour = applyProximityLighting(scene, closestTriangle);
                 break;
             case Light::ANGLE_OF_INCIDENCE:
-                applyAngleOfIncidenceLighting(scene, closestTriangle, false);
+                colour = applyAngleOfIncidenceLighting(scene, closestTriangle, false);
                 break;
             case Light::AMBIENT:
-                applyAngleOfIncidenceLighting(scene, closestTriangle, true);
+                colour = applyAngleOfIncidenceLighting(scene, closestTriangle, true);
                 break;
             case Light::SPECULAR:
-                applySpecularLighting(scene, closestTriangle, false);
+                colour = applySpecularLighting(scene, closestTriangle, false);
                 break;
             default:
                 break;
         }
+        return colour;
     }
 }

@@ -5,5 +5,5 @@
 class Scene;
 
 namespace LightingUtils {
-    void applyLighting(Scene &scene, RayTriangleIntersection &closestTriangle);
+    Colour applyLighting(Scene &scene, RayTriangleIntersection &closestTriangle);
 }
