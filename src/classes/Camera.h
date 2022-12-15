@@ -9,8 +9,8 @@ class Camera {
 private:
     float width;
     float height;
-    glm::mat4 rotation;
     glm::mat4 model;
+    glm::mat4 view;
     const glm::mat4 projection = glm::perspective(glm::radians(-45.f), -width/height, 0.1f, 100.f);
     void updateMVP();
 public:
@@ -23,7 +23,7 @@ public:
     std::vector<std::vector<float>> depthBuffer;
     Camera(float width, float height, glm::vec3 position, bool orbit);
     void resetDepthBuffer();
-    void translate(Axis axis, int sign);
-    void rotate(Axis axis, int sign);
+    void translate(Axis axis, float sign);
+    void rotate(Axis axis, float sign);
     void lookAt(glm::vec3 vertex);
 };
