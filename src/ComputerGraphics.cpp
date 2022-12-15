@@ -66,10 +66,9 @@ int main(int argc, char *argv[]) {
     Scene::RenderMode renderMode = Scene::RAY_TRACED;
     Light::Mode lightMode = Light::SPECULAR;
     glm::vec3 lightSource(0.0, 0.55, 0.7);
+    //glm::vec3 lightSource(0.8, 0.8, -0.8);
     Light light(lightSource, lightMode);
     float scaleFactor = 0.35;
-
-    //glm::vec3 lightSource(0.8, 0.8, -0.8);
     glm::vec3 initialPosition(0.0, 0.0, 4.0);
     Scene scene = initScene(renderMode, light, scaleFactor, initialPosition);
     SDL_Event event;
