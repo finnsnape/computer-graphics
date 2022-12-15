@@ -59,25 +59,25 @@ namespace {
                 scene.camera.orbit = !scene.camera.orbit;
                 break;
             case SDLK_l:
-                scene.camera.lookAt({0.0, 0.0, 0.0});
+                scene.camera.lookAt({0.f, 0.f, 0.f});
                 break;
             case SDLK_h:
-                scene.moveLight(Camera::Axis::y, 1);
+                scene.moveLight(Camera::Axis::y, 1.f);
                 break;
             case SDLK_n:
-                scene.moveLight(Camera::Axis::y, -1);
+                scene.moveLight(Camera::Axis::y, -1.f);
                 break;
             case SDLK_b:
-                scene.moveLight(Camera::Axis::x, -1);
+                scene.moveLight(Camera::Axis::x, -1.f);
                 break;
             case SDLK_m:
-                scene.moveLight(Camera::Axis::x, 1);
+                scene.moveLight(Camera::Axis::x, 1.f);
                 break;
             case SDLK_j:
-                scene.moveLight(Camera::Axis::z, 1);
+                scene.moveLight(Camera::Axis::z, 1.f);
                 break;
             case SDLK_k:
-                scene.moveLight(Camera::Axis::z, -1);
+                scene.moveLight(Camera::Axis::z, -1.f);
                 break;
             default:
                 return;

@@ -29,6 +29,6 @@ public:
     Camera camera;
     DrawingWindow window;
     Scene(float width, float height, RenderMode renderMode, Light light, std::vector<ModelTriangle> triangles, Camera camera);
-    void moveLight(Camera::Axis axis, int sign);
+    void moveLight(Camera::Axis axis, float sign);
     void draw();
 };
