@@ -37,20 +37,31 @@ void Camera::translate(Axis axis, float sign) {
 
 /// @brief Rotates camera position anti-clockwise about the world origin
 void Camera::rotate(Axis axis, float sign) {
-    float delta = 3.f * sign;
-    glm::vec3 axisVector;
+    float delta = glm::radians(3.f * sign);
+    glm::mat4 rotationMatrix;
+    float cos = std::cos(delta);
+    float sin = std::sin(delta);
     switch(axis) {
         case x:
-            axisVector = {1.0f, 0.0f, 0.0f};
+            rotationMatrix = glm::mat4(
+                1.f, 0.f, 0.f, 0.f,
+                0.f, cos, -sin, 0.f,
+                0.f, sin, cos, 0.f,
+                0.f, 0.f, 0.f, 1.f
+            );
             break;
         case y:
-            axisVector = {0.0f, 1.0f, 0.0f};
+            rotationMatrix = glm::mat4(
+                cos, 0.f, sin, 0.f,
+                0.f, 1.f, 0.f, 0.f,
+                -sin, 0.f, cos, 0.f,
+                0.f, 0.f, 0.f, 1.f
+            );
             break;
         default:
             return;
     }
-    // FIXME: figure out ourselves
-    this->view = glm::rotate(this->view, glm::radians(delta), axisVector);
+    this->view = this->view * rotationMatrix;
     this->updateMVP();
 }
 
