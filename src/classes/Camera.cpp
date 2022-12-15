@@ -4,7 +4,7 @@
 
 
 Camera::Camera(float _width, float _height, glm::vec3 _position, bool _orbit): width(_width), height(_height), position(_position), orbit(_orbit) {
-    this->model = glm::translate(glm::mat4(1.f), {0.f, 0.f, 0.f});
+    this->model = glm::translate(glm::mat4(1.f), {0.f, 0.f, 0.f}); // place object at origin
     this->lookAt({0.0, 0.0, 0.0});
 }
 
@@ -16,22 +16,23 @@ void Camera::resetDepthBuffer() {
 /// @brief Translates camera position
 void Camera::translate(Axis axis, float sign) {
     float delta = 0.03f * sign;
-    glm::vec3 translationVector(0.f, 0.f, 0.f);
+    glm::mat4 translationMatrix(1.f);
+    glm::vec4 translationVector(0.f, 0.f, 0.f, 1.f);
     switch(axis) {
         case x:
-            translationVector.x = delta;
+            translationVector.x = -delta;
             break;
         case y:
-            translationVector.y = delta;
+            translationVector.y = -delta;
             break;
         case z:
-            translationVector.z = delta;
+            translationVector.z = -delta;
             break;
         default:
             break;
     }
-    // FIXME: figure out ourselves
-    this->view = glm::translate(this->view, -translationVector);
+    translationMatrix[3] = translationVector;
+    this->view = this->view * translationMatrix;
     this->updateMVP();
 }
 
