@@ -1,11 +1,12 @@
 # TODO
 ## Main tasks
 - Specular lighting (in progress)
-- Fix lookAt
+- ~Fix lookAt~ -- just need to implement translate, rotate, lookAt ourselves!
 - Export of image files and creation of animated video
 - Mirrors (in progress)
 - Test on vagrant
 ## General
+- Modes 7 and 8 seem to be functioning the same at the moment
 - Try moving model (or part of model, e.g., just one box!)
 - Add comments
 - Potentially split into more classes
@@ -17,6 +18,7 @@
 - Fix proximity lighting to work when light is very close to intersection
 - Find way to use perspective logic in our demo
 - Remove unused imports
+- Make light translation better, like camera translation
 
 ## Notes
 - negative z is away from us
