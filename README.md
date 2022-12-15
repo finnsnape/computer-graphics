@@ -1,9 +1,9 @@
 # TODO
 ## Main tasks
 - Specular lighting (in progress)
-- ~Fix lookAt~ -- just need to implement translate, rotate, lookAt ourselves!
+- ~Fix lookAt~ -- just need to implement translate, rotate, ~lookAt~ ourselves!
 - Export of image files and creation of animated video
-- Mirrors (in progress)
+- Mirrors (in progress) -- need to do all the lighting calculations, then add mirror effect
 - Test on vagrant
 ## General
 - Modes 7 and 8 seem to be functioning the same at the moment
