@@ -14,3 +14,10 @@ std::ostream &operator<<(std::ostream &os, const Colour &colour) {
 	   << colour.blue << "]";
 	return os;
 }
+
+bool operator==(const Colour &c1, const Colour &c2) {
+    if (c1.red == c2.red && c1.green == c2.green && c1.blue == c2.blue) {
+        return true;
+    }
+    return false;
+}
