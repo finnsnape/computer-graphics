@@ -16,6 +16,7 @@ std::map<SDL_Keycode, Light::Mode> lightingModeMap = {
         {SDLK_7, Light::ANGLE_OF_INCIDENCE},
         {SDLK_8, Light::AMBIENT},
         {SDLK_9, Light::SPECULAR},
+        {SDLK_0, Light::MIRROR}
 };
 
 namespace {
@@ -95,7 +96,9 @@ namespace {
         Light::Mode newMode = lightingModeMap[key];
         scene.renderMode = Scene::RAY_TRACED;
         scene.light.mode = newMode;
-        std::cout << "Setting lighting mode to: " << newMode + 4 << "..." << std::endl;
+        int modeNumber = newMode + 4;
+        if (newMode == Light::MIRROR) modeNumber = 0; // 10th option, but #0
+        std::cout << "Setting lighting mode to: " << modeNumber << "..." << std::endl;
     }
 }
 

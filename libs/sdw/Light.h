@@ -9,7 +9,8 @@ struct Light {
         PROXIMITY,
         ANGLE_OF_INCIDENCE,
         AMBIENT,
-        SPECULAR
+        SPECULAR,
+        MIRROR
     };
     glm::vec3 position;
     Mode mode;

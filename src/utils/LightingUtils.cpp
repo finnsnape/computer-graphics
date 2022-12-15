@@ -101,7 +101,7 @@ namespace LightingUtils {
         Colour colour;
         switch (scene.light.mode) {
             case Light::DEFAULT:
-                colour = applyMirror(scene, closestTriangle);
+                colour = closestTriangle.intersectedTriangle.colour;
                 break;
             case Light::HARD_SHADOWS:
                 colour = applyHardShadows(scene, closestTriangle);
@@ -117,6 +117,9 @@ namespace LightingUtils {
                 break;
             case Light::SPECULAR:
                 colour = applySpecularLighting(scene, closestTriangle, false);
+                break;
+            case Light::MIRROR:
+                colour = applyMirror(scene, closestTriangle);
                 break;
             default:
                 break;

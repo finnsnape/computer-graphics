@@ -25,6 +25,7 @@ void printInstructions() {
     "7: Angle of Incidence" << std::endl <<
     "8: Ambient" << std::endl <<
     "9: Specular" << std::endl <<
+    "0: Mirror" << std::endl <<
     std::endl <<
     "LIGHT POSITION OPERATIONS: " << std::endl <<
     "H: Translate (y, positive)" << std::endl <<
