@@ -96,8 +96,7 @@ namespace {
         Light::Mode newMode = lightingModeMap[key];
         scene.renderMode = Scene::RAY_TRACED;
         scene.light.mode = newMode;
-        int modeNumber = newMode + 4;
-        if (newMode == Light::MIRROR) modeNumber = 0; // 10th option, but #0
+        int modeNumber = (newMode + 4) % 10; // so that 10th option is still 0
         std::cout << "Setting lighting mode to: " << modeNumber << "..." << std::endl;
     }
 }
