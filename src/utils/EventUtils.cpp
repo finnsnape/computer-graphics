@@ -83,7 +83,6 @@ namespace {
             default:
                 return;
         }
-        //std::cout << "Doing operation: " << SDL_GetKeyName(key) << "..." << std::endl;
     }
 
     void changeRenderMode(SDL_Keycode key, Scene &scene) {
