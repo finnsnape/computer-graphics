@@ -44,7 +44,7 @@ namespace {
         glm::vec3 reflectDir = glm::reflect(-lightDir, closestTriangle.intersectedTriangle.normal);
         //std::cout << glm::dot(viewDir, reflectDir) << std::endl;
         float specFactor = fmax(glm::dot(viewDir, reflectDir), 0.f);
-        float spec = pow(specFactor, 64.f);
+        float spec = pow(specFactor, 32.f);
         float intensity = specularStrength * spec;
         return fmax(intensity, 0.f);
     }
@@ -84,12 +84,13 @@ namespace {
     }
 
     Colour applySpecularLighting(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
-        float brightness = calculateProximityIntensity(scene, closestTriangle);
+        //float brightness = calculateProximityIntensity(scene, closestTriangle);
         float ambient = 0.15f;
         float incidence = calculateIncidenceIntensity(scene, closestTriangle, useAmbient);
         float specular = calculateSpecularIntensity(scene, closestTriangle, useAmbient);
         if (incidence > 1) std::cout << incidence;
-        float intensity = glm::clamp(specular + ambient + brightness * 4 * incidence, 0.f, 1.f);
+        float intensity = glm::clamp(specular + ambient, 0.f, 1.f);
+        // FIXME: add back other types
         return setIntensity(intensity, closestTriangle);
     }
 }
