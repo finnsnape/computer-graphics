@@ -41,16 +41,16 @@ namespace {
                 scene.camera.translate(Camera::z, -1.f);
                 break;
             case SDLK_UP:
-                scene.camera.rotate(Camera::x, -1.f);
-                break;
-            case SDLK_DOWN:
                 scene.camera.rotate(Camera::x, 1.f);
                 break;
+            case SDLK_DOWN:
+                scene.camera.rotate(Camera::x, -1.f);
+                break;
             case SDLK_LEFT:
-                scene.camera.rotate(Camera::y, -1.f);
+                scene.camera.rotate(Camera::y, 1.f);
                 break;
             case SDLK_RIGHT:
-                scene.camera.rotate(Camera::y, 1.f);
+                scene.camera.rotate(Camera::y, -1.f);
                 break;
             case SDLK_f:
                 std::cout << "Saving..." << std::endl;

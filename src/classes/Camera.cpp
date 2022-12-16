@@ -32,7 +32,7 @@ void Camera::translate(Axis axis, float sign) {
             break;
     }
     translationMatrix[3] = translationVector;
-    this->camera = this->camera * translationMatrix;
+    this->camera = translationMatrix * this->camera;
     this->updateMVP();
 }
 
@@ -62,7 +62,7 @@ void Camera::rotate(Axis axis, float sign) {
         default:
             return;
     }
-    this->camera = this->camera * rotationMatrix;
+    this->camera = rotationMatrix * this->camera;
     this->updateMVP();
 }
 
