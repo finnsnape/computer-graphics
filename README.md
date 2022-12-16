@@ -6,6 +6,7 @@
 - Test on vagrant
 ## General
 - Translating view matrix doesnt make sense when inverse holds camera position
+- Could modify model matrix instead of the 0.35 multiplier earlier on
 - Check rotation/translation signs
 - Modes 7 and 8 seem to be functioning the same at the moment
 - Try moving model (or part of model, e.g., just one box!)
