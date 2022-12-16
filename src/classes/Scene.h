@@ -7,6 +7,8 @@
 #include <Light.h>
 
 class Scene {
+private:
+    void modelToWorld();
 public:
     enum RenderMode {
         WIRE_FRAME,

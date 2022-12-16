@@ -11,6 +11,17 @@ Scene::Scene(float _width, float _height, RenderMode _renderMode, Light _light, 
         camera(std::move(_camera))
         {
     this->window = DrawingWindow((int) width, (int) height, false);
+    this->modelToWorld();
+}
+
+/// @brief Converts the loaded model coordinates to world coordinates
+void Scene::modelToWorld() {
+    for (auto &triangle : this->triangles) {
+        for (auto &vertex : triangle.vertices) {
+            glm::vec4 temp(vertex, 1.f);
+            vertex = glm::vec3(this->camera.model * temp);
+        }
+    }
 }
 
 void Scene::moveLight(Camera::Axis axis, float sign) {
@@ -45,4 +56,6 @@ void Scene::draw() {
         default:
             break;
     }
+    // FIXME: temp to draw light pos
+    RasterisingUtils::a(*this);
 }
