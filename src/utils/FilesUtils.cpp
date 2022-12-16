@@ -47,9 +47,9 @@ namespace {
         return glm::normalize(glm::cross(vertices[1] - vertices[0], vertices[2] - vertices[0]));
     }
 
-    glm::vec3 parseVector(std::string line, float scaleFactor) {
+    glm::vec3 parseVector(std::string line) {
         std::vector<std::string> trianglePointRaw = split(line, ' ');
-        glm::vec3 trianglePoint = {std::stof(trianglePointRaw[1]) * scaleFactor, std::stof(trianglePointRaw[2]) * scaleFactor, std::stof(trianglePointRaw[3]) * scaleFactor};
+        glm::vec3 trianglePoint = {std::stof(trianglePointRaw[1]), std::stof(trianglePointRaw[2]), std::stof(trianglePointRaw[3])};
         return trianglePoint;
     }
 
@@ -80,7 +80,7 @@ namespace FilesUtils {
     void saveAsImage(DrawingWindow &window) {
         window.savePPM("output/output.ppm");
     }
-    std::vector<ModelTriangle> loadOBJ(float scaleFactor, std::string objFileName, std::string mtlFileName) {
+    std::vector<ModelTriangle> loadOBJ(std::string objFileName, std::string mtlFileName) {
         std::vector<glm::vec3> trianglePoints;
         std::vector<std::vector<int>> triangles;
         std::vector<std::string> colours;
@@ -89,7 +89,7 @@ namespace FilesUtils {
         std::string lastColourName;
         for (std::string line; std::getline(filein, line); ) {
             if (line[0] == 'v') {
-                glm::vec3 trianglePoint = parseVector(line, scaleFactor);
+                glm::vec3 trianglePoint = parseVector(line);
                 trianglePoints.push_back(trianglePoint);
             } else if (line[0] == 'f') {
                 triangles.push_back(parseFacet(line));
