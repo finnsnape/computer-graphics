@@ -5,6 +5,7 @@
 - Mirrors (in progress) -- need to do all the lighting calculations, then add mirror effect
 - Test on vagrant
 ## General
+- Translating view matrix doesnt make sense when inverse holds camera position
 - Check rotation/translation signs
 - Modes 7 and 8 seem to be functioning the same at the moment
 - Try moving model (or part of model, e.g., just one box!)
