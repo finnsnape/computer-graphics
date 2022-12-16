@@ -27,7 +27,7 @@ namespace {
     }
 
     /// @brief Finds the relevant 3D point on the intersecting triangle
-    glm::vec3 calculateIntersection(Scene &scene, glm::mat3 DEMatrix, ModelTriangle triangle, glm::vec3 rawIntersection) {
+    glm::vec3 calculateIntersection(glm::mat3 DEMatrix, ModelTriangle triangle, glm::vec3 rawIntersection) {
         glm::vec3 e0 = DEMatrix[1];
         glm::vec3 e1 = DEMatrix[2];
         glm::vec3 intersectionPoint = triangle.vertices[0] + rawIntersection.y * e0 + rawIntersection.z * e1;
@@ -54,9 +54,9 @@ namespace {
         float f = scene.camera.far;
         glm::vec2 normalisedCanvasPoint = normaliseCanvasPoint(scene, canvasPoint);
         glm::vec4 nearPos(normalisedCanvasPoint.x, normalisedCanvasPoint.y, -1.0, 1.0); // canvas point on near plane
-        glm::vec4 origin(glm::inverse(scene.camera.mvp) * nearPos * n); // adjust near pos to world
+        glm::vec4 origin(glm::inverse(scene.camera.vp) * nearPos * n); // adjust near pos to world
         glm::vec4 farPos(normalisedCanvasPoint.x * (f - n), normalisedCanvasPoint.y * (f - n), f + n, f - n); // canvas point on far plane
-        glm::vec4 direction(glm::normalize(glm::inverse(scene.camera.mvp) * farPos)); // adjust far pos to world and normalise
+        glm::vec4 direction(glm::normalize(glm::inverse(scene.camera.vp) * farPos)); // adjust far pos to world and normalise
         return {glm::vec3(origin), glm::vec3(direction)};
     }
 }
@@ -74,7 +74,7 @@ namespace RayTracingUtils {
             if (!validateRawIntersection(rawIntersection)) continue;
             if (rawIntersection.x >= closestTriangle.distanceFromCamera || closestTriangle.distanceFromCamera <= 0) continue; // something closer already exists
             if (mirror && i == k) continue; // same triangle we are reflecting from
-            glm::vec3 intersectionPoint = calculateIntersection(scene, DEMatrix, triangle, rawIntersection);
+            glm::vec3 intersectionPoint = calculateIntersection(DEMatrix, triangle, rawIntersection);
             closestTriangle = {intersectionPoint, rawIntersection.x, triangle, i};
         }
         return closestTriangle;
