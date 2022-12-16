@@ -44,10 +44,10 @@ void printInstructions() {
     "D: Translate (x, positive)" << std::endl <<
     "-: Translate (z, positive)" << std::endl <<
     "=: Translate (z, negative)" << std::endl <<
-    "UP: Rotate (x, negative)" << std::endl <<
-    "DOWN: Rotate (x, positive)" << std::endl <<
-    "LEFT: Rotate (y, negative)" << std::endl <<
-    "RIGHT: Rotate (y, positive)" << std::endl <<
+    "UP: Rotate (x, positive)" << std::endl <<
+    "DOWN: Rotate (x, negative)" << std::endl <<
+    "LEFT: Rotate (y, positive)" << std::endl <<
+    "RIGHT: Rotate (y, negative)" << std::endl <<
     std::endl <<
     "MISC: " << std::endl <<
     "F: Save as file" << std::endl <<
