@@ -20,19 +20,19 @@ void Camera::translate(Axis axis, float sign) {
     glm::vec4 translationVector(0.f, 0.f, 0.f, 1.f);
     switch(axis) {
         case x:
-            translationVector.x = -delta;
+            translationVector.x = delta;
             break;
         case y:
-            translationVector.y = -delta;
+            translationVector.y = delta;
             break;
         case z:
-            translationVector.z = -delta;
+            translationVector.z = delta;
             break;
         default:
             break;
     }
     translationMatrix[3] = translationVector;
-    this->view = this->view * translationMatrix;
+    this->camera = this->camera * translationMatrix;
     this->updateMVP();
 }
 
@@ -62,15 +62,15 @@ void Camera::rotate(Axis axis, float sign) {
         default:
             return;
     }
-    this->view = this->view * rotationMatrix;
+    this->camera = this->camera * rotationMatrix;
     this->updateMVP();
 }
 
-/// @brief Updates the MVP matrix after a change to the view matrix
+/// @brief Updates the MVP matrix after a change to the camera matrix
 void Camera::updateMVP() {
-    glm::mat4 camera = glm::inverse(this->view);
-    this->position = glm::vec3(camera[3]); // get first 3 coords from 4th column
-    this->mvp = this->projection * this->view * this->model;
+    glm::mat4 view = glm::inverse(this->camera);
+    this->position = glm::vec3(this->camera[3]); // get first 3 coords from 4th column
+    this->mvp = this->projection * view * this->model;
 }
 
 /// @brief Alters the camera orientation to face a given vertex
@@ -82,11 +82,11 @@ void Camera::lookAt(glm::vec3 vertex) {
     glm::vec3 up(0.f, 1.f, 0.f);
     glm::vec3 right = glm::normalize(glm::cross(forward, up));
     up = glm::cross(right, forward);
-    this->view = glm::mat4(
+    this->camera = glm::inverse(glm::mat4(
             right.x, up.x, -forward.x, 0.f,
             right.y, up.y, -forward.y, 0.f,
             right.z, up.z, -forward.z, 0.f,
             -glm::dot(right, this->position), -glm::dot(up, this->position), glm::dot(forward, this->position), 1.f
-    );
+    ));
     this->updateMVP();
 }
