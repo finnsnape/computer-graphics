@@ -9,13 +9,13 @@ class Camera {
 private:
     float width;
     float height;
-    glm::mat4 model;
     glm::mat4 camera;
     const glm::mat4 projection = glm::perspective(glm::radians(-45.f), -width/height, 0.1f, 100.f);
-    void updateMVP();
+    void updateVP();
 public:
     enum Axis { x, y, z };
-    glm::mat4 mvp;
+    glm::mat4 vp;
+    const glm::mat4 model = glm::translate(glm::mat4(0.35f), {0.f, 0.f, 0.f}); // place object at origin, scaled to 0.35x
     glm::vec3 position;
     const float near = 0.1f;
     const float far = 100.f;

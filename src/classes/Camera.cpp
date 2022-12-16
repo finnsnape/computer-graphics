@@ -4,7 +4,6 @@
 
 
 Camera::Camera(float _width, float _height, glm::vec3 _position, bool _orbit): width(_width), height(_height), position(_position), orbit(_orbit) {
-    this->model = glm::translate(glm::mat4(1.f), {0.f, 0.f, 0.f}); // place object at origin
     this->lookAt({0.0, 0.0, 0.0});
 }
 
@@ -33,7 +32,7 @@ void Camera::translate(Axis axis, float sign) {
     }
     translationMatrix[3] = translationVector;
     this->camera = translationMatrix * this->camera;
-    this->updateMVP();
+    this->updateVP();
 }
 
 /// @brief Rotates camera position anti-clockwise about the world origin
@@ -63,14 +62,14 @@ void Camera::rotate(Axis axis, float sign) {
             return;
     }
     this->camera = rotationMatrix * this->camera;
-    this->updateMVP();
+    this->updateVP();
 }
 
-/// @brief Updates the MVP matrix after a change to the camera matrix
-void Camera::updateMVP() {
+/// @brief Updates the view-projection matrix after a change to the camera matrix
+void Camera::updateVP() {
     glm::mat4 view = glm::inverse(this->camera);
     this->position = glm::vec3(this->camera[3]); // get first 3 coords from 4th column
-    this->mvp = this->projection * view * this->model;
+    this->vp = this->projection * view;
 }
 
 /// @brief Alters the camera orientation to face a given vertex
@@ -85,5 +84,5 @@ void Camera::lookAt(glm::vec3 vertex) {
             forward.x, forward.y, forward.z, 0.f,
             this->position.x, this->position.y, this->position.z, 1.f
     );
-    this->updateMVP();
+    this->updateVP();
 }
