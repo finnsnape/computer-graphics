@@ -10,7 +10,7 @@ private:
     float width;
     float height;
     glm::mat4 camera;
-    const glm::mat4 projection = glm::perspective(glm::radians(-45.f), -width/height, 0.1f, 100.f);
+    glm::mat4 projection;
     void updateVP();
 public:
     enum Axis { x, y, z };

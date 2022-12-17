@@ -1,9 +1,9 @@
 #include "Camera.h"
-
 #include <CanvasPoint.h>
 
 
 Camera::Camera(float _width, float _height, glm::vec3 _position, bool _orbit): width(_width), height(_height), position(_position), orbit(_orbit) {
+    this->projection = glm::perspective(glm::radians(-45.f), -width/height, near, far);
     this->lookAt({0.0, 0.0, 0.0});
 }
 
