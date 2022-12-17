@@ -11,12 +11,8 @@ std::map<SDL_Keycode, Scene::RenderMode> renderModeMap = {
 
 std::map<SDL_Keycode, Light::Mode> lightingModeMap = {
         {SDLK_4, Light::DEFAULT},
-        {SDLK_5, Light::HARD_SHADOWS},
-        {SDLK_6, Light::PROXIMITY},
-        {SDLK_7, Light::ANGLE_OF_INCIDENCE},
-        {SDLK_8, Light::AMBIENT},
-        {SDLK_9, Light::SPECULAR},
-        {SDLK_0, Light::MIRROR}
+        {SDLK_5, Light::PROXIMITY},
+        {SDLK_6, Light::SPECULAR}
 };
 
 namespace {
@@ -56,6 +52,9 @@ namespace {
                 std::cout << "Saving..." << std::endl;
                 FilesUtils::saveAsImage(scene.window);
                 break;
+            case SDLK_r:
+                std::cout << "Toggling mirror..." << std::endl;
+                scene.mirror = !scene.mirror;
             case SDLK_o:
                 scene.camera.orbit = !scene.camera.orbit;
                 break;
@@ -95,7 +94,7 @@ namespace {
         Light::Mode newMode = lightingModeMap[key];
         scene.renderMode = Scene::RAY_TRACED;
         scene.light.mode = newMode;
-        int modeNumber = (newMode + 4) % 10; // so that 10th option is still 0
+        int modeNumber = newMode + 4;
         std::cout << "Setting lighting mode to: " << modeNumber << "..." << std::endl;
     }
 }
