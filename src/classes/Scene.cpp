@@ -25,6 +25,7 @@ void Scene::modelToWorld() {
     }
 }
 
+/// @brief Moves the light around in the scene
 void Scene::moveLight(Camera::Axis axis, float sign) {
     float delta = 0.1f * sign;
     switch(axis) {
