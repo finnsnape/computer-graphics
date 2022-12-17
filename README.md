@@ -2,9 +2,10 @@
 ## Main tasks
 - Specular lighting (in progress)
 - Export of image files and creation of animated video
-- Mirrors (in progress) -- need to do all the lighting calculations, then add mirror effect
+- Mirrors (in progress, see below)
 - Test on vagrant
 ## General
+- Make lighting more realistic (circles should join up)
 - Are we sure our reflection angles are correct for the mirror? e.g., ceiling, seems not to be reflecting as "early" as it should
 - Try moving model (or part of model, e.g., just one box!)
 - Stretch model?
