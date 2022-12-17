@@ -66,7 +66,7 @@ Scene initScene(Scene::RenderMode renderMode, Light light, glm::vec3 initialPosi
 int main(int argc, char *argv[]) {
     Scene::RenderMode renderMode = Scene::RAY_TRACED;
     Light::Mode lightMode = Light::SPECULAR;
-    glm::vec3 lightSource(0.f, 0.9f, 0.f);
+    glm::vec3 lightSource(0.f, 0.5f, 0.f);
     //glm::vec3 lightSource(0.8, 0.8, -0.8);
     //glm::vec3 lightSource(0.0, 0.55, 0.7);
     Light light(lightSource, lightMode);
