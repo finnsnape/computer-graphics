@@ -5,7 +5,7 @@
 - Mirrors (in progress) -- need to do all the lighting calculations, then add mirror effect
 - Test on vagrant
 ## General
-- Modes 7 and 8 seem to be functioning the same at the moment
+- Are we sure our reflection angles are correct for the mirror? e.g., ceiling, seems not to be reflecting as "early" as it should
 - Try moving model (or part of model, e.g., just one box!)
 - Stretch model?
 - Add comments
@@ -13,7 +13,6 @@
 - Fix rounding errors and type warnings
 - Reduce duplicate functions (e.g., transposing)
 - Improve function names
-- Potentially add own implementations of trivial functions (~rotate~, perspective)
 - Consider texture mapping
 - Fix proximity lighting to work when light is very close to intersection
 - Find way to use perspective logic in our demo
