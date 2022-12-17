@@ -20,12 +20,9 @@ void printInstructions() {
     std::endl <<
     "LIGHTING MODES (Ray Traced): " << std::endl <<
     "4: Default" << std::endl <<
-    "5: Hard Shadows" << std::endl <<
-    "6: Proximity" << std::endl <<
-    "7: Angle of Incidence" << std::endl <<
-    "8: Ambient" << std::endl <<
-    "9: Specular" << std::endl <<
-    "0: Mirror" << std::endl <<
+    "5: Proximity" << std::endl <<
+    "6: Proximity + Angle + Specular" << std::endl <<
+    "7: Mirror" << std::endl <<
     std::endl <<
     "LIGHT POSITION OPERATIONS: " << std::endl <<
     "H: Translate (y, positive)" << std::endl <<
@@ -50,16 +47,17 @@ void printInstructions() {
     "RIGHT: Rotate (y, negative)" << std::endl <<
     std::endl <<
     "MISC: " << std::endl <<
+    "R: Toggle mirror" << std::endl <<
     "F: Save as file" << std::endl <<
     "=================================" << std::endl;
 }
 
-Scene initScene(Scene::RenderMode renderMode, Light light, glm::vec3 initialPosition) {
+Scene initScene(bool mirror, Scene::RenderMode renderMode, Light light, glm::vec3 initialPosition) {
     std::string objFileName = "cornell-box.obj";
     std::string mtlFileName = "cornell-box.mtl";
     Camera camera(WIDTH, HEIGHT, initialPosition, false);
     std::vector<ModelTriangle> triangles = FilesUtils::loadOBJ(objFileName, mtlFileName);
-    Scene scene(WIDTH, HEIGHT, renderMode, light, triangles, camera);
+    Scene scene(WIDTH, HEIGHT, mirror, renderMode, light, triangles, camera);
     return scene;
 }
 
@@ -69,9 +67,10 @@ int main(int argc, char *argv[]) {
     glm::vec3 lightSource(0.f, 0.5f, 0.f);
     //glm::vec3 lightSource(0.8, 0.8, -0.8);
     //glm::vec3 lightSource(0.0, 0.55, 0.7);
+    bool enableMirror = true;
     Light light(lightSource, lightMode);
     glm::vec3 initialPosition(0.f, 0.f, 4.f);
-    Scene scene = initScene(renderMode, light, initialPosition);
+    Scene scene = initScene(enableMirror, renderMode, light, initialPosition);
     SDL_Event event;
     printInstructions();
     scene.draw();
