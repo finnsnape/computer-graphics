@@ -22,7 +22,6 @@ void printInstructions() {
     "4: Default" << std::endl <<
     "5: Proximity" << std::endl <<
     "6: Proximity + Angle + Specular" << std::endl <<
-    "7: Mirror" << std::endl <<
     std::endl <<
     "LIGHT POSITION OPERATIONS: " << std::endl <<
     "H: Translate (y, positive)" << std::endl <<
