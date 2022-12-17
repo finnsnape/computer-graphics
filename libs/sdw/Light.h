@@ -5,12 +5,8 @@
 struct Light {
     enum Mode {
         DEFAULT,
-        HARD_SHADOWS,
         PROXIMITY,
-        ANGLE_OF_INCIDENCE,
-        AMBIENT,
-        SPECULAR,
-        MIRROR
+        SPECULAR
     };
     glm::vec3 position;
     Mode mode;
