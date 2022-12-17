@@ -17,12 +17,13 @@ public:
     };
     float width;
     float height;
+    bool mirror;
     RenderMode renderMode;
     Light light;
     std::vector<ModelTriangle> triangles;
     Camera camera;
     DrawingWindow window;
-    Scene(float width, float height, RenderMode renderMode, Light light, std::vector<ModelTriangle> triangles, Camera camera);
+    Scene(float width, float height, bool mirror, RenderMode renderMode, Light light, std::vector<ModelTriangle> triangles, Camera camera);
     void moveLight(Camera::Axis axis, float sign);
     void draw();
 };
