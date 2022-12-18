@@ -6,10 +6,12 @@ struct Light {
     enum Mode {
         DEFAULT,
         PROXIMITY,
-        SPECULAR
+        PHONG
     };
     glm::vec3 position;
     Mode mode;
+    float ambientIntensity;
+    glm::vec3 colour;
     Light();
-    Light(glm::vec3 position, Mode mode);
+    Light(glm::vec3 position, Mode mode, float ambientIntensity, glm::vec3 colour);
 };
