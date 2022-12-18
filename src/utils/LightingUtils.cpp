@@ -43,7 +43,7 @@ namespace {
 
     Colour applySpecularLighting(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
         float brightness = calculateProximityIntensity(scene, closestTriangle);
-        float ambient = 0.15f;
+        float ambient = 0.2f;
         float incidence = calculateIncidenceIntensity(scene, closestTriangle, useAmbient);
         float specular = calculateSpecularIntensity(scene, closestTriangle, useAmbient);
         float calculatedIntensity = brightness * (specular + 2.5f * incidence);
@@ -74,7 +74,7 @@ namespace LightingUtils {
 
     /// @brief Checks if the provided colour is equal to the object colour we have set to be a mirror
     bool isMirror(Colour &colour) {
-        Colour mirrorColour(0, 255, 255);
+        Colour mirrorColour(255, 0, 255);
         if (colour == mirrorColour) return true;
         return false;
     }

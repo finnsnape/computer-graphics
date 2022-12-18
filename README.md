@@ -18,6 +18,8 @@
 - Fix proximity lighting to work when light is very close to intersection
 - Find way to use perspective logic in our demo
 - Remove unused imports
+- Orbit enabled itself when scale factor was 35
+- Remove light dot
 
 ## Notes
 - negative z is away from us

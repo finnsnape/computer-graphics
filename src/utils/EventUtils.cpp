@@ -56,9 +56,11 @@ namespace {
                 std::cout << "Toggling mirror..." << std::endl;
                 scene.mirror = !scene.mirror;
             case SDLK_o:
+                std::cout << "Toggling orbit..." << std::endl;
                 scene.camera.orbit = !scene.camera.orbit;
                 break;
             case SDLK_l:
+                std::cout << "Looking at world origin..." << std::endl;
                 scene.camera.lookAt({0.f, 0.f, 0.f});
                 break;
             case SDLK_h:

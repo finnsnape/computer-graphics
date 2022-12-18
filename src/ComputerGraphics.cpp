@@ -7,8 +7,8 @@
 #include "FilesUtils.h"
 #include "EventUtils.h"
 
-#define WIDTH 240
-#define HEIGHT 240
+#define WIDTH 320
+#define HEIGHT 320
 
 void printInstructions() {
     std::cout <<
@@ -63,7 +63,7 @@ Scene initScene(bool mirror, Scene::RenderMode renderMode, Light light, glm::vec
 int main(int argc, char *argv[]) {
     Scene::RenderMode renderMode = Scene::RAY_TRACED;
     Light::Mode lightMode = Light::SPECULAR;
-    glm::vec3 lightSource(0.f, 0.5f, 0.f);
+    glm::vec3 lightSource(0.f, 0.5f, 0.3f);
     //glm::vec3 lightSource(0.8, 0.8, -0.8);
     //glm::vec3 lightSource(0.0, 0.55, 0.7);
     bool enableMirror = true;
