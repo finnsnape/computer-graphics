@@ -56,7 +56,7 @@ Scene initScene(bool show, bool mirror, Scene::RenderMode renderMode, Light ligh
     float w = WIDTH;
     float h = HEIGHT;
     if (!show) w = 480, h = 480;
-    std::string objFileName = "cornell-box.obj";
+    std::string objFileName = "sphere.obj";
     std::string mtlFileName = "cornell-box.mtl";
     Camera camera(w, h, initialPosition, false);
     std::vector<ModelTriangle> triangles = FilesUtils::loadOBJ(objFileName, mtlFileName);

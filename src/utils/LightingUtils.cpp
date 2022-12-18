@@ -21,7 +21,7 @@ namespace {
     }
 
     float calculateIncidenceAngle(Scene &scene, RayTriangleIntersection &closestTriangle, glm::vec3 lightDir) {
-        float incidenceAngle = glm::dot(closestTriangle.intersectedTriangle.normal, lightDir);
+        float incidenceAngle = glm::dot(closestTriangle.intersectedTriangle.surfaceNormal, lightDir);
         return glm::max(incidenceAngle, 0.f);
     }
 
@@ -29,7 +29,7 @@ namespace {
         if (incidenceAngle <= 0.f) return 0.f;
         float specularIntensity = 0.5f;
         float specularFactor = 16.f;
-        glm::vec3 reflectDir = glm::reflect(-lightDir, closestTriangle.intersectedTriangle.normal);
+        glm::vec3 reflectDir = glm::reflect(-lightDir, closestTriangle.intersectedTriangle.surfaceNormal);
         glm::vec3 viewDir = glm::normalize(scene.camera.position - closestTriangle.intersectionPoint);
         float specularAngle = glm::max(glm::dot(reflectDir, viewDir), 0.f);
         return pow(specularAngle, specularFactor) * specularIntensity;
@@ -95,7 +95,7 @@ namespace LightingUtils {
     Colour applyMirror(Scene &scene, RayTriangleIntersection &closestTriangle) {
         if (!isMirror(closestTriangle.intersectedTriangle.colour)) return closestTriangle.intersectedTriangle.colour;
         glm::vec3 viewDir = glm::normalize(scene.camera.position - closestTriangle.intersectionPoint);
-        glm::vec3 reflectDir = glm::reflect(-viewDir, closestTriangle.intersectedTriangle.normal);
+        glm::vec3 reflectDir = glm::reflect(-viewDir, closestTriangle.intersectedTriangle.surfaceNormal);
         Ray ray(closestTriangle.intersectionPoint, reflectDir);
         RayTriangleIntersection newClosestTriangle = RayTracingUtils::findClosestTriangle(scene, ray, true, closestTriangle.triangleIndex);
         if (newClosestTriangle.distanceFromCamera == FLT_MAX) {
