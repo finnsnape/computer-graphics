@@ -22,7 +22,7 @@ void printInstructions() {
     "LIGHTING MODES (Ray Traced): " << std::endl <<
     "4: Default" << std::endl <<
     "5: Proximity" << std::endl <<
-    "6: Proximity + Angle + Specular" << std::endl <<
+    "6: Phong" << std::endl <<
     std::endl <<
     "LIGHT POSITION OPERATIONS: " << std::endl <<
     "H: Translate (y, positive)" << std::endl <<
@@ -81,13 +81,15 @@ void showScene(Scene &scene) {
 
 void run(bool show) {
     Scene::RenderMode renderMode = Scene::RAY_TRACED;
-    Light::Mode lightMode = Light::SPECULAR;
+    glm::vec3 lightColour = {255.f, 255.f, 255.f};
+    float ambientIntensity = 0.15f;
+    Light::Mode lightMode = Light::PROXIMITY;
     glm::vec3 lightSource(0.f, 0.5f, 0.3f);
     RenderUtils::Sequence sequence = RenderUtils::RASTERISED_NAVIGATION;
     //glm::vec3 lightSource(0.8, 0.8, -0.8);
     //glm::vec3 lightSource(0.0, 0.55, 0.7);
-    bool enableMirror = true;
-    Light light(lightSource, lightMode);
+    bool enableMirror = false;
+    Light light(lightSource, lightMode, ambientIntensity, lightColour);
     glm::vec3 initialPosition(0.f, 0.f, 4.f);
     Scene scene = initScene(show, enableMirror, renderMode, light, initialPosition);
     printInstructions();
@@ -99,6 +101,6 @@ void run(bool show) {
 }
 
 int main(int argc, char *argv[]) {
-    bool show = false;
+    bool show = true;
     run(show);
 }
