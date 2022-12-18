@@ -4,52 +4,65 @@
 #include "RayTracingUtils.h"
 
 namespace {
-    Colour setIntensity(float intensity, RayTriangleIntersection &closestTriangle) {
-        Colour colour = closestTriangle.intersectedTriangle.colour;
-        colour.red *= intensity;
-        colour.green *= intensity;
-        colour.blue *= intensity;
-        return colour;
+    Colour vectorToColour(glm::vec3 colour) {
+        return {(int) fmin(colour.x, 255.f), (int) fmin(colour.y, 255.f), (int) fmin(colour.z, 255.f)};
     }
 
     /// @brief Gets brightness based on distance from light source
     float calculateProximityIntensity(Scene &scene, RayTriangleIntersection &closestTriangle) {
+        float maxDistance = sqrt(12); // corner to corner of our room
+        float radius = maxDistance * 0.7f;
+        float falloff = 2.f;
         float distance = glm::length(scene.light.position - closestTriangle.intersectionPoint);
-        float brightness = 1.f/(0.5f * glm::pi<float>() * pow(distance, 2));
-        return fmin(brightness, 1.f);
+        float normalisedDistance = distance/radius;
+        if (normalisedDistance >= 1.f) return 0.f;
+        //return 1.f * pow(1 - pow(normalisedDistance, 2), 2) / (1 + falloff * normalisedDistance);
+        return 1.f * pow(1 - pow(normalisedDistance, 2), 2) / (1 + falloff * pow(normalisedDistance, 2));
     }
 
-    float calculateIncidenceIntensity(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
-        glm::vec3 direction = glm::normalize(scene.light.position - closestTriangle.intersectionPoint); // point to light
-        float angle = glm::dot(closestTriangle.intersectedTriangle.normal, direction);
-        return fmax(angle, 0.f);
+    float calculateIncidenceAngle(Scene &scene, RayTriangleIntersection &closestTriangle, glm::vec3 lightDir) {
+        float incidenceAngle = glm::dot(closestTriangle.intersectedTriangle.normal, lightDir);
+        return glm::max(incidenceAngle, 0.f);
     }
 
-    float calculateSpecularIntensity(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
-        float specularStrength = 0.25f;
-        glm::vec3 lightDir = glm::normalize(scene.light.position - closestTriangle.intersectionPoint); // point to light
-        glm::vec3 viewDir = glm::normalize(scene.camera.position - closestTriangle.intersectionPoint);
+    float calculateSpecularIntensity(Scene &scene, RayTriangleIntersection &closestTriangle, glm::vec3 lightDir, float incidenceAngle) {
+        if (incidenceAngle <= 0.f) return 0.f;
+        float specularIntensity = 0.5f;
+        float specularFactor = 16.f;
         glm::vec3 reflectDir = glm::reflect(-lightDir, closestTriangle.intersectedTriangle.normal);
-        float specFactor = fmax(glm::dot(viewDir, reflectDir), 0.f);
-        float spec = pow(specFactor, 24.f);
-        float intensity = specularStrength * spec;
-        return fmax(intensity, 0.f);;
+        glm::vec3 viewDir = glm::normalize(scene.camera.position - closestTriangle.intersectionPoint);
+        float specularAngle = glm::max(glm::dot(reflectDir, viewDir), 0.f);
+        return pow(specularAngle, specularFactor) * specularIntensity;
     }
 
     Colour applyProximityLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
-        float intensity = calculateProximityIntensity(scene, closestTriangle);
-        return setIntensity(intensity, closestTriangle);
+        float proximityIntensity = calculateProximityIntensity(scene, closestTriangle);
+        glm::vec3 diffuseColour = {closestTriangle.intersectedTriangle.colour.red, closestTriangle.intersectedTriangle.colour.green, closestTriangle.intersectedTriangle.colour.blue};
+        glm::vec3 colour(
+            (diffuseColour * proximityIntensity) +
+            (diffuseColour * scene.light.ambientIntensity)
+        );
+        return vectorToColour(colour);
     }
 
-    Colour applySpecularLighting(Scene &scene, RayTriangleIntersection &closestTriangle, bool useAmbient) {
-        float brightness = calculateProximityIntensity(scene, closestTriangle);
-        float ambient = 0.2f;
-        float incidence = calculateIncidenceIntensity(scene, closestTriangle, useAmbient);
-        float specular = calculateSpecularIntensity(scene, closestTriangle, useAmbient);
-        float calculatedIntensity = brightness * (specular + 2.5f * incidence);
-        if (!RayTracingUtils::canSeeLight(scene, closestTriangle)) calculatedIntensity = 0.f;
-        float intensity = glm::clamp(ambient + calculatedIntensity, 0.f, 1.f);
-        return setIntensity(intensity, closestTriangle);
+    Colour applyPhongLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
+        float proximityIntensity = calculateProximityIntensity(scene, closestTriangle);
+        glm::vec3 diffuseColour = {closestTriangle.intersectedTriangle.colour.red, closestTriangle.intersectedTriangle.colour.green, closestTriangle.intersectedTriangle.colour.blue};
+        glm::vec3 lightDir = glm::normalize(scene.light.position - closestTriangle.intersectionPoint);
+
+        float incidenceAngle = calculateIncidenceAngle(scene, closestTriangle, lightDir);
+        float specularIntensity = calculateSpecularIntensity(scene, closestTriangle, lightDir, incidenceAngle);
+        if (!RayTracingUtils::canSeeLight(scene, closestTriangle)) {
+            incidenceAngle = 0.f;
+            specularIntensity = 0.f;
+        }
+        glm::vec3 colour(
+            (diffuseColour * proximityIntensity * incidenceAngle) +
+            (scene.light.colour * proximityIntensity * specularIntensity) +
+            (diffuseColour * scene.light.ambientIntensity)
+        );
+        //ambientColour + angle * diffuseColour + specular * specularColour
+        return vectorToColour(colour);
     }
 }
 
@@ -63,8 +76,8 @@ namespace LightingUtils {
             case Light::PROXIMITY:
                 colour = applyProximityLighting(scene, closestTriangle);
                 break;
-            case Light::SPECULAR:
-                colour = applySpecularLighting(scene, closestTriangle, false);
+            case Light::PHONG:
+                colour = applyPhongLighting(scene, closestTriangle);
                 break;
             default:
                 break;
