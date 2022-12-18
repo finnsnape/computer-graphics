@@ -19,7 +19,7 @@ private:
 
 public:
 	DrawingWindow();
-	DrawingWindow(int w, int h, bool fullscreen);
+	DrawingWindow(int w, int h, bool fullscreen, bool shown);
 	void renderFrame();
 	void savePPM(const std::string &filename) const;
 	void saveBMP(const std::string &filename) const;

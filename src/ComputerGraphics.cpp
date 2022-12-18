@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "FilesUtils.h"
 #include "EventUtils.h"
+#include "RenderUtils.h"
 
 #define WIDTH 320
 #define HEIGHT 320
@@ -51,34 +52,53 @@ void printInstructions() {
     "=================================" << std::endl;
 }
 
-Scene initScene(bool mirror, Scene::RenderMode renderMode, Light light, glm::vec3 initialPosition) {
+Scene initScene(bool show, bool mirror, Scene::RenderMode renderMode, Light light, glm::vec3 initialPosition) {
+    float w = WIDTH;
+    float h = HEIGHT;
+    if (!show) w = 480, h = 480;
     std::string objFileName = "cornell-box.obj";
     std::string mtlFileName = "cornell-box.mtl";
-    Camera camera(WIDTH, HEIGHT, initialPosition, false);
+    Camera camera(w, h, initialPosition, false);
     std::vector<ModelTriangle> triangles = FilesUtils::loadOBJ(objFileName, mtlFileName);
-    Scene scene(WIDTH, HEIGHT, mirror, renderMode, light, triangles, camera);
+    Scene scene(w, h, show, mirror, renderMode, light, triangles, camera);
     return scene;
 }
 
-int main(int argc, char *argv[]) {
+void showScene(Scene &scene) {
+    SDL_Event event;
+    scene.draw();
+    while (true) {
+        if (scene.show) {
+            if (scene.window.pollForInputEvents(event)) EventUtils::handleEvent(event, scene);
+            if (scene.camera.orbit) {
+                scene.camera.rotate(Camera::Axis::y, 1.f);
+                scene.draw();
+            }
+        }
+        scene.window.renderFrame();
+    }
+}
+
+void run(bool show) {
     Scene::RenderMode renderMode = Scene::RAY_TRACED;
     Light::Mode lightMode = Light::SPECULAR;
     glm::vec3 lightSource(0.f, 0.5f, 0.3f);
+    RenderUtils::Sequence sequence = RenderUtils::RASTERISED_NAVIGATION;
     //glm::vec3 lightSource(0.8, 0.8, -0.8);
     //glm::vec3 lightSource(0.0, 0.55, 0.7);
     bool enableMirror = true;
     Light light(lightSource, lightMode);
     glm::vec3 initialPosition(0.f, 0.f, 4.f);
-    Scene scene = initScene(enableMirror, renderMode, light, initialPosition);
-    SDL_Event event;
+    Scene scene = initScene(show, enableMirror, renderMode, light, initialPosition);
     printInstructions();
-    scene.draw();
-    while (true) {
-        if (scene.window.pollForInputEvents(event)) EventUtils::handleEvent(event, scene);
-        if (scene.camera.orbit) {
-            scene.camera.rotate(Camera::Axis::y, 1.f);
-            scene.draw();
-        }
-        scene.window.renderFrame();
+    if (scene.show) {
+        showScene(scene);
+    } else {
+        RenderUtils::generate(scene, sequence);
     }
+}
+
+int main(int argc, char *argv[]) {
+    bool show = false;
+    run(show);
 }

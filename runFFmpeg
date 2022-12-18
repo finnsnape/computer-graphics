@@ -1,0 +1,1 @@
+ffmpeg -framerate 24 -i output/%05d.ppm -c:v mpeg4 -q 5 output/out.mp4

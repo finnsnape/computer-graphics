@@ -2,16 +2,17 @@
 #include "RayTracingUtils.h"
 #include "RasterisingUtils.h"
 
-Scene::Scene(float _width, float _height, bool _mirror, RenderMode _renderMode, Light _light, std::vector<ModelTriangle> _triangles, Camera _camera):
+Scene::Scene(float _width, float _height, bool _show, bool _mirror, RenderMode _renderMode, Light _light, std::vector<ModelTriangle> _triangles, Camera _camera):
         width(_width),
         height(_height),
+        show(_show),
         mirror(_mirror),
         renderMode(_renderMode),
         light(_light),
         triangles(std::move(_triangles)),
         camera(std::move(_camera))
         {
-    this->window = DrawingWindow((int) width, (int) height, false);
+    this->window = DrawingWindow((int) width, (int) height, false, show);
     this->modelToWorld();
 }
 
@@ -59,5 +60,5 @@ void Scene::draw() {
             break;
     }
     // FIXME: temp to draw light pos
-    RasterisingUtils::a(*this);
+    //RasterisingUtils::a(*this);
 }

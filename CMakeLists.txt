@@ -47,6 +47,7 @@ add_executable(ComputerGraphics
         src/utils/TriangleUtils.cpp
         src/utils/EventUtils.cpp
         src/utils/LightingUtils.cpp
+        src/utils/RenderUtils.cpp
         src/ComputerGraphics.cpp)
 
 if (MSVC)

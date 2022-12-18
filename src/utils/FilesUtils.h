@@ -7,5 +7,5 @@
 
 namespace FilesUtils {
     std::vector<ModelTriangle> loadOBJ(std::string objFileName, std::string mtlFileName);
-    void saveAsImage(DrawingWindow &window);
+    void saveAsImage(DrawingWindow &window, std::string &name);
 }

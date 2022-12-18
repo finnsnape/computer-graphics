@@ -77,9 +77,10 @@ namespace {
 }
 
 namespace FilesUtils {
-    void saveAsImage(DrawingWindow &window) {
-        window.savePPM("output/output.ppm");
+    void saveAsImage(DrawingWindow &window, std::string &name) {
+        window.savePPM("output/" + name + ".ppm");
     }
+
     std::vector<ModelTriangle> loadOBJ(std::string objFileName, std::string mtlFileName) {
         std::vector<glm::vec3> trianglePoints;
         std::vector<std::vector<int>> triangles;

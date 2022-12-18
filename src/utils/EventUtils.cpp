@@ -16,7 +16,8 @@ std::map<SDL_Keycode, Light::Mode> lightingModeMap = {
 };
 
 namespace {
-    void doOperation(SDL_Keycode key, Scene &scene, SDL_Event event) {
+    void doOperation(SDL_Keycode key, Scene &scene) {
+        std::string n;
         switch(key) {
             case SDLK_w:
                 scene.camera.translate(Camera::y, 1.f);
@@ -50,11 +51,13 @@ namespace {
                 break;
             case SDLK_f:
                 std::cout << "Saving..." << std::endl;
-                FilesUtils::saveAsImage(scene.window);
+                n = "output";
+                FilesUtils::saveAsImage(scene.window, n);
                 break;
             case SDLK_r:
                 std::cout << "Toggling mirror..." << std::endl;
                 scene.mirror = !scene.mirror;
+                break;
             case SDLK_o:
                 std::cout << "Toggling orbit..." << std::endl;
                 scene.camera.orbit = !scene.camera.orbit;
@@ -110,7 +113,7 @@ namespace EventUtils {
         } else if (lightingModeMap.count(key)) {
             changeLightingMode(key, scene); // hard shadows, proximity, etc.,
         } else {
-            doOperation(key, scene, event); // rotate, translate, etc.,
+            doOperation(key, scene); // rotate, translate, etc.,
         }
         scene.draw();
     }

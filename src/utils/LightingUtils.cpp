@@ -74,7 +74,7 @@ namespace LightingUtils {
 
     /// @brief Checks if the provided colour is equal to the object colour we have set to be a mirror
     bool isMirror(Colour &colour) {
-        Colour mirrorColour(255, 0, 255);
+        Colour mirrorColour(178, 178, 178);
         if (colour == mirrorColour) return true;
         return false;
     }
