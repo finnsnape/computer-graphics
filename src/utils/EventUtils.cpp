@@ -12,7 +12,7 @@ std::map<SDL_Keycode, Scene::RenderMode> renderModeMap = {
 std::map<SDL_Keycode, Light::Mode> lightingModeMap = {
         {SDLK_4, Light::DEFAULT},
         {SDLK_5, Light::PROXIMITY},
-        {SDLK_6, Light::SPECULAR}
+        {SDLK_6, Light::PHONG}
 };
 
 namespace {
