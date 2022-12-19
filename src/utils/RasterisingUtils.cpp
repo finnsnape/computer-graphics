@@ -46,11 +46,5 @@ namespace RasterisingUtils {
             TriangleUtils::drawStrokedTriangle(scene, canvasTriangle);
         }
     }
-
-    // FIXME: temp
-    void a(Scene &scene) {
-        CanvasPoint p = worldToCanvas(scene, scene.light.position);
-        TriangleUtils::drawPixel(scene.window, p, Colour(0, 255, 0));
-    }
 }
 

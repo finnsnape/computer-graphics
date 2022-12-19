@@ -72,6 +72,4 @@ void Scene::draw() {
         default:
             break;
     }
-    // FIXME: temp to draw light pos
-    RasterisingUtils::a(*this);
 }

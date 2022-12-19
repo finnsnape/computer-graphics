@@ -1,9 +1,6 @@
 # TODO
 ## Main tasks
-- Export of image files and creation of animated video
 - Test on vagrant
-## General tasks
-- Remove light dot
 
 ## Notes
 - negative z is away from us

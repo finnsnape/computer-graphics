@@ -8,8 +8,8 @@
 #include "EventUtils.h"
 #include "RenderUtils.h"
 
-#define WIDTH 320
-#define HEIGHT 320
+#define WIDTH 480
+#define HEIGHT 480
 
 void printInstructions() {
     std::cout <<
@@ -56,8 +56,8 @@ Scene initScene(bool show, bool mirror, Scene::RenderMode renderMode, Light ligh
     float w = WIDTH;
     float h = HEIGHT;
     if (!show) w = 480, h = 480;
-    //std::string objFileName = "cornell-box.obj";
-    std::string objFileName = "sphere.obj";
+    std::string objFileName = "cornell-box.obj";
+    //std::string objFileName = "sphere.obj";
     std::string mtlFileName = "cornell-box.mtl";
     Camera camera(w, h, initialPosition, false);
     std::vector<ModelTriangle> triangles = FilesUtils::loadOBJ(objFileName, mtlFileName);
@@ -66,7 +66,6 @@ Scene initScene(bool show, bool mirror, Scene::RenderMode renderMode, Light ligh
 }
 
 void showScene(Scene &scene) {
-    int count = 331;
     SDL_Event event;
     scene.draw();
     while (true) {
@@ -86,7 +85,8 @@ void run(bool show) {
     glm::vec3 lightColour = {255.f, 255.f, 255.f};
     float ambientIntensity = 0.15f;
     Light::Mode lightMode = Light::PHONG;
-    glm::vec3 lightSource(0.f, 0.5f, 0.3f);
+    glm::vec3 lightSource(0.3f,0.6f,1.3f);
+    //glm::vec3 lightSource(0.f, 0.5f, 0.3f);
     //glm::vec3 lightSource(0.9f, 0.4f, -0.3f);
     RenderUtils::Sequence sequence = RenderUtils::RASTERISED_NAVIGATION;
     //glm::vec3 lightSource(0.8, 0.8, -0.8);
@@ -95,6 +95,7 @@ void run(bool show) {
     Light light(lightSource, lightMode, ambientIntensity, lightColour);
     light.softShadows = false;
     glm::vec3 initialPosition(0.f, 0.f, 4.f);
+    //glm::vec3 initialPosition(-0.03f,0.39f,2.29f);
     //glm::vec3 initialPosition(0.f, 0.35f, 3.1f);
     Scene scene = initScene(show, enableMirror, renderMode, light, initialPosition);
     printInstructions();
