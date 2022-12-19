@@ -48,6 +48,7 @@ void printInstructions() {
     std::endl <<
     "MISC: " << std::endl <<
     "R: Toggle mirror" << std::endl <<
+    "X: Toggle soft shadows" << std::endl <<
     "F: Save as file" << std::endl <<
     "=================================" << std::endl;
 }
@@ -56,6 +57,7 @@ Scene initScene(bool show, bool mirror, Scene::RenderMode renderMode, Light ligh
     float w = WIDTH;
     float h = HEIGHT;
     if (!show) w = 480, h = 480;
+    //std::string objFileName = "cornell-box.obj";
     std::string objFileName = "sphere.obj";
     std::string mtlFileName = "cornell-box.mtl";
     Camera camera(w, h, initialPosition, false);
@@ -83,14 +85,17 @@ void run(bool show) {
     Scene::RenderMode renderMode = Scene::RAY_TRACED;
     glm::vec3 lightColour = {255.f, 255.f, 255.f};
     float ambientIntensity = 0.15f;
-    Light::Mode lightMode = Light::PROXIMITY;
+    Light::Mode lightMode = Light::PHONG;
     glm::vec3 lightSource(0.f, 0.5f, 0.3f);
+    //glm::vec3 lightSource(0.9f, 0.4f, -0.3f);
     RenderUtils::Sequence sequence = RenderUtils::RASTERISED_NAVIGATION;
     //glm::vec3 lightSource(0.8, 0.8, -0.8);
     //glm::vec3 lightSource(0.0, 0.55, 0.7);
     bool enableMirror = false;
     Light light(lightSource, lightMode, ambientIntensity, lightColour);
+    light.softShadows = false;
     glm::vec3 initialPosition(0.f, 0.f, 4.f);
+    //glm::vec3 initialPosition(0.f, 0.35f, 3.1f);
     Scene scene = initScene(show, enableMirror, renderMode, light, initialPosition);
     printInstructions();
     if (scene.show) {

@@ -12,6 +12,7 @@ struct Light {
     Mode mode;
     float ambientIntensity;
     glm::vec3 colour;
+    bool softShadows;
     Light();
     Light(glm::vec3 position, Mode mode, float ambientIntensity, glm::vec3 colour);
 };

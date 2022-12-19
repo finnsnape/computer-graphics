@@ -44,6 +44,20 @@ namespace {
 }
 
 namespace TriangleUtils {
+    glm::vec3 calculateVertexNormals(ModelTriangle modelTriangle, std::vector<ModelTriangle> modelTriangles, glm::vec3 v) {
+        glm::vec3 vertexNormal = modelTriangle.surfaceNormal;
+        for (int j=0; j<modelTriangles.size(); j++) {
+            if (v == modelTriangles[j].vertices[0] || v == modelTriangles[j].vertices[1] || v == modelTriangles[j].vertices[2]) {
+                vertexNormal += modelTriangles[j].surfaceNormal;
+            }
+        }
+        return vertexNormal;
+    }
+
+    glm::vec3 calculateSurfaceNormal(std::array<glm::tvec3<float>, 3> vertices) {
+        return glm::cross(vertices[1] - vertices[0], vertices[2] - vertices[0]);
+    }
+
     /// @brief Checks if given point is outside of canvas bounds
     bool isInsideCanvas(DrawingWindow &window, CanvasPoint point) {
         if (point.x < 0 || point.x >= window.width || point.y < 0 || point.y >= window.height) {

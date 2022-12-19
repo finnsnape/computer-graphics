@@ -62,6 +62,24 @@ namespace {
 }
 
 namespace RayTracingUtils {
+    /// @brief Uses barycentric coords to figure out normal of point within triangle, given vertex normals
+    glm::vec3 calculatePointNormal(ModelTriangle triangle, glm::vec3 point) {
+        std::array<glm::vec3, 3> vertices = triangle.vertices;
+        glm::vec3 v0 = vertices[1] - vertices[0];
+        glm::vec3 v1 = vertices[2] - vertices[0];
+        glm::vec3 v2 = point - vertices[0];
+        float dotv0v0 = glm::dot(v0, v0);
+        float dotv0v1 = glm::dot(v0, v1);
+        float dotv1v1 = glm::dot(v1, v1);
+        float dotv2v0 = glm::dot(v2, v0);
+        float dotv2v1 = glm::dot(v2, v1);
+        float denominator = dotv0v0 * dotv1v1 - dotv0v1 * dotv0v1;
+        float w1 = (dotv1v1 * dotv2v0 - dotv0v1 * dotv2v1) / denominator;
+        float w2 = (dotv0v0 * dotv2v1 - dotv0v1 * dotv2v0) / denominator;
+        float w0 = 1.f - w1 - w2;
+        return glm::normalize(w0 * triangle.vertexNormals[0] + w1 * triangle.vertexNormals[1] + w2 * triangle.vertexNormals[2]);
+    }
+
     /// @brief Returns the triangle that the given ray intersects with first, using given ray (camera or light source)
     RayTriangleIntersection findClosestTriangle(Scene &scene, Ray ray, bool mirror, int k) {
         RayTriangleIntersection closestTriangle;
@@ -81,7 +99,7 @@ namespace RayTracingUtils {
     }
 
     /// @brief Checks if the point we want to draw on an intersecting triangle is able to see the light source
-    bool canSeeLight(Scene &scene, const RayTriangleIntersection &closestTriangle) {
+    glm::vec3 canSeeLight(Scene &scene, const RayTriangleIntersection &closestTriangle) {
         // ray using intersection and light source
         glm::vec3 direction = glm::normalize(closestTriangle.intersectionPoint - scene.light.position);
         glm::vec3 origin = scene.light.position;
@@ -91,9 +109,9 @@ namespace RayTracingUtils {
         // if triangle we are trying to draw is the triangle closest to the light source
         // then that means it can see the light. otherwise, it cannot as it's behind another one
         if (closestTriangle.triangleIndex == newClosestTriangle.triangleIndex) {
-            return true;
+            return {-1.f, -1.f, -1.f}; // true
         }
-        return false;
+        return newClosestTriangle.intersectionPoint;
     }
 
     void draw(Scene &scene) {
@@ -107,10 +125,11 @@ namespace RayTracingUtils {
                     continue; // no triangle intersection found
                 }
                 Colour colour;
+                glm::vec3 pointNormal = calculatePointNormal(closestTriangle.intersectedTriangle, closestTriangle.intersectionPoint);
                 if (scene.mirror && LightingUtils::isMirror(closestTriangle.intersectedTriangle.colour)) {
                     colour = LightingUtils::applyMirror(scene, closestTriangle);
                 } else {
-                    colour = LightingUtils::applyLighting(scene, closestTriangle);
+                    colour = LightingUtils::applyLighting(scene, closestTriangle, pointNormal);
                 }
                 TriangleUtils::drawPixel(scene.window, canvasPoint, colour);
             }

@@ -9,6 +9,7 @@
 class Scene {
 private:
     void modelToWorld();
+    void calculateNormals();
 public:
     enum RenderMode {
         WIRE_FRAME,

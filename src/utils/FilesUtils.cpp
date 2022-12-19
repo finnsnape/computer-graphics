@@ -43,26 +43,6 @@ namespace {
 
     /* Object (.obj) */
 
-    std::array<glm::vec3, 3> calculateVertexNormals(ModelTriangle &modelTriangle, std::vector<ModelTriangle> modelTriangles) {
-        std::array<glm::vec3, 3> vertexNormals;
-        for (int i=0; i<3; i++) {
-            glm::vec3 vertexNormal = modelTriangle.surfaceNormal;
-            for (int j=0; j<modelTriangles.size(); j++) {
-                for (int k=0; k<3; k++) {
-                    if (modelTriangle.vertices[i] == modelTriangles[j].vertices[k]) {
-                        vertexNormal += modelTriangles[j].surfaceNormal;
-                    }
-                }
-            }
-            vertexNormals[i] = glm::normalize(vertexNormal);
-        }
-        return vertexNormals;
-    }
-
-    glm::vec3 calculateSurfaceNormal(std::array<glm::tvec3<float>, 3> vertices) {
-        return glm::normalize(glm::cross(vertices[1] - vertices[0], vertices[2] - vertices[0]));
-    }
-
     glm::vec3 parseVector(std::string line) {
         std::vector<std::string> trianglePointRaw = split(line, ' ');
         glm::vec3 trianglePoint = {std::stof(trianglePointRaw[1]), std::stof(trianglePointRaw[2]), std::stof(trianglePointRaw[3])};
@@ -84,13 +64,13 @@ namespace {
         for (int i=0; i<triangles.size(); i++) {
             Colour colour = colourMap.at(colours[i]);
             ModelTriangle modelTriangle = {trianglePoints[triangles[i][0] - 1], trianglePoints[triangles[i][1] - 1], trianglePoints[triangles[i][2] - 1], colour};
-            glm::vec3 normal = calculateSurfaceNormal(modelTriangle.vertices);
-            modelTriangle.surfaceNormal = normal;
+            //glm::vec3 normal = calculateSurfaceNormal(modelTriangle.vertices);
+            //modelTriangle.surfaceNormal = normal;
             modelTriangles.push_back(modelTriangle);
         }
-        for (auto &triangle : modelTriangles) {
-            triangle.vertexNormals = calculateVertexNormals(triangle, modelTriangles);
-        }
+//        for (auto &triangle : modelTriangles) {
+//            triangle.vertexNormals = calculateVertexNormals(triangle, modelTriangles);
+//        }
         return modelTriangles;
     }
 }
