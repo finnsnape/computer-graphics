@@ -5,7 +5,6 @@
 struct Light {
     enum Mode {
         DEFAULT,
-        PROXIMITY,
         PHONG
     };
     glm::vec3 position;

@@ -15,8 +15,8 @@ namespace {
         float falloff = 2.f;
         float normalisedDistance = distance/radius;
         if (normalisedDistance >= 1.f) return 0.f;
-        return 1.f * pow(1 - pow(normalisedDistance, 2), 2) / (1 + falloff * normalisedDistance);
-        //return 1.f * pow(1 - pow(normalisedDistance, 2), 2) / (1 + falloff * pow(normalisedDistance, 2));
+        //return 1.f * pow(1 - pow(normalisedDistance, 2), 2) / (1 + falloff * normalisedDistance);
+        return 1.f * pow(1 - pow(normalisedDistance, 2), 2) / (1 + falloff * pow(normalisedDistance, 2));
     }
 
     float calculateIncidenceAngle(Scene &scene, RayTriangleIntersection &closestTriangle, glm::vec3 lightDir, glm::vec3 pointNormal) {
@@ -34,16 +34,16 @@ namespace {
         return pow(specularAngle, specularFactor) * specularIntensity;
     }
 
-    Colour applyProximityLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
-        float distance = glm::length(scene.light.position - closestTriangle.intersectionPoint);
-        float proximityIntensity = calculateProximityIntensity(distance);
-        glm::vec3 diffuseColour = {closestTriangle.intersectedTriangle.colour.red, closestTriangle.intersectedTriangle.colour.green, closestTriangle.intersectedTriangle.colour.blue};
-        glm::vec3 colour(
-            (diffuseColour * proximityIntensity) +
-            (diffuseColour * scene.light.ambientIntensity)
-        );
-        return vectorToColour(colour);
-    }
+//    Colour applyProximityLighting(Scene &scene, RayTriangleIntersection &closestTriangle) {
+//        float distance = glm::length(scene.light.position - closestTriangle.intersectionPoint);
+//        float proximityIntensity = calculateProximityIntensity(distance);
+//        glm::vec3 diffuseColour = {closestTriangle.intersectedTriangle.colour.red, closestTriangle.intersectedTriangle.colour.green, closestTriangle.intersectedTriangle.colour.blue};
+//        glm::vec3 colour(
+//            (diffuseColour * proximityIntensity) +
+//            (diffuseColour * scene.light.ambientIntensity)
+//        );
+//        return vectorToColour(colour);
+//    }
 
     Colour applyPhongLighting(Scene &scene, RayTriangleIntersection &closestTriangle, glm::vec3 pointNormal) {
         float distance = glm::length(scene.light.position - closestTriangle.intersectionPoint);
@@ -63,7 +63,6 @@ namespace {
             incidenceAngle = 0.f;
             specularIntensity = 0.f;
         }
-        if (specularIntensity >= 1.f) std::cout << "SPEC " << specularIntensity << std::endl;
         glm::vec3 colour(
             (diffuseColour * proximityIntensity * incidenceAngle) +
             (scene.light.colour * proximityIntensity * specularIntensity) +
@@ -79,9 +78,6 @@ namespace LightingUtils {
         switch (scene.light.mode) {
             case Light::DEFAULT:
                 colour = closestTriangle.intersectedTriangle.colour;
-                break;
-            case Light::PROXIMITY:
-                colour = applyProximityLighting(scene, closestTriangle);
                 break;
             case Light::PHONG:
                 colour = applyPhongLighting(scene, closestTriangle, pointNormal);

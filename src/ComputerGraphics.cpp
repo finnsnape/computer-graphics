@@ -21,8 +21,7 @@ void printInstructions() {
     std::endl <<
     "LIGHTING MODES (Ray Traced): " << std::endl <<
     "4: Default" << std::endl <<
-    "5: Proximity" << std::endl <<
-    "6: Phong" << std::endl <<
+    "5: Phong" << std::endl <<
     std::endl <<
     "LIGHT POSITION OPERATIONS: " << std::endl <<
     "H: Translate (y, positive)" << std::endl <<
@@ -67,6 +66,7 @@ Scene initScene(bool show, bool mirror, Scene::RenderMode renderMode, Light ligh
 }
 
 void showScene(Scene &scene) {
+    int count = 331;
     SDL_Event event;
     scene.draw();
     while (true) {

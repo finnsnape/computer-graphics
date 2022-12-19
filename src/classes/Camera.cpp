@@ -33,7 +33,6 @@ void Camera::translate(Axis axis, float sign) {
     translationMatrix[3] = translationVector;
     this->camera = translationMatrix * this->camera;
     this->updateVP();
-    std::cout << "cam: " << position.x << "," << position.y << "," << position.z << std::endl;
 }
 
 /// @brief Rotates camera position anti-clockwise about the world origin

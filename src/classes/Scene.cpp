@@ -31,21 +31,11 @@ void Scene::modelToWorld() {
 void Scene::calculateNormals() {
     for (auto &triangle : this->triangles) {
         triangle.surfaceNormal = TriangleUtils::calculateSurfaceNormal(triangle.vertices);
-        std::cout << triangle.surfaceNormal.x << "," << triangle.surfaceNormal.y << "," << triangle.surfaceNormal.z << std::endl;
     }
-    std::cout << "=======" << std::endl;
     for (auto &triangle : this->triangles) {
-        std::cout << triangle.vertexNormals.size() << std::endl;
         triangle.vertexNormals[0] = TriangleUtils::calculateVertexNormals(triangle, this->triangles, triangle.vertices[0]);
         triangle.vertexNormals[1] = TriangleUtils::calculateVertexNormals(triangle, this->triangles, triangle.vertices[1]);
         triangle.vertexNormals[2] = TriangleUtils::calculateVertexNormals(triangle, this->triangles, triangle.vertices[2]);
-
-        /// FIXME 1, 2, 3 ????????????????????????????
-        std::cout << triangle.vertexNormals[1].x << "," << triangle.vertexNormals[1].y << "," << triangle.vertexNormals[1].z << std::endl;
-        std::cout << triangle.vertexNormals[2].x << "," << triangle.vertexNormals[2].y << "," << triangle.vertexNormals[2].z << std::endl;
-        std::cout << triangle.vertexNormals[0].x << "," << triangle.vertexNormals[3].y << "," << triangle.vertexNormals[3].z << std::endl;
-
-
     }
 }
 
@@ -65,8 +55,6 @@ void Scene::moveLight(Camera::Axis axis, float sign) {
         default:
             break;
     }
-    std::cout << "light: " << light.position.x << "," << light.position.y << "," << light.position.z << std::endl;
-
 }
 
 void Scene::draw() {
