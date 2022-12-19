@@ -6,7 +6,6 @@
 
 struct RayTriangleIntersection {
 	glm::vec3 intersectionPoint;
-    glm::vec3 pointNormal;
 	float distanceFromCamera;
 	ModelTriangle intersectedTriangle;
 	size_t triangleIndex;

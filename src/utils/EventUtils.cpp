@@ -114,7 +114,7 @@ namespace EventUtils {
         if (renderModeMap.count(key)) {
             changeRenderMode(key, scene); // wire frame, ray traced, etc.,
         } else if (lightingModeMap.count(key)) {
-            changeLightingMode(key, scene); // hard shadows, proximity, etc.,
+            changeLightingMode(key, scene); // default, phong, ...
         } else {
             doOperation(key, scene); // rotate, translate, etc.,
         }
