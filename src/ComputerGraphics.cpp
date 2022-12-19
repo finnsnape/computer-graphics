@@ -85,8 +85,8 @@ void run(bool show) {
     glm::vec3 lightColour = {255.f, 255.f, 255.f};
     float ambientIntensity = 0.15f;
     Light::Mode lightMode = Light::PHONG;
-    glm::vec3 lightSource(0.3f,0.6f,1.3f);
-    //glm::vec3 lightSource(0.f, 0.5f, 0.3f);
+    //glm::vec3 lightSource(0.3f,0.6f,1.3f);
+    glm::vec3 lightSource(0.f, 0.5f, 0.3f);
     //glm::vec3 lightSource(0.9f, 0.4f, -0.3f);
     RenderUtils::Sequence sequence = RenderUtils::RASTERISED_NAVIGATION;
     //glm::vec3 lightSource(0.8, 0.8, -0.8);
